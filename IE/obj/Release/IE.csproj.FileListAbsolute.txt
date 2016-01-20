@@ -1,0 +1,1 @@
+D:\Github\InformationExtraction\IE\bin\Release\IE.exe.config
