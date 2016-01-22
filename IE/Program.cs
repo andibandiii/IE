@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using IE.POSTaggerModule;
 
 namespace IE
 {
@@ -18,6 +19,12 @@ namespace IE
         static void Main()
         {
             parseFile();
+
+            //Initialize the POS Tagger
+            POSTagger post = new POSTagger();
+            //Test a sample sentence
+            post.tagText("Sinabi ni Pangulong Arroyo kahapon na inatasan niya si Vice President Noli de Castro na pumuntang Libya para tingnan ang posibilidad kung may mga oportunidad ng trabaho ang mga Pilipinong manggagawa sa bansa.");
+
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());

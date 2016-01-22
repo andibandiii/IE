@@ -12,7 +12,7 @@ namespace IE.POSTaggerModule
         /// <summary>
         /// File path for POS Tagger to be used.
         /// </summary>
-        private const string modelPath = @"..\..\POSTaggerModule\models\wsj-0-18-bidirectional-nodistsim.tagger";
+        private const string modelPath = @"..\..\POSTaggerModule\models\filipino.tagger";
 
         /// <summary>
         /// MaxentTagger variable to be used.
@@ -61,6 +61,12 @@ namespace IE.POSTaggerModule
                         tokenToTag[splitWord[0]] = splitWord[1];
                     }
                 }
+            }
+
+            // TEMPORARY CODE FOR PRINTING OUT THIS FUNCTION'S RESULTS
+            foreach (KeyValuePair<String, String> entry in tokenToTag)
+            {
+                Console.WriteLine(entry.Key + " - " + entry.Value);
             }
 
             return tokenToTag;
