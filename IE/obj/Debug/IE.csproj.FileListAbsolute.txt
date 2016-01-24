@@ -70,7 +70,12 @@ C:\Users\John Paul\Source\Repos\IE\IE\bin\Debug\IKVM.OpenJDK.XML.XPath.dll
 C:\Users\John Paul\Source\Repos\IE\IE\bin\Debug\IKVM.Runtime.dll
 C:\Users\John Paul\Source\Repos\IE\IE\bin\Debug\IKVM.Runtime.JNI.dll
 C:\Users\John Paul\Source\Repos\IE\IE\bin\Debug\slf4j-api.dll
-C:\Users\John Paul\Source\Repos\IE\IE\bin\Debug\stanford-postagger-3.6.0.dll
 C:\Users\John Paul\Source\Repos\IE\IE\obj\Debug\IE.csprojResolveAssemblyReference.cache
 C:\Users\John Paul\Source\Repos\IE\IE\obj\Debug\IE.Properties.Resources.resources
 C:\Users\John Paul\Source\Repos\IE\IE\obj\Debug\IE.csproj.GenerateResource.Cache
+C:\Users\John Paul\Source\Repos\IE\IE\bin\Debug\ejml-0.23.dll
+C:\Users\John Paul\Source\Repos\IE\IE\bin\Debug\javax.json.dll
+C:\Users\John Paul\Source\Repos\IE\IE\bin\Debug\joda-time.dll
+C:\Users\John Paul\Source\Repos\IE\IE\bin\Debug\jollyday.dll
+C:\Users\John Paul\Source\Repos\IE\IE\bin\Debug\stanford-corenlp-3.6.0.dll
+C:\Users\John Paul\Source\Repos\IE\IE\bin\Debug\xom.dll
