@@ -11,8 +11,7 @@ namespace IE.Models
         PERSON,
         LOCATION,
         DATE,
-        ORGANIZATION,
-        TIME
+        ORGANIZATION
     }
 
     class Token
