@@ -6,6 +6,7 @@ using IE.Models;
 using java.io;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace IE
 {
@@ -36,6 +37,17 @@ namespace IE
             performNER();
             performPOST();
             performWS();
+
+            foreach (var token in tokenizedArticle)
+            {
+                System.Console.WriteLine("Value: " + token.Value);
+                System.Console.WriteLine("Sentence: " + token.Sentence);
+                System.Console.WriteLine("Position: " + token.Position);
+                System.Console.WriteLine("NER: " + token.NamedEntity);
+                System.Console.WriteLine("POS: " + token.PartOfSpeech);
+                System.Console.WriteLine("WS: " + token.Frequency);
+                System.Console.WriteLine("=====\n");
+            }
         }
 
         static void tokenize()
@@ -51,7 +63,7 @@ namespace IE
                 CoreLabel label = ((CoreLabel)ptbt.next());
                 tokenizedArticle.Add(new Token(label.toString(), ctr));
                 
-                System.Console.WriteLine(label);
+                //System.Console.WriteLine(label);
             }
         }
 
@@ -110,33 +122,46 @@ namespace IE
             String modelPath = @"..\..\POSTagger\filipino.tagger";
             MaxentTagger tagger = new MaxentTagger(modelPath);
 
-            //Sample Text to Tag
-            String text = "Sinabi ni Pangulong Arroyo kahapon na inatasan niya si Vice President Noli de Castro na pumuntang Libya para tingnan ang posibilidad kung may mga oportunidad ng trabaho ang mga Pilipinong manggagawa sa bansa.";
+            //Get all tokens and segregate them into lists based on sentence number
+            List<List<Token>> segregatedTokenLists = tokenizedArticle
+                .GroupBy(token => token.Sentence)
+                .Select(tokenGroup => tokenGroup.ToList())
+                .ToList();
 
-            Dictionary<String, String> tokenToTag = new Dictionary<String, String>();
-
-            //Segment text into sentences and break down each sentence into tokens
-            var sentences = MaxentTagger.tokenizeText(new java.io.StringReader(text)).toArray();
-
-            //Tag each sentence's tokens and add it to the Dictionary
-            foreach (java.util.ArrayList sentence in sentences)
+            //Convert the lists into a "CoreLabelList" and store in a Dictionary
+            //Dictionary Key: Sentence Number
+            //Dictionary Value: CoreLabelList
+            Dictionary<int, java.util.List> tokenizedSentenceLists = new Dictionary<int, java.util.List>();
+            foreach (List<Token> tokenList in segregatedTokenLists)
             {
-                var taggedSentence = tagger.tagSentence(sentence).toArray();
-                var convertedTaggedSentence = new List<String>();
+                if (tokenList.Count > 0)
+                {
+                    var tokenToStringArray = tokenList.Select(token => token.Value).ToArray();
+                    tokenizedSentenceLists[tokenList[0].Sentence] = Sentence.toCoreLabelList(tokenToStringArray);
+                }
+            }
+
+            //Tag each sentence
+            foreach (KeyValuePair<int, java.util.List> entry in tokenizedSentenceLists)
+            {
+                var taggedSentence = tagger.tagSentence(entry.Value).toArray();
                 foreach (var word in taggedSentence)
                 {
                     var splitWord = word.ToString().Split('/');
                     if (splitWord.Length >= 2)
                     {
-                        tokenToTag[splitWord[0]] = splitWord[1];
+                        foreach (var token in tokenizedArticle)
+                        {
+                            if ((token.PartOfSpeech == null || token.PartOfSpeech.Length <= 0) &&
+                                token.Value.Trim() == splitWord[0].Trim() && 
+                                token.Sentence == entry.Key)
+                            {
+                                token.PartOfSpeech = splitWord[1];
+                                break;
+                            }
+                        }
                     }
                 }
-            }
-
-            // TEMPORARY CODE FOR PRINTING OUT THIS FUNCTION'S RESULTS
-            foreach (KeyValuePair<String, String> entry in tokenToTag)
-            {
-                System.Console.WriteLine(entry.Key + " - " + entry.Value);
             }
         }
 

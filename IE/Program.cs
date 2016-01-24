@@ -75,16 +75,6 @@ namespace IE
                 articleList.Add(article);
             }
 
-            //Print Results
-            foreach (Article article in articleList)
-            {
-                Console.WriteLine("Author: " + article.Author);
-                Console.WriteLine("Title: " + article.Title);
-                Console.WriteLine("Date: " + article.Date);
-                Console.WriteLine("Body: " + article.Body);
-                Console.WriteLine("Link: " + article.Link);
-            }
-
             return articleList;
         }
     }
