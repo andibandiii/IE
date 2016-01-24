@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using IE.POSTaggerModule;
 using IE.Models;
 
 namespace IE

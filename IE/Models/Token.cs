@@ -15,13 +15,6 @@ namespace IE.Models
         TIME
     }
 
-    enum PartOfSpeech
-    {
-        NOUN,
-        ADJECTIVE,
-        VERB
-    }
-
     class Token
     {
         public String Value { get; set; }
@@ -30,7 +23,7 @@ namespace IE.Models
 
         public int Position { get; set; }
 
-        public PartOfSpeech PartOfSpeech { get; set; }
+        public String PartOfSpeech { get; set; }
 
         public NamedEntity NamedEntity { get; set; }
 

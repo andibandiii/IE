@@ -1,8 +1,10 @@
 ﻿using edu.stanford.nlp.ie.crf;
 using edu.stanford.nlp.ling;
 using edu.stanford.nlp.process;
+using edu.stanford.nlp.tagger.maxent;
 using IE.Models;
 using java.io;
+using System;
 using System.Collections.Generic;
 
 namespace IE
@@ -99,7 +101,38 @@ namespace IE
 
         static void performPOST()
         {
+            //Path to Filipino Tagger Model
+            String modelPath = @"..\..\POSTagger\filipino.tagger";
+            MaxentTagger tagger = new MaxentTagger(modelPath);
 
+            //Sample Text to Tag
+            String text = "Sinabi ni Pangulong Arroyo kahapon na inatasan niya si Vice President Noli de Castro na pumuntang Libya para tingnan ang posibilidad kung may mga oportunidad ng trabaho ang mga Pilipinong manggagawa sa bansa.";
+
+            Dictionary<String, String> tokenToTag = new Dictionary<String, String>();
+
+            //Segment text into sentences and break down each sentence into tokens
+            var sentences = MaxentTagger.tokenizeText(new java.io.StringReader(text)).toArray();
+
+            //Tag each sentence's tokens and add it to the Dictionary
+            foreach (java.util.ArrayList sentence in sentences)
+            {
+                var taggedSentence = tagger.tagSentence(sentence).toArray();
+                var convertedTaggedSentence = new List<String>();
+                foreach (var word in taggedSentence)
+                {
+                    var splitWord = word.ToString().Split('/');
+                    if (splitWord.Length >= 2)
+                    {
+                        tokenToTag[splitWord[0]] = splitWord[1];
+                    }
+                }
+            }
+
+            // TEMPORARY CODE FOR PRINTING OUT THIS FUNCTION'S RESULTS
+            foreach (KeyValuePair<String, String> entry in tokenToTag)
+            {
+                System.Console.WriteLine(entry.Key + " - " + entry.Value);
+            }
         }
 
         static void performWS()

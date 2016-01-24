@@ -206,7 +206,6 @@
     <Compile Include="Identifier.cs" />
     <Compile Include="Models\Article.cs" />
     <Compile Include="Models\Token.cs" />
-    <Compile Include="POSTaggerModule\POSTagger.cs" />
     <Compile Include="Preprocessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
