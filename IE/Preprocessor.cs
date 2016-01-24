@@ -24,6 +24,11 @@ namespace IE
 
         internal static void preprocess()
         {
+            if(article == null)
+            {
+                return;
+            }
+
             tokenize();
             performSS();
             performNER();
@@ -50,7 +55,27 @@ namespace IE
 
         static void performSS()
         {
+            int ctr = 1;
+            bool isPreceded = false;
 
+            foreach(Token token in tokenizedArticle)
+            {
+                token.Sentence = ctr;
+
+                // Simple sentence segmentation
+                if (token.Value.Equals('.'))
+                {
+                    isPreceded = true;
+                    continue;
+                }
+
+                if(char.IsUpper(token.Value[0]) && isPreceded)
+                { 
+                    ctr++;
+                }
+
+                isPreceded = false;
+            }
         }
 
         static void performNER()
