@@ -23,12 +23,15 @@ namespace IE
             ////Test a sample sentence
             //post.tagText("Sinabi ni Pangulong Arroyo kahapon na inatasan niya si Vice President Noli de Castro na pumuntang Libya para tingnan ang posibilidad kung may mga oportunidad ng trabaho ang mga Pilipinong manggagawa sa bansa.");
 
-            Article currentArticle = parseFile("C:\\Users\\Andrea\\Dropbox\\IE\\IE\\news.xml");
+            List<Article> currentArticles = parseFile(@"..\..\news.xml");
             List<Token> tokenizedArticle;
 
-            Preprocessor.setArticle(currentArticle);
-            Preprocessor.preprocess();
-            tokenizedArticle = Preprocessor.getTokenizedArticle();
+            if (currentArticles != null && currentArticles.Count > 0)
+            {
+                Preprocessor.setArticle(currentArticles[0]);
+                Preprocessor.preprocess();
+                tokenizedArticle = Preprocessor.getTokenizedArticle();
+            }
 
             //Trainer.setTokenizedArticle(tokenizedArticle);
             //Trainer.train();
@@ -43,78 +46,46 @@ namespace IE
             //Application.Run(new Form1());
         }
 
-        static Article parseFile(String path)
+        static List<Article> parseFile(String path)
         {
-            try
-            {
-                XmlTextReader reader = new XmlTextReader(path);
-                ArrayList articles = new ArrayList();
-                
-                while (reader.Read())
-                {
-                    if (reader.NodeType == XmlNodeType.Element)
-                    {
-                        if (reader.Name == "article")
-                        {
-                            ArrayList a = new ArrayList();
-                            while (reader.Read())
-                            {
-                                if(reader.NodeType == XmlNodeType.Element)
-                                {
-                                    string name = reader.Name;
-                                    if (name == "date")
-                                    {
-                                        string date = null;
-                                        for (int i = 0; i < 12; i++)
-                                        {
-                                            reader.Read();
-                                            if (reader.NodeType == XmlNodeType.Text)
-                                            {
-                                                date += reader.Value;
-                                            }
-                                        }
-                                        a.Add(date);
-                                    }
-                                }
-                                else if (reader.NodeType == XmlNodeType.Text)
-                                {
-                                    string val = reader.Value;
-                                    a.Add(val);
-                                }
-                                else if (reader.NodeType == XmlNodeType.EndElement)
-                                {
-                                    string name = reader.Name;
-                                    if (name == "article")
-                                    {
-                                        articles.Add(a);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                Console.ReadLine();
-                foreach (ArrayList value in articles)
-                {
-                    foreach(string s in value)
-                        Console.WriteLine(s);
-                }
+            List<Article> articleList = new List<Article>();
 
-                return null;
-            }
-            catch (DirectoryNotFoundException dirEx)
+            XmlDocument doc = new XmlDocument();
+            doc.Load(path);
+
+            XmlNodeList articleNodes = doc.DocumentElement.SelectNodes("/data/article");
+
+            foreach (XmlNode articleNode in articleNodes)
             {
-                Console.WriteLine("Directory not found: " + dirEx.Message);
+                Article article = new Article();
+
+                article.Author = articleNode.SelectSingleNode("author").InnerText;
+                article.Body = articleNode.SelectSingleNode("body").InnerText;
+                article.Link = articleNode.SelectSingleNode("link").InnerText;
+                article.Title = articleNode.SelectSingleNode("title").InnerText;
+
+                String date = articleNode.SelectSingleNode("date").SelectSingleNode("month").InnerText + "/" +
+                    articleNode.SelectSingleNode("date").SelectSingleNode("day").InnerText + "/" +
+                    articleNode.SelectSingleNode("date").SelectSingleNode("year").InnerText;
+
+                DateTime tempDate = new DateTime(2000, 01, 01);
+                DateTime.TryParse(date, out tempDate);
+                article.Date = tempDate;
+
+                articleList.Add(article);
             }
 
-            return null;
-            //title
-            //author
-            //date
-            //link
-            //body
+            //Print Results
+            foreach (Article article in articleList)
+            {
+                Console.WriteLine("Author: " + article.Author);
+                Console.WriteLine("Title: " + article.Title);
+                Console.WriteLine("Date: " + article.Date);
+                Console.WriteLine("Body: " + article.Body);
+                Console.WriteLine("Link: " + article.Link);
+            }
+
+            return articleList;
         }
     }
 }
