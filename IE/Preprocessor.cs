@@ -32,8 +32,9 @@ namespace IE
                 return;
             }
 
-            tokenize();
-            performSS();
+            StanfordTokenizeAndSS();
+            //tokenize();
+            //performSS();
             performNER();
             performPOST();
             performWS();
@@ -47,6 +48,25 @@ namespace IE
                 System.Console.WriteLine("POS: " + token.PartOfSpeech);
                 System.Console.WriteLine("WS: " + token.Frequency);
                 System.Console.WriteLine("=====\n");
+            }
+        }
+
+        static void StanfordTokenizeAndSS()
+        {
+            tokenizedArticle = new List<Token>();
+            var sentences = MaxentTagger.tokenizeText(new java.io.StringReader(article.Body)).toArray();
+            int sentenceCounter = 1;
+            int positionCounter = 1;
+            foreach (java.util.ArrayList sentence in sentences)
+            {
+                foreach (var word in sentence)
+                {
+                    var newToken = new Token(word.ToString(), positionCounter);
+                    newToken.Sentence = sentenceCounter;
+                    tokenizedArticle.Add(newToken);
+                    positionCounter++;
+                }
+                sentenceCounter++;
             }
         }
 
