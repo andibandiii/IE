@@ -17,7 +17,7 @@ namespace IE
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        void Main()
+        public static void Main()
         {
             ////Initialize the POS Tagger
             //POSTagger post = new POSTagger();
@@ -44,7 +44,7 @@ namespace IE
             //Application.Run(new Form1());
         }
 
-        public Article parseFile(String path)
+        static Article parseFile(String path)
         {
             try
             {
