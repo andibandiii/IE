@@ -7,34 +7,48 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using IE.POSTaggerModule;
+using IE.Models;
 
 namespace IE
 {
-    static class Program
+    class Program
     {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        void Main()
         {
-            parseFile();
+            ////Initialize the POS Tagger
+            //POSTagger post = new POSTagger();
+            ////Test a sample sentence
+            //post.tagText("Sinabi ni Pangulong Arroyo kahapon na inatasan niya si Vice President Noli de Castro na pumuntang Libya para tingnan ang posibilidad kung may mga oportunidad ng trabaho ang mga Pilipinong manggagawa sa bansa.");
 
-            //Initialize the POS Tagger
-            POSTagger post = new POSTagger();
-            //Test a sample sentence
-            post.tagText("Sinabi ni Pangulong Arroyo kahapon na inatasan niya si Vice President Noli de Castro na pumuntang Libya para tingnan ang posibilidad kung may mga oportunidad ng trabaho ang mga Pilipinong manggagawa sa bansa.");
+            Article currentArticle = parseFile("C:\\Users\\Andrea\\Dropbox\\IE\\IE\\news.xml");
+            List<Token> tokenizedArticle;
 
+            Preprocessor.setArticle(currentArticle);
+            Preprocessor.preprocess();
+            tokenizedArticle = Preprocessor.getTokenizedArticle();
+
+            //Trainer.setTokenizedArticle(tokenizedArticle);
+            //Trainer.train();
+
+            //Identifier.setTokenizedArticle(tokenizedArticle);
+            //Identifier.setModels(Trainer.getModels());
+            //Identifier.label5Ws();
+            //tokenizedArticle = Identifier.getTokenizedArticle();
+            
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
         }
 
-        public static void parseFile()
+        public Article parseFile(String path)
         {
             try
             {
-                XmlTextReader reader = new XmlTextReader("C:\\Users\\Andrea\\Dropbox\\IE\\IE\\news.xml");
+                XmlTextReader reader = new XmlTextReader(path);
                 ArrayList articles = new ArrayList();
                 
                 while (reader.Read())
@@ -88,13 +102,15 @@ namespace IE
                     foreach(string s in value)
                         Console.WriteLine(s);
                 }
+
+                return null;
             }
             catch (DirectoryNotFoundException dirEx)
             {
                 Console.WriteLine("Directory not found: " + dirEx.Message);
             }
 
-
+            return null;
             //title
             //author
             //date
