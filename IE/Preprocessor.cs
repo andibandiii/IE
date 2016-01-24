@@ -60,8 +60,6 @@ namespace IE
 
             foreach(Token token in tokenizedArticle)
             {
-                token.Sentence = ctr;
-
                 // Simple sentence segmentation
                 if (token.Value.Equals('.'))
                 {
@@ -74,27 +72,34 @@ namespace IE
                     ctr++;
                 }
 
+                token.Sentence = ctr;
                 isPreceded = false;
             }
         }
 
         static void performNER()
         {
-            // Path to the folder with classifiers models
-            var jarRoot = @"..\..\..\..\paket-files\nlp.stanford.edu\stanford-ner-2015-12-09";
-            var classifiersDirecrory = jarRoot + @"\classifiers";
+            java.util.List tokens;
+            List<string> values = new List<string>();
+            object[] nerValues;
+            var classifier = CRFClassifier.getClassifierNoExceptions(@"..\..\NERModel\filipino.all.4class.distsim.crf.ser.gz");
 
-            // Loading 3 class classifier model
-            var classifier = CRFClassifier.getClassifierNoExceptions(
-                classifiersDirecrory + @"\english.all.3class.distsim.crf.ser.gz");
+            foreach (Token token in tokenizedArticle)
+            {
+                values.Add(token.Value);
+            }
 
-            var s1 = "Good afternoon Rajat Raina, how are you today?";
-            System.Console.WriteLine("{0}\n", classifier.classifyToString(s1));
+            tokens = Sentence.toCoreLabelList(values.ToArray());
 
-            var s2 = "I go to school at Stanford University, which is located in California.";
-            System.Console.WriteLine("{0}\n", classifier.classifyWithInlineXML(s2));
+            nerValues = classifier.classifySentence(tokens).toArray();
 
-            System.Console.WriteLine("{0}\n", classifier.classifyToString(s2, "xml", true));
+            for(int i = 0; i < tokenizedArticle.Count; i++)
+            {
+                NamedEntity nerValue;
+                System.Enum.TryParse(((CoreLabel)nerValues[i]).ner(), out nerValue);
+
+                tokenizedArticle[i].NamedEntity = nerValue;
+            }
         }
 
         static void performPOST()
@@ -104,7 +109,24 @@ namespace IE
 
         static void performWS()
         {
+            Dictionary<string, int> frequencies = new Dictionary<string, int>();
 
+            foreach(Token token in tokenizedArticle)
+            {
+                if(frequencies.ContainsKey(token.Value))
+                {
+                    frequencies[token.Value]++;
+                }
+                else
+                {
+                    frequencies[token.Value] = 1;
+                }
+            }
+
+            foreach(Token token in tokenizedArticle)
+            {
+                token.Frequency = frequencies[token.Value];
+            }
         }
     }
 }
