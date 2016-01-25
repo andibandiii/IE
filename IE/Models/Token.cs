@@ -8,10 +8,10 @@ namespace IE.Models
 {
     enum NamedEntity
     {
-        PERSON,
-        LOCATION,
+        PER,
+        LOC,
         DATE,
-        ORGANIZATION
+        ORG
     }
 
     class Token
