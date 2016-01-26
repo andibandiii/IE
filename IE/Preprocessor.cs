@@ -127,12 +127,15 @@ namespace IE
 
             nerValues = classifier.classifySentence(tokens).toArray();
 
-            for(int i = 0; i < tokenizedArticle.Count; i++)
-            {
-                NamedEntity nerValue;
-                System.Enum.TryParse(((CoreLabel)nerValues[i]).ner(), out nerValue);
+            System.Console.WriteLine("{0}\n", classifier.classifyToString(article.Body));
 
-                tokenizedArticle[i].NamedEntity = nerValue;
+            for (int i = 0; i < tokenizedArticle.Count; i++)
+            {
+                //System.Console.WriteLine(((CoreLabel)nerValues[i]).get(typeof(CoreAnnotations.AnswerAnnotation)) + " - " + ((CoreLabel)nerValues[i]).toShorterString());
+                //NamedEntity nerValue;
+                //System.Enum.TryParse(((CoreLabel)nerValues[i]).get(typeof(CoreAnnotations.AnswerAnnotation)).ToString(), out nerValue);
+
+                tokenizedArticle[i].NamedEntity = ((CoreLabel)nerValues[i]).get(typeof(CoreAnnotations.AnswerAnnotation)).ToString();
             }
         }
 

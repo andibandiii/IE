@@ -24,7 +24,7 @@ namespace IE.Models
 
         public String PartOfSpeech { get; set; }
 
-        public NamedEntity NamedEntity { get; set; }
+        public String NamedEntity { get; set; }
 
         public int Frequency { get; set; }
 
