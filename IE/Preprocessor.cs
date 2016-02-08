@@ -222,17 +222,60 @@ namespace IE
         static void performTokenizeAnnotations()
         {
             String who = annotation.Who;
-            List<string> whoAnnotations = who.Replace(";", " ").Split(' ').ToList();
-
-            foreach (var token in tokenizedArticle)
+            List<string> whoAnnotations = null;
+            string[] whoAnnot = null;
+            
+            whoAnnot = who.Split(';');
+            foreach (string a in whoAnnot)
             {
-                foreach (var aWho in whoAnnotations)
+                whoAnnotations = a.Replace(",", "").Replace(":", "").Replace(".", "").Replace("-", "").Replace("\'", "").Replace("“", "").Replace("”", "").Replace("\"", "").Replace(" ", " ").Split(' ').ToList();
+                
+                for (int w=0; w < whoAnnotations.Count; w++)
                 {
-                    if (aWho.Equals(token.Value))
+                    if (whoAnnotations[w].Equals(""))
                     {
-                        System.Console.WriteLine("AAAAAAAAAAAAA");
-                        System.Console.WriteLine(token.Value + " " + annotation.Who);
-                        token.IsWho = true;
+                        whoAnnotations.RemoveAt(w);
+                    }
+                }
+
+                int startIndex = 0;
+                for (int i = 0; i < tokenizedArticle.Count; i++)
+                {
+                    if (whoAnnotations != null && (tokenizedArticle[i].Value.Equals(whoAnnotations[0])))
+                    {
+                        int ctr = 0;
+                        for (int j = 0; j < whoAnnotations.Count; j++)
+                        {
+                            if (tokenizedArticle[i].Value.Equals(whoAnnotations[j]))
+                            {
+                                if (j == 0)
+                                {
+                                    startIndex = i;
+                                }
+                                i++;
+                                while (!((tokenizedArticle[i].Value[0] >= 'A' && tokenizedArticle[i].Value[0] <= 'Z') || (tokenizedArticle[i].Value[0] >= 'a' && tokenizedArticle[i].Value[0] <= 'z')))
+                                {
+                                    i++;
+                                    if (tokenizedArticle[i].Value.Equals(whoAnnotations[0]))
+                                    { //If it matches the first word of the annotation again
+                                        j = 0;
+                                        ctr = 0;
+                                        startIndex = i;
+                                    }
+                                }
+                                ctr++;
+                            }
+                            if (ctr == whoAnnotations.Count)
+                            {
+                                while (startIndex < i)
+                                {
+                                    tokenizedArticle[startIndex].IsWho = true;
+                                    startIndex++;
+                                }
+                                whoAnnotations = null;
+                                break;
+                            }
+                        }
                     }
                 }
             }

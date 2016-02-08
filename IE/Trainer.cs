@@ -68,6 +68,7 @@ namespace IE
                     int ctr = 0;
 
                     foreach (var candidate in candidates)
+                    //foreach(var candidate in tokenizedArticle)
                     {
                         value = candidate.Value;
                         sentence = candidate.Sentence;
