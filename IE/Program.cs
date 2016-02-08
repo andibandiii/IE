@@ -23,14 +23,20 @@ namespace IE
             ////Test a sample sentence
             //post.tagText("Sinabi ni Pangulong Arroyo kahapon na inatasan niya si Vice President Noli de Castro na pumuntang Libya para tingnan ang posibilidad kung may mga oportunidad ng trabaho ang mga Pilipinong manggagawa sa bansa.");
 
-            List<Article> currentArticles = parseFile(@"..\..\news.xml");
+            //List<Article> currentArticles = parseFile(@"..\..\news.xml");
+            List<Article> currentArticles = parseFile(@"..\..\aprileditorial1.xml");
             List<Token> tokenizedArticle;
+
+            List<Annotation> currentAnnotations = parseAnnotations(@"..\..\aprileditorial1.xml");
 
             if (currentArticles != null && currentArticles.Count > 0)
             {
                 Preprocessor.setArticle(currentArticles[0]);
+                Preprocessor.setAnnotations(currentAnnotations[0]);
                 Preprocessor.preprocess();
                 tokenizedArticle = Preprocessor.getTokenizedArticle();
+                Trainer.setTokenizedArticle(tokenizedArticle);
+                Trainer.train();
             }
 
             //Trainer.setTokenizedArticle(tokenizedArticle);
@@ -76,6 +82,31 @@ namespace IE
             }
 
             return articleList;
+        }
+
+        static List<Annotation> parseAnnotations(String path)
+        {
+            List<Annotation> annotationsList = new List<Annotation>();
+
+            XmlDocument doc = new XmlDocument();
+            doc.Load(path);
+
+            XmlNodeList articleNodes = doc.DocumentElement.SelectNodes("/data/article");
+
+            foreach (XmlNode articleNode in articleNodes)
+            {
+                Annotation annotation = new Annotation();
+
+                annotation.Who = articleNode.SelectSingleNode("who").InnerText;
+                annotation.Where = articleNode.SelectSingleNode("where").InnerText;
+                annotation.When = articleNode.SelectSingleNode("when").InnerText;
+                annotation.What = articleNode.SelectSingleNode("what").InnerText;
+                annotation.Why = articleNode.SelectSingleNode("why").InnerText;
+
+                annotationsList.Add(annotation);
+            }
+
+            return annotationsList;
         }
     }
 }

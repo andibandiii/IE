@@ -7,6 +7,7 @@ using java.io;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 
 namespace IE
 {
@@ -14,10 +15,16 @@ namespace IE
     {
         static Article article;
         static List<Token> tokenizedArticle;
+        static Annotation annotation;
 
         internal static void setArticle(Article inputArticle)
         {
             article = inputArticle;
+        }
+
+        internal static void setAnnotations(Annotation inputAnnotations)
+        {
+            annotation = inputAnnotations;
         }
 
         internal static List<Token> getTokenizedArticle()
@@ -27,7 +34,7 @@ namespace IE
 
         internal static void preprocess()
         {
-            if(article == null)
+            if (article == null)
             {
                 return;
             }
@@ -38,6 +45,7 @@ namespace IE
             performNER();
             performPOST();
             performWS();
+            performTokenizeAnnotations();
 
             foreach (var token in tokenizedArticle)
             {
@@ -47,6 +55,7 @@ namespace IE
                 System.Console.WriteLine("NER: " + token.NamedEntity);
                 System.Console.WriteLine("POS: " + token.PartOfSpeech);
                 System.Console.WriteLine("WS: " + token.Frequency);
+                System.Console.WriteLine("Who: " + token.IsWho);
                 System.Console.WriteLine("=====\n");
             }
         }
@@ -82,7 +91,7 @@ namespace IE
                 ctr++;
                 CoreLabel label = ((CoreLabel)ptbt.next());
                 tokenizedArticle.Add(new Token(label.toString(), ctr));
-                
+
                 //System.Console.WriteLine(label);
             }
         }
@@ -92,7 +101,7 @@ namespace IE
             int ctr = 1;
             bool isPreceded = false;
 
-            foreach(Token token in tokenizedArticle)
+            foreach (Token token in tokenizedArticle)
             {
                 // Simple sentence segmentation
                 if (token.Value.Equals('.'))
@@ -101,8 +110,8 @@ namespace IE
                     continue;
                 }
 
-                if(char.IsUpper(token.Value[0]) && isPreceded)
-                { 
+                if (char.IsUpper(token.Value[0]) && isPreceded)
+                {
                     ctr++;
                 }
 
@@ -176,7 +185,7 @@ namespace IE
                         foreach (var token in tokenizedArticle)
                         {
                             if ((token.PartOfSpeech == null || token.PartOfSpeech.Length <= 0) &&
-                                token.Value.Trim() == splitWord[0].Trim() && 
+                                token.Value.Trim() == splitWord[0].Trim() &&
                                 token.Sentence == entry.Key)
                             {
                                 token.PartOfSpeech = splitWord[1];
@@ -192,9 +201,9 @@ namespace IE
         {
             Dictionary<string, int> frequencies = new Dictionary<string, int>();
 
-            foreach(Token token in tokenizedArticle)
+            foreach (Token token in tokenizedArticle)
             {
-                if(frequencies.ContainsKey(token.Value))
+                if (frequencies.ContainsKey(token.Value))
                 {
                     frequencies[token.Value]++;
                 }
@@ -204,9 +213,28 @@ namespace IE
                 }
             }
 
-            foreach(Token token in tokenizedArticle)
+            foreach (Token token in tokenizedArticle)
             {
                 token.Frequency = frequencies[token.Value];
+            }
+        }
+
+        static void performTokenizeAnnotations()
+        {
+            String who = annotation.Who;
+            List<string> whoAnnotations = who.Replace(";", " ").Split(' ').ToList();
+
+            foreach (var token in tokenizedArticle)
+            {
+                foreach (var aWho in whoAnnotations)
+                {
+                    if (aWho.Equals(token.Value))
+                    {
+                        System.Console.WriteLine("AAAAAAAAAAAAA");
+                        System.Console.WriteLine(token.Value + " " + annotation.Who);
+                        token.IsWho = true;
+                    }
+                }
             }
         }
     }

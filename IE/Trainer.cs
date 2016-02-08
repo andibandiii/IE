@@ -25,8 +25,8 @@ namespace IE
 
         internal static void train()
         {
-            //if (tokenizedArticle == null || candidates == null)
-            if (tokenizedArticle == null)
+            //if (tokenizedArticle == null)
+            if (tokenizedArticle == null || candidates == null)
             {
                 return;
             }
@@ -67,8 +67,7 @@ namespace IE
                     int frequency = 0;
                     int ctr = 0;
 
-                    //foreach (var candidate in candidates)
-                    foreach (var candidate in tokenizedArticle)
+                    foreach (var candidate in candidates)
                     {
                         value = candidate.Value;
                         sentence = candidate.Sentence;
