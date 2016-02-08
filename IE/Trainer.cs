@@ -25,7 +25,8 @@ namespace IE
 
         internal static void train()
         {
-            if (tokenizedArticle == null || candidates == null)
+            //if (tokenizedArticle == null || candidates == null)
+            if (tokenizedArticle == null)
             {
                 return;
             }
@@ -53,6 +54,7 @@ namespace IE
                     sw.WriteLine("@attribute named-entity-class-1 {LOC, PER, ORG, DATE, TIME, O}");
                     sw.WriteLine("@attribute named-entity-class+1 {LOC, PER, ORG, DATE, TIME, O}");
                     sw.WriteLine("@attribute named-entity-class+2 {LOC, PER, ORG, DATE, TIME, O}");
+                    sw.WriteLine("@attribute who {yes, no}");
                     sw.WriteLine("\n@data");
                 }
 
@@ -65,7 +67,8 @@ namespace IE
                     int frequency = 0;
                     int ctr = 0;
 
-                    foreach (var candidate in candidates)
+                    //foreach (var candidate in candidates)
+                    foreach (var candidate in tokenizedArticle)
                     {
                         value = candidate.Value;
                         sentence = candidate.Sentence;
@@ -73,10 +76,11 @@ namespace IE
                         frequency = candidate.Frequency;
                         str = "\"" + value + "\"," + sentence + "," + position + "," + frequency + ",";
 
-                        while (ctr < tokenizedArticle.Count && !tokenizedArticle[ctr].Value.Equals(value) && !tokenizedArticle[ctr].Sentence.Equals(sentence) && !tokenizedArticle[ctr].Position.Equals(position))
+                        while (ctr < tokenizedArticle.Count && tokenizedArticle[ctr].Value.Equals(value) == false && tokenizedArticle[ctr].Sentence.Equals(sentence) == false && tokenizedArticle[ctr].Position.Equals(position) == false)
                         {
                             ctr++;
                         }
+
                         if (ctr - 2 >= 0 && ctr + 2 <= tokenizedArticle.Count - 1)
                         {
                             str += "\"" + tokenizedArticle[ctr - 2].Value + "\",\"" + tokenizedArticle[ctr - 1].Value + "\",\"" + tokenizedArticle[ctr + 1].Value + "\",\"" + tokenizedArticle[ctr + 2].Value + "\", " + tokenizedArticle[ctr - 2].PartOfSpeech + ", " + tokenizedArticle[ctr - 1].PartOfSpeech + ", " + tokenizedArticle[ctr + 1].PartOfSpeech + ", " + tokenizedArticle[ctr + 2].PartOfSpeech + ", " + tokenizedArticle[ctr - 2].NamedEntity + ", " + tokenizedArticle[ctr - 1].NamedEntity + ", " + tokenizedArticle[ctr + 1].NamedEntity + ", " + tokenizedArticle[ctr + 2].NamedEntity;
@@ -97,6 +101,16 @@ namespace IE
                         {
                             str += "\"" + tokenizedArticle[ctr - 2].Value + "\",\"" + tokenizedArticle[ctr - 1].Value + "\",\"" + tokenizedArticle[ctr + 1].Value + "\",\"?\", " + tokenizedArticle[ctr - 2].PartOfSpeech + ", " + tokenizedArticle[ctr - 1].PartOfSpeech + ", " + tokenizedArticle[ctr + 1].PartOfSpeech + ", ?" + ", " + tokenizedArticle[ctr - 2].NamedEntity + ", " + tokenizedArticle[ctr - 1].NamedEntity + ", " + tokenizedArticle[ctr + 1].NamedEntity + ", ?";
                         }
+                        
+                        if (candidate.IsWho)
+                        {
+                            str += ", yes";
+                        }
+                        else
+                        {
+                            str += ", no";
+                        }
+                        ctr++;
                         sw.WriteLine(str);
                     }
                 }
