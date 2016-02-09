@@ -16,6 +16,7 @@ namespace IE
         static Article article;
         static List<Token> tokenizedArticle;
         static Annotation annotation;
+        static List<Token> candidates;
 
         internal static void setArticle(Article inputArticle)
         {
@@ -32,6 +33,11 @@ namespace IE
             return tokenizedArticle;
         }
 
+        internal static List<Token> getCandidates()
+        {
+            return candidates;
+        }
+
         internal static void preprocess()
         {
             if (article == null)
@@ -46,6 +52,7 @@ namespace IE
             performPOST();
             performWS();
             performTokenizeAnnotations();
+            performCandidateSelection();
 
             foreach (var token in tokenizedArticle)
             {
@@ -277,6 +284,22 @@ namespace IE
                             }
                         }
                     }
+                }
+            }
+        }
+
+        static void performCandidateSelection()
+        {
+            int startIndex = 0;
+            int endIndex = 0;
+
+            for (int i=0; i < tokenizedArticle.Count; i++)
+            {
+                if(tokenizedArticle[i].NamedEntity == "PER" || tokenizedArticle[i].NamedEntity == "ORG")
+                {
+                    startIndex = i;
+                    
+
                 }
             }
         }

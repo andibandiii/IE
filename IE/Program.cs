@@ -28,6 +28,7 @@ namespace IE
             List<Token> tokenizedArticle;
 
             List<Annotation> currentAnnotations = parseAnnotations(@"..\..\aprileditorial1.xml");
+            List<Token> candidates;
 
             if (currentArticles != null && currentArticles.Count > 0)
             {
@@ -35,7 +36,9 @@ namespace IE
                 Preprocessor.setAnnotations(currentAnnotations[0]);
                 Preprocessor.preprocess();
                 tokenizedArticle = Preprocessor.getTokenizedArticle();
+                candidates = Preprocessor.getCandidates();
                 Trainer.setTokenizedArticle(tokenizedArticle);
+                Trainer.setCandidatesList(candidates);
                 Trainer.train();
             }
 
