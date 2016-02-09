@@ -204,6 +204,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="Identifier.cs" />
+    <Compile Include="Models\Annotation.cs" />
     <Compile Include="Models\Article.cs" />
     <Compile Include="Models\Token.cs" />
     <Compile Include="Preprocessor.cs" />

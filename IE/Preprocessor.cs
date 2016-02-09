@@ -132,7 +132,7 @@ namespace IE
             java.util.List tokens;
             List<string> values = new List<string>();
             object[] nerValues;
-            var classifier = CRFClassifier.getClassifierNoExceptions(@"..\..\NERModel\filipino.all.4class.distsim.crf.ser.gz");
+            var classifier = CRFClassifier.getClassifierNoExceptions(@"..\..\NERModel\filipino.ser.gz");
 
             foreach (Token token in tokenizedArticle)
             {
