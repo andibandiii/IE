@@ -31,7 +31,7 @@ namespace IE
             }
 
             string path = @"..\..\Who.arff";
-            string posTags = "{ CCA, CCB, CCP, CCR, CCT, CDB, DTC, DTCP, DTPP, DTP, EX, FW, IN, JJD, JJN, JJR, JJS, LS, LM, MD, NNC, NNS, NNP, NNPS, PDT, PMC, PMP, POS, PRP, PRC, PRI, PRO, PRS, PRPS, PRSP, RB, RBB, RBF, RBI, RBK, RBP, RBR, RBW, RP, SYM, TO, UH, VB, VBD, VBG, VBN, VBP, VBOF, VBTS, VBZ, WDT, WP, WPS, WRB }";
+            string posTags = "{ CC, CCA, CCB, CCC, CCD, CCP, CCR, CCT, CD, CDB, DT, DTC, DTCP, DTPP, DTP, EX, FW, IN, JJ, JJC, JJCC, JJCS, JJCN, JJD, JJN, JJR, JJS, LS, LM, MD, NN, NNC, NNS, NNP, NNPS, PP, PPA, PPIN, PPF, PPM, PPU, PPR, PPD, PPBY, PPTS, PPL, PPO, PDT, PM, PMC, PME, PMQ, PMS, PMP, POS, PR, PRP, PRC, PRI, PRO, PROP, PRS, PRPS, PRSP, PRQ, PRL, PRN, PRF, RB, RBD, RBN, RBC, RBQ, RBT, RBM, RBF, RBI, RBK, RBP, RBR, RBW, RBB, RP, SYM, TO, UH, VB, VBW, VBS, VBH, VBL, VBTF, VBTR, VBD, VBG, VBN, VBP, VBOF, VBTS, VBZ, WDT, WP, WPS, WRB }";
 
             try
             {
