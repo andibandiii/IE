@@ -44,15 +44,23 @@ namespace IE
                     sw.WriteLine("@relation who");
                     sw.WriteLine("@attribute word string\n@attribute sentence NUMERIC\n@attribute position NUMERIC");
                     sw.WriteLine("@attribute wordScore NUMERIC");
-                    sw.WriteLine("@attribute word-2 string\n@attribute word-1 string\n@attribute word+1 string\n@attribute word+2 string");
-                    sw.WriteLine("@attribute postag-2 { CCA, CCB, CCP, CCR, CCT,CDB, DTC, DTCP, DTPP, DTP, EX, FW, IN, JJD, JJN, JJR, JJS, LS, LM, MD, NNC, NNS, NNP, NNPS, PDT, PMC, PMP, POS, PRP, PRC, PRI, PRO, PRS, PRPS, PRSP, RB, RBF, RBI, RBK, RBP, RBR, RBW, RP, SYM, TO, UH, VB, VBD, VBG, VBN, VBP, VBOF, VBTS, VBZ, WDT, WP, WPS, WRB }");
-                    sw.WriteLine("@attribute postag-1 { CCA, CCB, CCP, CCR, CCT,CDB, DTC, DTCP, DTPP, DTP, EX, FW, IN, JJD, JJN, JJR, JJS, LS, LM, MD, NNC, NNS, NNP, NNPS, PDT, PMC, PMP, POS, PRP, PRC, PRI, PRO, PRS, PRPS, PRSP, RB, RBF, RBI, RBK, RBP, RBR, RBW, RP, SYM, TO, UH, VB, VBD, VBG, VBN, VBP, VBOF, VBTS, VBZ, WDT, WP, WPS, WRB }");
+
+                    for (int c = 10; c > 0; c--)
+                    {
+                        sw.WriteLine("@attribute word-" + c + " string");
+                    }
+                    sw.WriteLine("@attribute word+1 string\n@attribute word+2 string");
+                    for (int c = 10; c > 0; c--)
+                    {
+                        sw.WriteLine("@attribute postag-" + c + " { CCA, CCB, CCP, CCR, CCT,CDB, DTC, DTCP, DTPP, DTP, EX, FW, IN, JJD, JJN, JJR, JJS, LS, LM, MD, NNC, NNS, NNP, NNPS, PDT, PMC, PMP, POS, PRP, PRC, PRI, PRO, PRS, PRPS, PRSP, RB, RBF, RBI, RBK, RBP, RBR, RBW, RP, SYM, TO, UH, VB, VBD, VBG, VBN, VBP, VBOF, VBTS, VBZ, WDT, WP, WPS, WRB }");
+                    }
+                    
                     sw.WriteLine("@attribute postag+1 { CCA, CCB, CCP, CCR, CCT,CDB, DTC, DTCP, DTPP, DTP, EX, FW, IN, JJD, JJN, JJR, JJS, LS, LM, MD, NNC, NNS, NNP, NNPS, PDT, PMC, PMP, POS, PRP, PRC, PRI, PRO, PRS, PRPS, PRSP, RB, RBF, RBI, RBK, RBP, RBR, RBW, RP, SYM, TO, UH, VB, VBD, VBG, VBN, VBP, VBOF, VBTS, VBZ, WDT, WP, WPS, WRB }");
                     sw.WriteLine("@attribute postag+2 { CCA, CCB, CCP, CCR, CCT,CDB, DTC, DTCP, DTPP, DTP, EX, FW, IN, JJD, JJN, JJR, JJS, LS, LM, MD, NNC, NNS, NNP, NNPS, PDT, PMC, PMP, POS, PRP, PRC, PRI, PRO, PRS, PRPS, PRSP, RB, RBF, RBI, RBK, RBP, RBR, RBW, RP, SYM, TO, UH, VB, VBD, VBG, VBN, VBP, VBOF, VBTS, VBZ, WDT, WP, WPS, WRB }");
-                    sw.WriteLine("@attribute named-entity-class-2 {LOC, PER, ORG, DATE, TIME, O}");
-                    sw.WriteLine("@attribute named-entity-class-1 {LOC, PER, ORG, DATE, TIME, O}");
-                    sw.WriteLine("@attribute named-entity-class+1 {LOC, PER, ORG, DATE, TIME, O}");
-                    sw.WriteLine("@attribute named-entity-class+2 {LOC, PER, ORG, DATE, TIME, O}");
+                    //sw.WriteLine("@attribute named-entity-class-2 {LOC, PER, ORG, DATE, TIME, O}");
+                    //sw.WriteLine("@attribute named-entity-class-1 {LOC, PER, ORG, DATE, TIME, O}");
+                    //sw.WriteLine("@attribute named-entity-class+1 {LOC, PER, ORG, DATE, TIME, O}");
+                    //sw.WriteLine("@attribute named-entity-class+2 {LOC, PER, ORG, DATE, TIME, O}");
                     sw.WriteLine("@attribute who {yes, no}");
                     sw.WriteLine("\n@data");
                 }
@@ -64,51 +72,81 @@ namespace IE
                     int sentence = 0;
                     int position = 0;
                     int frequency = 0;
-                    int ctr = 0;
-
+                    int endIndex = 0;
+                    int wordsbefore = 0;
+                    
+                    string[] arrCandidate = null;
+                    
                     foreach (var candidate in candidates)
                     {
                         value = candidate.Value;
                         sentence = candidate.Sentence;
                         position = candidate.Position;
                         frequency = candidate.Frequency;
+                        arrCandidate = candidate.Value.Split(' ');
+                        endIndex = position + arrCandidate.Length - 1;
+
+                        wordsbefore = position - 10;
+
                         str = "\"" + value + "\"," + sentence + "," + position + "," + frequency + ",";
 
-                        while (ctr < tokenizedArticle.Count && tokenizedArticle[ctr].Value.Equals(value) == false && tokenizedArticle[ctr].Sentence.Equals(sentence) == false && tokenizedArticle[ctr].Position.Equals(position) == false)
+                        int ctrBefore = wordsbefore;
+                        
+                        while (ctrBefore < 1)
                         {
-                            ctr++;
+                            str += "\"?\",";
+                            ctrBefore++;
+                        }
+                        while (ctrBefore < position)
+                        {
+                            str += "\"" + tokenizedArticle[ctrBefore-1].Value + "\",";
+                            ctrBefore++;
+                        }
+                        for (int c=0; c<2; c++)
+                        {
+                            if (endIndex + c < tokenizedArticle.Count)
+                            {
+                                str += "\"" + tokenizedArticle[endIndex+c].Value + "\",";
+                            }
+                            else
+                            {
+                                str += "\"?\",";
+                            }
+                        }
+                        /******** POS tags of words Before and After candidate *******/
+                        ctrBefore = wordsbefore;
+
+                        while (ctrBefore < 1)
+                        {
+                            str += "\"?\",";
+                            ctrBefore++;
+                        }
+                        while (ctrBefore < position)
+                        {
+                            str += "\"" + tokenizedArticle[ctrBefore - 1].PartOfSpeech + "\",";
+                            ctrBefore++;
+                        }
+                        for (int c = 0; c < 2; c++)
+                        {
+                            if (endIndex + c < tokenizedArticle.Count)
+                            {
+                                str += "\"" + tokenizedArticle[endIndex + c].PartOfSpeech + "\",";
+                            }
+                            else
+                            {
+                                str += "\"?\",";
+                            }
                         }
 
-                        if (ctr - 2 >= 0 && ctr + 2 <= tokenizedArticle.Count - 1)
-                        {
-                            str += "\"" + tokenizedArticle[ctr - 2].Value + "\",\"" + tokenizedArticle[ctr - 1].Value + "\",\"" + tokenizedArticle[ctr + 1].Value + "\",\"" + tokenizedArticle[ctr + 2].Value + "\", " + tokenizedArticle[ctr - 2].PartOfSpeech + ", " + tokenizedArticle[ctr - 1].PartOfSpeech + ", " + tokenizedArticle[ctr + 1].PartOfSpeech + ", " + tokenizedArticle[ctr + 2].PartOfSpeech + ", " + tokenizedArticle[ctr - 2].NamedEntity + ", " + tokenizedArticle[ctr - 1].NamedEntity + ", " + tokenizedArticle[ctr + 1].NamedEntity + ", " + tokenizedArticle[ctr + 2].NamedEntity;
-                        }
-                        else if (ctr == 0)
-                        {
-                            str += "\"?\",\"?\",\"" + tokenizedArticle[ctr + 1].Value + "\",\"" + tokenizedArticle[ctr + 2].Value + "\", ?, ?, " + tokenizedArticle[ctr + 1].PartOfSpeech + ", " + tokenizedArticle[ctr + 2].PartOfSpeech + ", ?, ?, " + tokenizedArticle[ctr + 1].NamedEntity + ", " + tokenizedArticle[ctr + 2].NamedEntity;
-                        }
-                        else if (ctr == 1)
-                        {
-                            str += "\"?\",\"" + tokenizedArticle[ctr - 1].Value + "\",\"" + tokenizedArticle[ctr + 1].Value + "\",\"" + tokenizedArticle[ctr + 2].Value + "\", ?, " + tokenizedArticle[ctr - 1].PartOfSpeech + ", " + tokenizedArticle[ctr + 1].PartOfSpeech + ", " + tokenizedArticle[ctr + 2].PartOfSpeech + ", ?, " + tokenizedArticle[ctr - 1].NamedEntity + ", " + tokenizedArticle[ctr + 1].NamedEntity + ", " + tokenizedArticle[ctr + 2].NamedEntity;
-                        }
-                        else if (ctr == tokenizedArticle.Count - 1)
-                        {
-                            str += "\"" + tokenizedArticle[ctr - 2].Value + "\",\"" + tokenizedArticle[ctr - 1].Value + "\",\"?\",\"?\", " + tokenizedArticle[ctr - 2].PartOfSpeech + ", " + tokenizedArticle[ctr - 1].PartOfSpeech + ", ?, ?" + ", " + tokenizedArticle[ctr - 2].NamedEntity + ", " + tokenizedArticle[ctr - 1].NamedEntity + ", ?, ?";
-                        }
-                        else if (ctr == tokenizedArticle.Count - 2)
-                        {
-                            str += "\"" + tokenizedArticle[ctr - 2].Value + "\",\"" + tokenizedArticle[ctr - 1].Value + "\",\"" + tokenizedArticle[ctr + 1].Value + "\",\"?\", " + tokenizedArticle[ctr - 2].PartOfSpeech + ", " + tokenizedArticle[ctr - 1].PartOfSpeech + ", " + tokenizedArticle[ctr + 1].PartOfSpeech + ", ?" + ", " + tokenizedArticle[ctr - 2].NamedEntity + ", " + tokenizedArticle[ctr - 1].NamedEntity + ", " + tokenizedArticle[ctr + 1].NamedEntity + ", ?";
-                        }
-                        
                         if (candidate.IsWho)
                         {
-                            str += ", yes";
+                            str += "yes";
                         }
                         else
                         {
-                            str += ", no";
+                            str += "no";
                         }
-                        ctr++;
+                        
                         sw.WriteLine(str);
                     }
                 }

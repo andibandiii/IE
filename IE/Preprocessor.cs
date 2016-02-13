@@ -278,7 +278,7 @@ namespace IE
                     newToken.Sentence = tokenizedArticle[i].Sentence;
                     newToken.NamedEntity = tokenizedArticle[i].NamedEntity;
                     newToken.PartOfSpeech = tokenizedArticle[i].PartOfSpeech;
-
+                    newToken.Frequency = tempWs;
                     candidates.Add(newToken);
                 }
             }
