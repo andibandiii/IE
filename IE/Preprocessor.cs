@@ -229,63 +229,20 @@ namespace IE
         static void performTokenizeAnnotations()
         {
             String who = annotation.Who;
-            List<string> whoAnnotations = null;
-            string[] whoAnnot = null;
+            string[] whoAnnotations = null;
             
-            whoAnnot = who.Split(';');
-            foreach (string a in whoAnnot)
-            {
-                whoAnnotations = a.Replace(",", "").Replace(":", "").Replace(".", "").Replace("-", "").Replace("\'", "").Replace("“", "").Replace("”", "").Replace("\"", "").Replace(" ", " ").Split(' ').ToList();
-                
-                for (int w=0; w < whoAnnotations.Count; w++)
-                {
-                    if (whoAnnotations[w].Equals(""))
-                    {
-                        whoAnnotations.RemoveAt(w);
-                    }
-                }
+            whoAnnotations = who.Split(';');
 
-                int startIndex = 0;
-                for (int i = 0; i < tokenizedArticle.Count; i++)
+            for (int r=0; r< whoAnnotations.Length; r++)
+            {
+                if (whoAnnotations[r][0] == ' ')
                 {
-                    if (whoAnnotations != null && (tokenizedArticle[i].Value.Equals(whoAnnotations[0])))
-                    {
-                        int ctr = 0;
-                        for (int j = 0; j < whoAnnotations.Count; j++)
-                        {
-                            if (tokenizedArticle[i].Value.Equals(whoAnnotations[j]))
-                            {
-                                if (j == 0)
-                                {
-                                    startIndex = i;
-                                }
-                                i++;
-                                while (!((tokenizedArticle[i].Value[0] >= 'A' && tokenizedArticle[i].Value[0] <= 'Z') || (tokenizedArticle[i].Value[0] >= 'a' && tokenizedArticle[i].Value[0] <= 'z')))
-                                {
-                                    i++;
-                                    if (tokenizedArticle[i].Value.Equals(whoAnnotations[0]))
-                                    { //If it matches the first word of the annotation again
-                                        j = 0;
-                                        ctr = 0;
-                                        startIndex = i;
-                                    }
-                                }
-                                ctr++;
-                            }
-                            if (ctr == whoAnnotations.Count)
-                            {
-                                while (startIndex < i)
-                                {
-                                    tokenizedArticle[startIndex].IsWho = true;
-                                    startIndex++;
-                                }
-                                whoAnnotations = null;
-                                break;
-                            }
-                        }
-                    }
+                    whoAnnotations[r] = whoAnnotations[r].Substring(1);
                 }
-            }
+                System.Console.WriteLine("WHO ANNOTATIONS-" + whoAnnotations[r]);
+            }    
+            
+                    
         }
 
         static void performCandidateSelection()
@@ -314,8 +271,9 @@ namespace IE
                             tempWs = tokenizedArticle[i].Frequency;
                         }
                     }
-
+                    
                     endIndex = i;
+
                     var newToken = new Token(strValue, tokenizedArticle[startIndex].Position);
                     newToken.Sentence = tokenizedArticle[i].Sentence;
                     newToken.NamedEntity = tokenizedArticle[i].NamedEntity;
@@ -324,10 +282,22 @@ namespace IE
                     candidates.Add(newToken);
                 }
             }
+            for (int can=0; can<candidates.Count; can++)
+            {
+                for (int a = 0; a < can; a++)
+                {
+                    if (candidates[can].Value.Equals(candidates[a].Value))
+                    {
+                        candidates.RemoveAt(can);
+                    }
+                }
+                
+            }
 
             foreach (var candidate in candidates)
             {
-                System.Console.WriteLine("CAN" + candidate.Value);
+
+                System.Console.WriteLine("CANDIDATE " + candidate.Value);
             }
         }
     }
