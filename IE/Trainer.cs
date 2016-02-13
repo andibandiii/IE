@@ -23,7 +23,7 @@ namespace IE
             candidates = inputCandidates;
         }
 
-        internal static void train()
+        internal static void train(bool isNewFile)
         {
             if (tokenizedArticle == null || candidates == null)
             {
@@ -31,38 +31,39 @@ namespace IE
             }
 
             string path = @"..\..\Who.arff";
+            string posTags = "{ CCA, CCB, CCP, CCR, CCT, CDB, DTC, DTCP, DTPP, DTP, EX, FW, IN, JJD, JJN, JJR, JJS, LS, LM, MD, NNC, NNS, NNP, NNPS, PDT, PMC, PMP, POS, PRP, PRC, PRI, PRO, PRS, PRPS, PRSP, RB, RBB, RBF, RBI, RBK, RBP, RBR, RBW, RP, SYM, TO, UH, VB, VBD, VBG, VBN, VBP, VBOF, VBTS, VBZ, WDT, WP, WPS, WRB }";
 
             try
             {
-                if (File.Exists(path))
+                if (File.Exists(path) && isNewFile)
                 {
                     File.Delete(path);
-                }
 
-                using (StreamWriter sw = File.CreateText(path))
-                {
-                    sw.WriteLine("@relation who");
-                    sw.WriteLine("@attribute word string\n@attribute sentence NUMERIC\n@attribute position NUMERIC");
-                    sw.WriteLine("@attribute wordScore NUMERIC");
+                    using (StreamWriter sw = File.CreateText(path))
+                    {
+                        sw.WriteLine("@relation who");
+                        sw.WriteLine("@attribute word string\n@attribute sentence NUMERIC\n@attribute position NUMERIC");
+                        sw.WriteLine("@attribute wordScore NUMERIC");
 
-                    for (int c = 10; c > 0; c--)
-                    {
-                        sw.WriteLine("@attribute word-" + c + " string");
+                        for (int c = 10; c > 0; c--)
+                        {
+                            sw.WriteLine("@attribute word-" + c + " string");
+                        }
+                        sw.WriteLine("@attribute word+1 string\n@attribute word+2 string");
+                        for (int c = 10; c > 0; c--)
+                        {
+                            sw.WriteLine("@attribute postag-" + c + " " + posTags);
+                        }
+
+                        sw.WriteLine("@attribute postag+1 " + posTags);
+                        sw.WriteLine("@attribute postag+2 " + posTags);
+                        //sw.WriteLine("@attribute named-entity-class-2 {LOC, PER, ORG, DATE, TIME, O}");
+                        //sw.WriteLine("@attribute named-entity-class-1 {LOC, PER, ORG, DATE, TIME, O}");
+                        //sw.WriteLine("@attribute named-entity-class+1 {LOC, PER, ORG, DATE, TIME, O}");
+                        //sw.WriteLine("@attribute named-entity-class+2 {LOC, PER, ORG, DATE, TIME, O}");
+                        sw.WriteLine("@attribute who {yes, no}");
+                        sw.WriteLine("\n@data");
                     }
-                    sw.WriteLine("@attribute word+1 string\n@attribute word+2 string");
-                    for (int c = 10; c > 0; c--)
-                    {
-                        sw.WriteLine("@attribute postag-" + c + " { CCA, CCB, CCP, CCR, CCT,CDB, DTC, DTCP, DTPP, DTP, EX, FW, IN, JJD, JJN, JJR, JJS, LS, LM, MD, NNC, NNS, NNP, NNPS, PDT, PMC, PMP, POS, PRP, PRC, PRI, PRO, PRS, PRPS, PRSP, RB, RBF, RBI, RBK, RBP, RBR, RBW, RP, SYM, TO, UH, VB, VBD, VBG, VBN, VBP, VBOF, VBTS, VBZ, WDT, WP, WPS, WRB }");
-                    }
-                    
-                    sw.WriteLine("@attribute postag+1 { CCA, CCB, CCP, CCR, CCT,CDB, DTC, DTCP, DTPP, DTP, EX, FW, IN, JJD, JJN, JJR, JJS, LS, LM, MD, NNC, NNS, NNP, NNPS, PDT, PMC, PMP, POS, PRP, PRC, PRI, PRO, PRS, PRPS, PRSP, RB, RBF, RBI, RBK, RBP, RBR, RBW, RP, SYM, TO, UH, VB, VBD, VBG, VBN, VBP, VBOF, VBTS, VBZ, WDT, WP, WPS, WRB }");
-                    sw.WriteLine("@attribute postag+2 { CCA, CCB, CCP, CCR, CCT,CDB, DTC, DTCP, DTPP, DTP, EX, FW, IN, JJD, JJN, JJR, JJS, LS, LM, MD, NNC, NNS, NNP, NNPS, PDT, PMC, PMP, POS, PRP, PRC, PRI, PRO, PRS, PRPS, PRSP, RB, RBF, RBI, RBK, RBP, RBR, RBW, RP, SYM, TO, UH, VB, VBD, VBG, VBN, VBP, VBOF, VBTS, VBZ, WDT, WP, WPS, WRB }");
-                    //sw.WriteLine("@attribute named-entity-class-2 {LOC, PER, ORG, DATE, TIME, O}");
-                    //sw.WriteLine("@attribute named-entity-class-1 {LOC, PER, ORG, DATE, TIME, O}");
-                    //sw.WriteLine("@attribute named-entity-class+1 {LOC, PER, ORG, DATE, TIME, O}");
-                    //sw.WriteLine("@attribute named-entity-class+2 {LOC, PER, ORG, DATE, TIME, O}");
-                    sw.WriteLine("@attribute who {yes, no}");
-                    sw.WriteLine("\n@data");
                 }
 
                 using (StreamWriter sw = File.AppendText(path))
@@ -94,7 +95,7 @@ namespace IE
                         
                         while (ctrBefore < 1)
                         {
-                            str += "\"?\",";
+                            str += "?,";
                             ctrBefore++;
                         }
                         while (ctrBefore < position)
@@ -110,31 +111,32 @@ namespace IE
                             }
                             else
                             {
-                                str += "\"?\",";
+                                str += "?,";
                             }
                         }
-                        /******** POS tags of words Before and After candidate *******/
+
+                        // POS tags of words Before and After candidate
                         ctrBefore = wordsbefore;
 
                         while (ctrBefore < 1)
                         {
-                            str += "\"?\",";
+                            str += "?,";
                             ctrBefore++;
                         }
                         while (ctrBefore < position)
                         {
-                            str += "\"" + tokenizedArticle[ctrBefore - 1].PartOfSpeech + "\",";
+                            str += tokenizedArticle[ctrBefore - 1].PartOfSpeech + ",";
                             ctrBefore++;
                         }
                         for (int c = 0; c < 2; c++)
                         {
                             if (endIndex + c < tokenizedArticle.Count)
                             {
-                                str += "\"" + tokenizedArticle[endIndex + c].PartOfSpeech + "\",";
+                                str += tokenizedArticle[endIndex + c].PartOfSpeech + ",";
                             }
                             else
                             {
-                                str += "\"?\",";
+                                str += "?,";
                             }
                         }
 
@@ -151,13 +153,10 @@ namespace IE
                     }
                 }
             }
-
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
             }
-        }
-            
-           
-        }
+        }     
+    }
 }

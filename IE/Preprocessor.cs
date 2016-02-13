@@ -45,14 +45,12 @@ namespace IE
                 return;
             }
 
-            StanfordTokenizeAndSS();
-            //tokenize();
-            //performSS();
+            tokenizeAndSS();
             performNER();
             performPOST();
             performWS();
             performTokenizeAnnotations();
-            performCandidateSelection();
+            performWhoCandidateSelection();
 
             foreach (var token in tokenizedArticle)
             {
@@ -62,12 +60,11 @@ namespace IE
                 System.Console.WriteLine("NER: " + token.NamedEntity);
                 System.Console.WriteLine("POS: " + token.PartOfSpeech);
                 System.Console.WriteLine("WS: " + token.Frequency);
-                System.Console.WriteLine("Who: " + token.IsWho);
                 System.Console.WriteLine("=====\n");
             }
         }
 
-        static void StanfordTokenizeAndSS()
+        static void tokenizeAndSS()
         {
             tokenizedArticle = new List<Token>();
             var sentences = MaxentTagger.tokenizeText(new java.io.StringReader(article.Body)).toArray();
@@ -83,47 +80,6 @@ namespace IE
                     positionCounter++;
                 }
                 sentenceCounter++;
-            }
-        }
-
-        static void tokenize()
-        {
-            tokenizedArticle = new List<Token>();
-            int ctr = 0;
-
-            PTBTokenizer ptbt = new PTBTokenizer(new StringReader(article.Body), new CoreLabelTokenFactory(), "");
-
-            while (ptbt.hasNext())
-            {
-                ctr++;
-                CoreLabel label = ((CoreLabel)ptbt.next());
-                tokenizedArticle.Add(new Token(label.toString(), ctr));
-
-                //System.Console.WriteLine(label);
-            }
-        }
-
-        static void performSS()
-        {
-            int ctr = 1;
-            bool isPreceded = false;
-
-            foreach (Token token in tokenizedArticle)
-            {
-                // Simple sentence segmentation
-                if (token.Value.Equals('.'))
-                {
-                    isPreceded = true;
-                    continue;
-                }
-
-                if (char.IsUpper(token.Value[0]) && isPreceded)
-                {
-                    ctr++;
-                }
-
-                token.Sentence = ctr;
-                isPreceded = false;
             }
         }
 
@@ -245,7 +201,7 @@ namespace IE
                     
         }
 
-        static void performCandidateSelection()
+        static void performWhoCandidateSelection()
         {
             candidates = new List<Token>();
             int startIndex = 0;
@@ -282,21 +238,25 @@ namespace IE
                     candidates.Add(newToken);
                 }
             }
-            for (int can=0; can<candidates.Count; can++)
+
+            for (int can = 0; can < candidates.Count; can++)
             {
                 for (int a = 0; a < can; a++)
                 {
                     if (candidates[can].Value.Equals(candidates[a].Value))
                     {
                         candidates.RemoveAt(can);
+                        if (can > 0)
+                        {
+                            can--;
+                        }
+                        break;
                     }
                 }
-                
             }
 
             foreach (var candidate in candidates)
             {
-
                 System.Console.WriteLine("CANDIDATE " + candidate.Value);
             }
         }

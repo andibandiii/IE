@@ -18,12 +18,6 @@ namespace IE
         [STAThread]
         public static void Main()
         {
-            ////Initialize the POS Tagger
-            //POSTagger post = new POSTagger();
-            ////Test a sample sentence
-            //post.tagText("Sinabi ni Pangulong Arroyo kahapon na inatasan niya si Vice President Noli de Castro na pumuntang Libya para tingnan ang posibilidad kung may mga oportunidad ng trabaho ang mga Pilipinong manggagawa sa bansa.");
-
-            //List<Article> currentArticles = parseFile(@"..\..\news.xml");
             List<Article> currentArticles = parseFile(@"..\..\aprileditorial1.xml");
             List<Token> tokenizedArticle;
 
@@ -32,18 +26,19 @@ namespace IE
 
             if (currentArticles != null && currentArticles.Count > 0)
             {
-                Preprocessor.setArticle(currentArticles[0]);
-                Preprocessor.setAnnotations(currentAnnotations[0]);
-                Preprocessor.preprocess();
-                tokenizedArticle = Preprocessor.getTokenizedArticle();
-                candidates = Preprocessor.getCandidates();
-                Trainer.setTokenizedArticle(tokenizedArticle);
-                Trainer.setCandidatesList(candidates);
-                Trainer.train();
+                //Temporarily set to 2 because getting all articles takes longer run time
+                for (int nI = 0; nI < 2; nI++)
+                {
+                    Preprocessor.setArticle(currentArticles[nI]);
+                    Preprocessor.setAnnotations(currentAnnotations[nI]);
+                    Preprocessor.preprocess();
+                    tokenizedArticle = Preprocessor.getTokenizedArticle();
+                    candidates = Preprocessor.getCandidates();
+                    Trainer.setTokenizedArticle(tokenizedArticle);
+                    Trainer.setCandidatesList(candidates);
+                    Trainer.train(nI == 0 ? true : false);
+                }
             }
-
-            //Trainer.setTokenizedArticle(tokenizedArticle);
-            //Trainer.train();
 
             //Identifier.setTokenizedArticle(tokenizedArticle);
             //Identifier.setModels(Trainer.getModels());
