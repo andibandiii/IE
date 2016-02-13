@@ -14,8 +14,16 @@ namespace IE.Models
         ORG
     }
 
-    class Token
+    public class Token
     {
+        public static readonly String[] NamedEntityTags = {
+            "PER", "LOC", "DATE", "ORG"
+        };
+
+        public static readonly String[] PartOfSpeechTags = {
+            "NN", "NNC", "NNP", "NNPA", "PR", "PRS", "PRSP", "PRO", "PROP", "PRQ", "PRL", "PRN", "PRC", "PRF", "DT", "DTC", "DTCP", "DTP", "DTPP", "CC", "CCA", "CCD", "CCC", "CCP", "VB", "VBW", "VBS", "VBH", "VBL", "VBTS", "VBTR", "VBTF", "JJ", "JJD", "JJC", "JJCC", "JJCS", "JJCN", "JJN", "RB", "RBD", "RBN", "RBC", "RBQ", "RBT", "RBF", "RBW", "RBI", "RBM", "PP", "PPA", "PPIN", "PPF", "PPM", "PPU", "PPR", "PPD", "PPBY", "PPTS", "PPL", "PPO", "CD", "CDB", "PM", "PMP", "PME", "PMQ", "PMC", "PMS"
+        };
+
         public String Value { get; set; }
 
         public int Sentence { get; set; }

@@ -11,48 +11,59 @@ using System.Xml;
 
 namespace IE
 {
-    public static class Preprocessor
+    public class Preprocessor
     {
-        static Article article;
-        static List<Token> tokenizedArticle;
-        static Annotation annotation;
-        static List<Token> candidates;
+        private Article articleCurrent;
+        private List<Token> listLatestTokenizedArticle;
+        private List<Token> listWhoCandidates;
 
-        internal static void setArticle(Article inputArticle)
+        public Preprocessor()
         {
-            article = inputArticle;
+            listLatestTokenizedArticle = new List<Token>();
+            listWhoCandidates = new List<Token>();
         }
 
-        internal static void setAnnotations(Annotation inputAnnotations)
+        #region Setters
+        public void setCurrent(Article pArticle)
         {
-            annotation = inputAnnotations;
+            articleCurrent = pArticle;
+        }
+        #endregion
+
+        #region Getters
+        public Article getCurrent()
+        {
+            return articleCurrent;
         }
 
-        internal static List<Token> getTokenizedArticle()
+        public List<Token> getLatestTokenizedArticle()
         {
-            return tokenizedArticle;
+            return listLatestTokenizedArticle;
         }
 
-        internal static List<Token> getCandidates()
+        public List<Token> getWhoCandidates()
         {
-            return candidates;
+            return listWhoCandidates;
         }
+        #endregion
 
-        internal static void preprocess()
+        public List<Token> preprocess()
         {
-            if (article == null)
+            if (articleCurrent == null)
             {
-                return;
+                return null;
             }
 
-            tokenizeAndSS();
+            listLatestTokenizedArticle = new List<Token>();
+
+            performTokenizationAndSS();
             performNER();
             performPOST();
             performWS();
             performTokenizeAnnotations();
-            performWhoCandidateSelection();
+            performCandidateSelection();
 
-            foreach (var token in tokenizedArticle)
+            foreach (var token in listLatestTokenizedArticle)
             {
                 System.Console.WriteLine("Value: " + token.Value);
                 System.Console.WriteLine("Sentence: " + token.Sentence);
@@ -62,12 +73,28 @@ namespace IE
                 System.Console.WriteLine("WS: " + token.Frequency);
                 System.Console.WriteLine("=====\n");
             }
+
+            return listLatestTokenizedArticle;
         }
 
-        static void tokenizeAndSS()
+        /// <summary>
+        /// Perform tokenization on all the given article's annotations.
+        /// </summary>
+        private void performTokenizeAnnotations()
         {
-            tokenizedArticle = new List<Token>();
-            var sentences = MaxentTagger.tokenizeText(new java.io.StringReader(article.Body)).toArray();
+            performWhoTokenization();
+        }
+
+        private void performCandidateSelection()
+        {
+            CandidateSelector selector = new CandidateSelector();
+            listWhoCandidates = selector.performWhoCandidateSelection(listLatestTokenizedArticle);
+        }
+
+        #region Article Preprocessing Functions
+        private void performTokenizationAndSS()
+        {
+            var sentences = MaxentTagger.tokenizeText(new java.io.StringReader(articleCurrent.Body)).toArray();
             int sentenceCounter = 1;
             int positionCounter = 1;
             foreach (java.util.ArrayList sentence in sentences)
@@ -76,21 +103,21 @@ namespace IE
                 {
                     var newToken = new Token(word.ToString(), positionCounter);
                     newToken.Sentence = sentenceCounter;
-                    tokenizedArticle.Add(newToken);
+                    listLatestTokenizedArticle.Add(newToken);
                     positionCounter++;
                 }
                 sentenceCounter++;
             }
         }
 
-        static void performNER()
+        private void performNER()
         {
             java.util.List tokens;
             List<string> values = new List<string>();
             object[] nerValues;
             var classifier = CRFClassifier.getClassifierNoExceptions(@"..\..\NERModel\filipino.ser.gz");
 
-            foreach (Token token in tokenizedArticle)
+            foreach (Token token in listLatestTokenizedArticle)
             {
                 values.Add(token.Value);
             }
@@ -99,26 +126,26 @@ namespace IE
 
             nerValues = classifier.classifySentence(tokens).toArray();
 
-            System.Console.WriteLine("{0}\n", classifier.classifyToString(article.Body));
+            //System.Console.WriteLine("{0}\n", classifier.classifyToString(article.Body));
 
-            for (int i = 0; i < tokenizedArticle.Count; i++)
+            for (int i = 0; i < listLatestTokenizedArticle.Count; i++)
             {
                 //System.Console.WriteLine(((CoreLabel)nerValues[i]).get(typeof(CoreAnnotations.AnswerAnnotation)) + " - " + ((CoreLabel)nerValues[i]).toShorterString());
                 //NamedEntity nerValue;
                 //System.Enum.TryParse(((CoreLabel)nerValues[i]).get(typeof(CoreAnnotations.AnswerAnnotation)).ToString(), out nerValue);
 
-                tokenizedArticle[i].NamedEntity = ((CoreLabel)nerValues[i]).get(typeof(CoreAnnotations.AnswerAnnotation)).ToString();
+                listLatestTokenizedArticle[i].NamedEntity = ((CoreLabel)nerValues[i]).get(typeof(CoreAnnotations.AnswerAnnotation)).ToString();
             }
         }
 
-        static void performPOST()
+        private void performPOST()
         {
             //Path to Filipino Tagger Model
             String modelPath = @"..\..\POSTagger\filipino.tagger";
             MaxentTagger tagger = new MaxentTagger(modelPath);
 
             //Get all tokens and segregate them into lists based on sentence number
-            List<List<Token>> segregatedTokenLists = tokenizedArticle
+            List<List<Token>> segregatedTokenLists = listLatestTokenizedArticle
                 .GroupBy(token => token.Sentence)
                 .Select(tokenGroup => tokenGroup.ToList())
                 .ToList();
@@ -145,7 +172,7 @@ namespace IE
                     var splitWord = word.ToString().Split('/');
                     if (splitWord.Length >= 2)
                     {
-                        foreach (var token in tokenizedArticle)
+                        foreach (var token in listLatestTokenizedArticle)
                         {
                             if ((token.PartOfSpeech == null || token.PartOfSpeech.Length <= 0) &&
                                 token.Value.Trim() == splitWord[0].Trim() &&
@@ -160,11 +187,11 @@ namespace IE
             }
         }
 
-        static void performWS()
+        private void performWS()
         {
             Dictionary<string, int> frequencies = new Dictionary<string, int>();
 
-            foreach (Token token in tokenizedArticle)
+            foreach (Token token in listLatestTokenizedArticle)
             {
                 if (frequencies.ContainsKey(token.Value))
                 {
@@ -176,89 +203,30 @@ namespace IE
                 }
             }
 
-            foreach (Token token in tokenizedArticle)
+            foreach (Token token in listLatestTokenizedArticle)
             {
                 token.Frequency = frequencies[token.Value];
             }
         }
+        #endregion
 
-        static void performTokenizeAnnotations()
+        #region Annotation Preprocessing Functions
+        private void performWhoTokenization()
         {
-            String who = annotation.Who;
+            String who = articleCurrent.Annotation.Who;
             string[] whoAnnotations = null;
-            
+
             whoAnnotations = who.Split(';');
 
-            for (int r=0; r< whoAnnotations.Length; r++)
+            for (int r = 0; r < whoAnnotations.Length; r++)
             {
                 if (whoAnnotations[r][0] == ' ')
                 {
                     whoAnnotations[r] = whoAnnotations[r].Substring(1);
                 }
                 System.Console.WriteLine("WHO ANNOTATIONS-" + whoAnnotations[r]);
-            }    
-            
-                    
-        }
-
-        static void performWhoCandidateSelection()
-        {
-            candidates = new List<Token>();
-            int startIndex = 0;
-            int endIndex = 0;
-            
-            string strValue = "";
-            int tempWs = 0;
-            for (int i=0; i < tokenizedArticle.Count; i++)
-            {
-                
-                if(tokenizedArticle[i].NamedEntity == "PER" || tokenizedArticle[i].NamedEntity == "ORG")
-                {
-                    startIndex = i;
-                    strValue = tokenizedArticle[i].Value;
-                    tempWs = tokenizedArticle[i].Frequency;
-
-                    while(tokenizedArticle[i].NamedEntity == tokenizedArticle[i+1].NamedEntity)
-                    {
-                        i++;
-                        strValue += " " + tokenizedArticle[i].Value;
-                        if (tokenizedArticle[i].Frequency > tempWs)
-                        {
-                            tempWs = tokenizedArticle[i].Frequency;
-                        }
-                    }
-                    
-                    endIndex = i;
-
-                    var newToken = new Token(strValue, tokenizedArticle[startIndex].Position);
-                    newToken.Sentence = tokenizedArticle[i].Sentence;
-                    newToken.NamedEntity = tokenizedArticle[i].NamedEntity;
-                    newToken.PartOfSpeech = tokenizedArticle[i].PartOfSpeech;
-                    newToken.Frequency = tempWs;
-                    candidates.Add(newToken);
-                }
-            }
-
-            for (int can = 0; can < candidates.Count; can++)
-            {
-                for (int a = 0; a < can; a++)
-                {
-                    if (candidates[can].Value.Equals(candidates[a].Value))
-                    {
-                        candidates.RemoveAt(can);
-                        if (can > 0)
-                        {
-                            can--;
-                        }
-                        break;
-                    }
-                }
-            }
-
-            foreach (var candidate in candidates)
-            {
-                System.Console.WriteLine("CANDIDATE " + candidate.Value);
             }
         }
+        #endregion
     }
 }

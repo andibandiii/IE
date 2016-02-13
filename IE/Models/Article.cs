@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IE.Models
 {
-    class Article
+    public class Article
     {
         public String Title { get; set; }
 
@@ -17,5 +17,7 @@ namespace IE.Models
         public String Link { get; set; }
 
         public String Body { get; set; }
+
+        public Annotation Annotation { get; set; }
     }
 }

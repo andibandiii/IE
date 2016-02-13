@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IE.Models
 {
-    class Annotation
+    public class Annotation
     {
         public String Who { get; set; }
 

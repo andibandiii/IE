@@ -8,155 +8,47 @@ using System.Threading.Tasks;
 
 namespace IE
 {
-    class Trainer
+    abstract class Trainer
     {
-        static List<Token> tokenizedArticle;
-        static List<Token> candidates;
+        protected List<Token> listTokenizedArticle;
+        protected List<Token> listCandidates;
 
-        internal static void setTokenizedArticle(List<Token> inputTokenizedArticle)
+        protected Trainer()
         {
-            tokenizedArticle = inputTokenizedArticle;
+            listTokenizedArticle = new List<Token>();
+            listCandidates = new List<Token>();
         }
 
-        internal static void setCandidatesList(List<Token> inputCandidates)
+        public void setTokenizedArticle(List<Token> pTokenizedArticle)
         {
-            candidates = inputCandidates;
+            listTokenizedArticle = pTokenizedArticle;
         }
 
-        internal static void train(bool isNewFile)
+        public void setCandidates(List<Token> pCandidates)
         {
-            if (tokenizedArticle == null || candidates == null)
+            listCandidates = pCandidates;
+        }
+
+        /// <summary>
+        /// Train a new model by creating an .arff file. 
+        /// Set isNewFile to false if you're just adding articles to an existing training file.
+        /// Otherwise, set isNewFile to true if you're creating a new training file.
+        /// </summary>
+        public abstract void train(bool isNewFile);
+
+        public void trainMany(List<List<Token>> pTokenizedArticleList, List<List<Token>> pAllCandidateLists)
+        {
+            if (pTokenizedArticleList.Count != pAllCandidateLists.Count)
             {
                 return;
             }
 
-            string path = @"..\..\Who.arff";
-            string posTags = "{ CC, CCA, CCB, CCC, CCD, CCP, CCR, CCT, CD, CDB, DT, DTC, DTCP, DTPP, DTP, EX, FW, IN, JJ, JJC, JJCC, JJCS, JJCN, JJD, JJN, JJR, JJS, LS, LM, MD, NN, NNC, NNS, NNP, NNPS, PP, PPA, PPIN, PPF, PPM, PPU, PPR, PPD, PPBY, PPTS, PPL, PPO, PDT, PM, PMC, PME, PMQ, PMS, PMP, POS, PR, PRP, PRC, PRI, PRO, PROP, PRS, PRPS, PRSP, PRQ, PRL, PRN, PRF, RB, RBD, RBN, RBC, RBQ, RBT, RBM, RBF, RBI, RBK, RBP, RBR, RBW, RBB, RP, SYM, TO, UH, VB, VBW, VBS, VBH, VBL, VBTF, VBTR, VBD, VBG, VBN, VBP, VBOF, VBTS, VBZ, WDT, WP, WPS, WRB }";
-
-            try
+            for (int nI = 0; nI < pTokenizedArticleList.Count; nI++)
             {
-                if (File.Exists(path) && isNewFile)
-                {
-                    File.Delete(path);
-
-                    using (StreamWriter sw = File.CreateText(path))
-                    {
-                        sw.WriteLine("@relation who");
-                        sw.WriteLine("@attribute word string\n@attribute sentence NUMERIC\n@attribute position NUMERIC");
-                        sw.WriteLine("@attribute wordScore NUMERIC");
-
-                        for (int c = 10; c > 0; c--)
-                        {
-                            sw.WriteLine("@attribute word-" + c + " string");
-                        }
-                        sw.WriteLine("@attribute word+1 string\n@attribute word+2 string");
-                        for (int c = 10; c > 0; c--)
-                        {
-                            sw.WriteLine("@attribute postag-" + c + " " + posTags);
-                        }
-
-                        sw.WriteLine("@attribute postag+1 " + posTags);
-                        sw.WriteLine("@attribute postag+2 " + posTags);
-                        //sw.WriteLine("@attribute named-entity-class-2 {LOC, PER, ORG, DATE, TIME, O}");
-                        //sw.WriteLine("@attribute named-entity-class-1 {LOC, PER, ORG, DATE, TIME, O}");
-                        //sw.WriteLine("@attribute named-entity-class+1 {LOC, PER, ORG, DATE, TIME, O}");
-                        //sw.WriteLine("@attribute named-entity-class+2 {LOC, PER, ORG, DATE, TIME, O}");
-                        sw.WriteLine("@attribute who {yes, no}");
-                        sw.WriteLine("\n@data");
-                    }
-                }
-
-                using (StreamWriter sw = File.AppendText(path))
-                {
-                    String str = null;
-                    String value = null;
-                    int sentence = 0;
-                    int position = 0;
-                    int frequency = 0;
-                    int endIndex = 0;
-                    int wordsbefore = 0;
-                    
-                    string[] arrCandidate = null;
-                    
-                    foreach (var candidate in candidates)
-                    {
-                        value = candidate.Value;
-                        sentence = candidate.Sentence;
-                        position = candidate.Position;
-                        frequency = candidate.Frequency;
-                        arrCandidate = candidate.Value.Split(' ');
-                        endIndex = position + arrCandidate.Length - 1;
-
-                        wordsbefore = position - 10;
-
-                        str = "\"" + value + "\"," + sentence + "," + position + "," + frequency + ",";
-
-                        int ctrBefore = wordsbefore;
-                        
-                        while (ctrBefore < 1)
-                        {
-                            str += "?,";
-                            ctrBefore++;
-                        }
-                        while (ctrBefore < position)
-                        {
-                            str += "\"" + tokenizedArticle[ctrBefore-1].Value + "\",";
-                            ctrBefore++;
-                        }
-                        for (int c=0; c<2; c++)
-                        {
-                            if (endIndex + c < tokenizedArticle.Count)
-                            {
-                                str += "\"" + tokenizedArticle[endIndex+c].Value + "\",";
-                            }
-                            else
-                            {
-                                str += "?,";
-                            }
-                        }
-
-                        // POS tags of words Before and After candidate
-                        ctrBefore = wordsbefore;
-
-                        while (ctrBefore < 1)
-                        {
-                            str += "?,";
-                            ctrBefore++;
-                        }
-                        while (ctrBefore < position)
-                        {
-                            str += tokenizedArticle[ctrBefore - 1].PartOfSpeech + ",";
-                            ctrBefore++;
-                        }
-                        for (int c = 0; c < 2; c++)
-                        {
-                            if (endIndex + c < tokenizedArticle.Count)
-                            {
-                                str += tokenizedArticle[endIndex + c].PartOfSpeech + ",";
-                            }
-                            else
-                            {
-                                str += "?,";
-                            }
-                        }
-
-                        if (candidate.IsWho)
-                        {
-                            str += "yes";
-                        }
-                        else
-                        {
-                            str += "no";
-                        }
-                        
-                        sw.WriteLine(str);
-                    }
-                }
+                setTokenizedArticle(pTokenizedArticleList[nI]);
+                setCandidates(pAllCandidateLists[nI]);
+                train(nI == 0);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-        }     
+        } 
     }
 }
