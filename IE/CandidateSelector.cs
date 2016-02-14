@@ -83,7 +83,7 @@ namespace IE
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
 
-                if (tokenizedArticle[i].NamedEntity == "PER" || tokenizedArticle[i].NamedEntity == "ORG")
+                if (tokenizedArticle[i].NamedEntity == "DATE")
                 {
                     startIndex = i;
                     strValue = tokenizedArticle[i].Value;
@@ -146,7 +146,7 @@ namespace IE
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
 
-                if (tokenizedArticle[i].NamedEntity == "PER" || tokenizedArticle[i].NamedEntity == "ORG")
+                if (tokenizedArticle[i].NamedEntity == "LOC")
                 {
                     startIndex = i;
                     strValue = tokenizedArticle[i].Value;
