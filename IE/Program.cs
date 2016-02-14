@@ -79,6 +79,8 @@ namespace IE
                 listAllWhyAnnotations.Add(annotationIdentifier.getWhy());
             }
 
+            ResultWriter rw = new ResultWriter(destinationPath, listCurrentArticles, listAllWhoAnnotations, listAllWhenAnnotations, listAllWhereAnnotations, listAllWhatAnnotations, listAllWhyAnnotations);
+            rw.generateOutput();
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());

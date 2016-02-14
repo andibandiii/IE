@@ -141,6 +141,10 @@ namespace IE
                 }
             }
             strWhat = sb.ToString();
+            strWhat = strWhat.Replace("-LRB- ", "(");
+            strWhat = strWhat.Replace(" -RRB-", ")");
+            strWhat = strWhat.Replace(" . ", ".");
+            strWhat = strWhat.Replace(" .", ".");
         }
 
         private void labelWhy()
@@ -159,6 +163,10 @@ namespace IE
                 }
             }
             strWhy = sb.ToString();
+            strWhy = strWhy.Replace("-LRB- ", "(");
+            strWhy = strWhy.Replace(" -RRB-", ")");
+            strWhy = strWhy.Replace(" . ", ".");
+            strWhy = strWhy.Replace(" .", ".");
         }
         #endregion
     }
