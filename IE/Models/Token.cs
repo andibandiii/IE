@@ -21,7 +21,7 @@ namespace IE.Models
         };
 
         public static readonly String[] PartOfSpeechTags = {
-            "NN", "NNC", "NNP", "NNPA", "PR", "PRS", "PRSP", "PRO", "PROP", "PRQ", "PRL", "PRN", "PRC", "PRF", "DT", "DTC", "DTCP", "DTP", "DTPP", "CC", "CCA", "CCD", "CCC", "CCP", "VB", "VBW", "VBS", "VBH", "VBL", "VBTS", "VBTR", "VBTF", "JJ", "JJD", "JJC", "JJCC", "JJCS", "JJCN", "JJN", "RB", "RBD", "RBN", "RBC", "RBQ", "RBT", "RBF", "RBW", "RBI", "RBM", "PP", "PPA", "PPIN", "PPF", "PPM", "PPU", "PPR", "PPD", "PPBY", "PPTS", "PPL", "PPO", "CD", "CDB", "PM", "PMP", "PME", "PMQ", "PMC", "PMS"
+            "PRC", "CDB", "PP", "PPIN", "LM", "NNC", "VBTR", "JJCC", "JJC", "PR", "VBTS", "JJD", "PRF", "PRI", "JJCN", "PRL", "PRO", "PRN", "PRQ", "JJN", "PRP", "PRS", "DT", "NNP", "JJCS", "RBC", "RBB", "RBD", "NNPA", "RBF", "RBI", "RBK", "RBM", "VBH", "RBL", "RBN", "RBQ", "RBP", "VBL", "RBR", "VBN", "RBT", "RBW", "VBS", "VBW", "VBOF", "VB", "DTPP", "RB", "DTC", "VBTF", "NN", "JJ", "PPA", "DTP", "PPD", "PROP", "PPF", "VBRF", "PPM", "PPL", "PPO", "PPR", "PPU", "PPTS", "DTCP", "CCA", "CC", "CD", "CCC", "CCB", "CCD", "PMC", "PME", "CCP", "PMP", "PPBY", "CCR", "CCT", "PMQ", "PMS", "VBAF", "PRSP", "PM"
         };
 
         public String Value { get; set; }
