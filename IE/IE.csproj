@@ -212,7 +212,10 @@
     <Compile Include="Preprocessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResultWriter.cs" />
     <Compile Include="Trainer.cs" />
+    <Compile Include="WhereTrainer.cs" />
+    <Compile Include="WhenTrainer.cs" />
     <Compile Include="WhoTrainer.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

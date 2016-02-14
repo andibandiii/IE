@@ -36,6 +36,23 @@ namespace IE
                 DateTime.TryParse(date, out tempDate);
                 article.Date = tempDate;
 
+                articleList.Add(article);
+            }
+
+            return articleList;
+        }
+
+        public List<Annotation> parseAnnotations(String path)
+        {
+            List<Annotation> annotationList = new List<Annotation>();
+
+            XmlDocument doc = new XmlDocument();
+            doc.Load(path);
+
+            XmlNodeList articleNodes = doc.DocumentElement.SelectNodes("/data/article");
+
+            foreach (XmlNode articleNode in articleNodes)
+            {
                 Annotation annotation = new Annotation();
 
                 annotation.Who = articleNode.SelectSingleNode("who").InnerText;
@@ -44,12 +61,10 @@ namespace IE
                 annotation.What = articleNode.SelectSingleNode("what").InnerText;
                 annotation.Why = articleNode.SelectSingleNode("why").InnerText;
 
-                article.Annotation = annotation;
-
-                articleList.Add(article);
+                annotationList.Add(annotation);
             }
 
-            return articleList;
+            return annotationList;
         }
     }
 }

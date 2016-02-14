@@ -14,26 +14,47 @@ namespace IE
     public class Preprocessor
     {
         private Article articleCurrent;
+        private Annotation annotationCurrent;
         private List<Token> listLatestTokenizedArticle;
         private List<Token> listWhoCandidates;
+        private List<Token> listWhenCandidates;
+        private List<Token> listWhereCandidates;
+        private List<String> listWhoAnnotations;
+        private List<String> listWhenAnnotations;
+        private List<String> listWhereAnnotations;
 
         public Preprocessor()
         {
             listLatestTokenizedArticle = new List<Token>();
             listWhoCandidates = new List<Token>();
+            listWhenCandidates = new List<Token>();
+            listWhereCandidates = new List<Token>();
+            listWhoAnnotations = new List<String>();
+            listWhenAnnotations = new List<String>();
+            listWhereAnnotations = new List<String>();
         }
 
         #region Setters
-        public void setCurrent(Article pArticle)
+        public void setCurrentArticle(Article pArticle)
         {
             articleCurrent = pArticle;
+        }
+
+        public void setCurrentAnnotation(Annotation pAnnotation)
+        {
+            annotationCurrent = pAnnotation;
         }
         #endregion
 
         #region Getters
-        public Article getCurrent()
+        public Article getCurrentArticle()
         {
             return articleCurrent;
+        }
+
+        public Annotation getCurrentAnnotation()
+        {
+            return annotationCurrent;
         }
 
         public List<Token> getLatestTokenizedArticle()
@@ -44,6 +65,31 @@ namespace IE
         public List<Token> getWhoCandidates()
         {
             return listWhoCandidates;
+        }
+
+        public List<Token> getWhenCandidates()
+        {
+            return listWhenCandidates;
+        }
+
+        public List<Token> getWhereCandidates()
+        {
+            return listWhereCandidates;
+        }
+
+        public List<String> getWhoAnnotations()
+        {
+            return listWhoAnnotations;
+        }
+
+        public List<String> getWhenAnnotations()
+        {
+            return listWhenAnnotations;
+        }
+
+        public List<String> getWhereAnnotations()
+        {
+            return listWhereAnnotations;
         }
         #endregion
 
@@ -60,7 +106,6 @@ namespace IE
             performNER();
             performPOST();
             performWS();
-            performTokenizeAnnotations();
             performCandidateSelection();
 
             foreach (var token in listLatestTokenizedArticle)
@@ -78,17 +123,26 @@ namespace IE
         }
 
         /// <summary>
-        /// Perform tokenization on all the given article's annotations.
+        /// Assign an article's token to whether or not it is part of a 5W.
         /// </summary>
-        private void performTokenizeAnnotations()
+        public void performAnnotationAssignment()
         {
-            performWhoTokenization();
+            if (annotationCurrent == null)
+            {
+                return;
+            }
+
+            performMultipleAnnotationAssignment("WHO");
+            performMultipleAnnotationAssignment("WHEN");
+            performMultipleAnnotationAssignment("WHERE");
         }
 
         private void performCandidateSelection()
         {
             CandidateSelector selector = new CandidateSelector();
             listWhoCandidates = selector.performWhoCandidateSelection(listLatestTokenizedArticle);
+            listWhenCandidates = selector.performWhenCandidateSelection(listLatestTokenizedArticle);
+            listWhereCandidates = selector.performWhereCandidateSelection(listLatestTokenizedArticle);
         }
 
         #region Article Preprocessing Functions
@@ -211,20 +265,80 @@ namespace IE
         #endregion
 
         #region Annotation Preprocessing Functions
-        private void performWhoTokenization()
+        private void performMultipleAnnotationAssignment(String annotationType = "WHO")
         {
-            String who = articleCurrent.Annotation.Who;
-            string[] whoAnnotations = null;
-
-            whoAnnotations = who.Split(';');
-
-            for (int r = 0; r < whoAnnotations.Length; r++)
+            annotationType = annotationType.ToUpper();
+            if (annotationType != "WHO" && annotationType != "WHEN" && annotationType != "WHERE")
             {
-                if (whoAnnotations[r][0] == ' ')
+                return;
+            }
+
+            String strAnnotation = "";
+            Action<string> assignmentMethod = null;
+            string[] arrAnnotations = null;
+
+            switch (annotationType)
+            {
+                case "WHO":
+                    strAnnotation = annotationCurrent.Who;
+                    assignmentMethod = annotation => {
+                        foreach (var candidate in listWhoCandidates)
+                        {
+                            if (candidate.Value == annotation)
+                            {
+                                candidate.IsWho = true;
+                                break;
+                            }
+                        }
+                    };
+                    break;
+                case "WHEN":
+                    strAnnotation = annotationCurrent.When;
+                    assignmentMethod = annotation => {
+                        foreach (var candidate in listWhenCandidates)
+                        {
+                            if (candidate.Value == annotation)
+                            {
+                                candidate.IsWhen = true;
+                                break;
+                            }
+                        }
+                    };
+                    break;
+                case "WHERE":
+                    strAnnotation = annotationCurrent.Where;
+                    assignmentMethod = annotation => {
+                        foreach (var candidate in listWhereCandidates)
+                        {
+                            if (candidate.Value == annotation)
+                            {
+                                candidate.IsWhere = true;
+                                break;
+                            }
+                        }
+                    };
+                    break;
+            }
+
+            if (strAnnotation.Count() <= 0 || strAnnotation == "N/A")
+            {
+                return;
+            }
+
+            arrAnnotations = strAnnotation.Split(';');
+
+            for (int r = 0; r < arrAnnotations.Length; r++)
+            {
+                if (arrAnnotations[r][0] == ' ')
                 {
-                    whoAnnotations[r] = whoAnnotations[r].Substring(1);
+                    arrAnnotations[r] = arrAnnotations[r].Substring(1);
                 }
-                System.Console.WriteLine("WHO ANNOTATIONS-" + whoAnnotations[r]);
+
+                System.Console.WriteLine(annotationType + " ANNOTATIONS-" + arrAnnotations[r]);
+                if (assignmentMethod != null)
+                {
+                    assignmentMethod(arrAnnotations[r]);
+                }
             }
         }
         #endregion

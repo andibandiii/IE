@@ -17,7 +17,5 @@ namespace IE.Models
         public String Link { get; set; }
 
         public String Body { get; set; }
-
-        public Annotation Annotation { get; set; }
     }
 }
