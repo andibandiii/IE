@@ -19,9 +19,8 @@ namespace IE
         private List<Token> listWhoCandidates;
         private List<Token> listWhenCandidates;
         private List<Token> listWhereCandidates;
-        private List<String> listWhoAnnotations;
-        private List<String> listWhenAnnotations;
-        private List<String> listWhereAnnotations;
+        private List<List<Token>> listWhatCandidates;
+        private List<List<Token>> listWhyCandidates;
 
         public Preprocessor()
         {
@@ -29,9 +28,8 @@ namespace IE
             listWhoCandidates = new List<Token>();
             listWhenCandidates = new List<Token>();
             listWhereCandidates = new List<Token>();
-            listWhoAnnotations = new List<String>();
-            listWhenAnnotations = new List<String>();
-            listWhereAnnotations = new List<String>();
+            listWhatCandidates = new List<List<Token>>();
+            listWhyCandidates = new List<List<Token>>();
         }
 
         #region Setters
@@ -77,19 +75,14 @@ namespace IE
             return listWhereCandidates;
         }
 
-        public List<String> getWhoAnnotations()
+        public List<List<Token>> getWhatCandidates()
         {
-            return listWhoAnnotations;
+            return listWhatCandidates;
         }
 
-        public List<String> getWhenAnnotations()
+        public List<List<Token>> getWhyCandidates()
         {
-            return listWhenAnnotations;
-        }
-
-        public List<String> getWhereAnnotations()
-        {
-            return listWhereAnnotations;
+            return listWhyCandidates;
         }
         #endregion
 
@@ -143,6 +136,8 @@ namespace IE
             listWhoCandidates = selector.performWhoCandidateSelection(listLatestTokenizedArticle);
             listWhenCandidates = selector.performWhenCandidateSelection(listLatestTokenizedArticle);
             listWhereCandidates = selector.performWhereCandidateSelection(listLatestTokenizedArticle);
+            listWhatCandidates = selector.performWhatCandidateSelection(listLatestTokenizedArticle);
+            listWhyCandidates = selector.performWhyCandidateSelection(listLatestTokenizedArticle);
         }
 
         #region Article Preprocessing Functions

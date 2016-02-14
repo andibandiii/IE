@@ -73,7 +73,6 @@ namespace IE
 
         public List<Token> performWhenCandidateSelection(List<Token> tokenizedArticle)
         {
-            //REPLACE THIS CODE
             List<Token> candidates = new List<Token>();
             int startIndex = 0;
             int endIndex = 0;
@@ -136,7 +135,6 @@ namespace IE
 
         public List<Token> performWhereCandidateSelection(List<Token> tokenizedArticle)
         {
-            //REPLACE THIS CODE
             List<Token> candidates = new List<Token>();
             int startIndex = 0;
             int endIndex = 0;
@@ -192,6 +190,40 @@ namespace IE
             foreach (var candidate in candidates)
             {
                 System.Console.WriteLine("CANDIDATE " + candidate.Value);
+            }
+
+            return candidates;
+        }
+
+        public List<List<Token>> performWhatCandidateSelection(List<Token> tokenizedArticle)
+        {
+            int maxNumberOfCandidates = 3;
+            List<List<Token>> candidates = new List<List<Token>>();
+            List<List<Token>> segregatedArticle = tokenizedArticle
+                .GroupBy(token => token.Sentence)
+                .Select(tokenGroup => tokenGroup.ToList())
+                .ToList();
+
+            for (int nI = 0; nI < Math.Min(maxNumberOfCandidates, segregatedArticle.Count()); nI++)
+            {
+                candidates.Add(segregatedArticle[nI]);
+            }
+
+            return candidates;
+        }
+
+        public List<List<Token>> performWhyCandidateSelection(List<Token> tokenizedArticle)
+        {
+            int maxNumberOfCandidates = 3;
+            List<List<Token>> candidates = new List<List<Token>>();
+            List<List<Token>> segregatedArticle = tokenizedArticle
+                .GroupBy(token => token.Sentence)
+                .Select(tokenGroup => tokenGroup.ToList())
+                .ToList();
+
+            for (int nI = 1; nI < Math.Min(maxNumberOfCandidates + 1, segregatedArticle.Count()); nI++)
+            {
+                candidates.Add(segregatedArticle[nI]);
             }
 
             return candidates;

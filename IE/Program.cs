@@ -28,6 +28,8 @@ namespace IE
             List<List<Token>> listAllWhoCandidates = new List<List<Token>>();
             List<List<Token>> listAllWhenCandidates = new List<List<Token>>();
             List<List<Token>> listAllWhereCandidates = new List<List<Token>>();
+            List<List<List<Token>>> listAllWhatCandidates = new List<List<List<Token>>>();
+            List<List<List<Token>>> listAllWhyCandidates = new List<List<List<Token>>>();
             List<List<String>> listAllWhoAnnotations = new List<List<String>>();
             List<List<String>> listAllWhenAnnotations = new List<List<String>>();
             List<List<String>> listAllWhereAnnotations = new List<List<String>>();
@@ -57,6 +59,8 @@ namespace IE
                     listAllWhoCandidates.Add(preprocessor.getWhoCandidates());
                     listAllWhenCandidates.Add(preprocessor.getWhenCandidates());
                     listAllWhereCandidates.Add(preprocessor.getWhereCandidates());
+                    listAllWhatCandidates.Add(preprocessor.getWhatCandidates());
+                    listAllWhyCandidates.Add(preprocessor.getWhyCandidates());
                 }
 
                 whoTrainer.trainMany(listTokenizedArticles, listAllWhoCandidates);
@@ -71,6 +75,8 @@ namespace IE
                 annotationIdentifier.setWhoCandidates(listAllWhoCandidates[nI]);
                 annotationIdentifier.setWhenCandidates(listAllWhenCandidates[nI]);
                 annotationIdentifier.setWhereCandidates(listAllWhereCandidates[nI]);
+                annotationIdentifier.setWhatCandidates(listAllWhatCandidates[nI]);
+                annotationIdentifier.setWhyCandidates(listAllWhyCandidates[nI]);
                 annotationIdentifier.labelAnnotations();
                 listAllWhoAnnotations.Add(annotationIdentifier.getWho());
                 listAllWhenAnnotations.Add(annotationIdentifier.getWhen());

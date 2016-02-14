@@ -13,6 +13,8 @@ namespace IE
         private List<Token> listWhoCandidates;
         private List<Token> listWhenCandidates;
         private List<Token> listWhereCandidates;
+        private List<List<Token>> listWhatCandidates;
+        private List<List<Token>> listWhyCandidates;
         private List<String> listWho;
         private List<String> listWhen;
         private List<String> listWhere;
@@ -24,6 +26,8 @@ namespace IE
             listWhoCandidates = new List<Token>();
             listWhenCandidates = new List<Token>();
             listWhereCandidates = new List<Token>();
+            listWhatCandidates = new List<List<Token>>();
+            listWhyCandidates = new List<List<Token>>();
             initializeAnnotations();
         }
 
@@ -55,6 +59,16 @@ namespace IE
         public void setWhereCandidates(List<Token> pCandidates)
         {
             listWhereCandidates = pCandidates;
+        }
+
+        public void setWhatCandidates(List<List<Token>> pCandidates)
+        {
+            listWhatCandidates = pCandidates;
+        }
+
+        public void setWhyCandidates(List<List<Token>> pCandidates)
+        {
+            listWhyCandidates = pCandidates;
         }
         #endregion
 
@@ -127,50 +141,30 @@ namespace IE
 
         private void labelWhat()
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (Token token in articleCurrent)
+            if (listWhatCandidates.Count > 0)
             {
-                if (token.Sentence <= 1)
-                {
-                    sb.Append(token.Value);
-                    sb.Append(" ");
-                }
-                else
-                {
-                    break;
-                }
+                strWhat = String.Join(" ", listWhatCandidates[0].Select(token => token.Value).ToArray());
+                strWhat = strWhat.Replace("-LRB- ", "(");
+                strWhat = strWhat.Replace(" -RRB-", ")");
+                strWhat = strWhat.Replace(" . ", ".");
+                strWhat = strWhat.Replace(" .", ".");
+                strWhat = strWhat.Replace(" ,", ",");
+                strWhat = strWhat.Replace(" !", "!");
             }
-            strWhat = sb.ToString();
-            strWhat = strWhat.Replace("-LRB- ", "(");
-            strWhat = strWhat.Replace(" -RRB-", ")");
-            strWhat = strWhat.Replace(" . ", ".");
-            strWhat = strWhat.Replace(" .", ".");
-            strWhat = strWhat.Replace(" ,", ",");
-            strWhat = strWhat.Replace(" !", "!");
         }
 
         private void labelWhy()
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (Token token in articleCurrent)
+            if (listWhyCandidates.Count > 0)
             {
-                if (token.Sentence == 2)
-                {
-                    sb.Append(token.Value);
-                    sb.Append(" ");
-                }
-                else if (token.Sentence > 2)
-                {
-                    break;
-                }
+                strWhy = String.Join(" ", listWhyCandidates[0].Select(token => token.Value).ToArray());
+                strWhy = strWhy.Replace("-LRB- ", "(");
+                strWhy = strWhy.Replace(" -RRB-", ")");
+                strWhy = strWhy.Replace(" . ", ".");
+                strWhy = strWhy.Replace(" .", ".");
+                strWhy = strWhy.Replace(" ,", ",");
+                strWhy = strWhy.Replace(" !", "!");
             }
-            strWhy = sb.ToString();
-            strWhy = strWhy.Replace("-LRB- ", "(");
-            strWhy = strWhy.Replace(" -RRB-", ")");
-            strWhy = strWhy.Replace(" . ", ".");
-            strWhy = strWhy.Replace(" .", ".");
-            strWhy = strWhy.Replace(" ,", ",");
-            strWhy = strWhy.Replace(" !", "!");
         }
         #endregion
     }
