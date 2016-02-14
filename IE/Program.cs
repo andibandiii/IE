@@ -45,7 +45,7 @@ namespace IE
                 Trainer whereTrainer = new WhereTrainer();
 
                 //Temporarily set to 2 because getting all articles takes longer run time
-                for (int nI = 0; nI < 1; nI++)
+                for (int nI = 0; nI < 2; nI++)
                 {
                     preprocessor.setCurrentArticle(listCurrentArticles[nI]);
                     preprocessor.preprocess();

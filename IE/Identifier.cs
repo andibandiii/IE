@@ -145,6 +145,8 @@ namespace IE
             strWhat = strWhat.Replace(" -RRB-", ")");
             strWhat = strWhat.Replace(" . ", ".");
             strWhat = strWhat.Replace(" .", ".");
+            strWhat = strWhat.Replace(" ,", ",");
+            strWhat = strWhat.Replace(" !", "!");
         }
 
         private void labelWhy()
@@ -167,6 +169,8 @@ namespace IE
             strWhy = strWhy.Replace(" -RRB-", ")");
             strWhy = strWhy.Replace(" . ", ".");
             strWhy = strWhy.Replace(" .", ".");
+            strWhy = strWhy.Replace(" ,", ",");
+            strWhy = strWhy.Replace(" !", "!");
         }
         #endregion
     }
