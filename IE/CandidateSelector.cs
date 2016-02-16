@@ -51,7 +51,7 @@ namespace IE
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
                 i = getCandidateByNer(NamedEntity.DATE, i, candidates, tokenizedArticle);
-                //i = getCandidateByMarkers(startMarkers, endMarkers, i, candidates, tokenizedArticle);
+                i = getCandidateByMarkers(startMarkers, endMarkers, i, candidates, tokenizedArticle);
             }
 
             for (int can = 0; can < candidates.Count; can++)
@@ -176,7 +176,9 @@ namespace IE
 
         private int getCandidateByMarkers(String[] startMarkers, String[][] endMarkers, int i, List<Token> candidates, List<Token> tokenizedArticle)
         {
+
             for (int j = 0; j < startMarkers.Length; j++)
+            {
                 if (tokenizedArticle[i].Value.Equals(startMarkers[j]))
                 {
                     i++;
@@ -185,44 +187,65 @@ namespace IE
                     String strValue = null;
                     int tempWs = 0;
                     Boolean flag = true;
-                    foreach (String markers in endMarkers[j])
-                    {
-                        if (tokenizedArticle[i].Value.Equals(markers))
-                        {
-                            flag = false;
-                            break;
-                        }
-                    }
+                    Boolean endMarkerFound = false;
                     while (flag)
                     {
-                        if (strValue == null)
-                            strValue = tokenizedArticle[i].Value;
-                        else
-                            strValue += " " + tokenizedArticle[i].Value;
-                        if (tokenizedArticle[i].Frequency > tempWs)
-                        {
-                            tempWs = tokenizedArticle[i].Frequency;
-                        }
-                        i++;
                         foreach (String markers in endMarkers[j])
                         {
-                            if (tokenizedArticle[i].Value.Equals(markers) || tokenizedArticle[i].Sentence != sentenceNumber)
+                            if (tokenizedArticle[i].Value.Equals(markers))
                             {
+                                endMarkerFound = true;
                                 flag = false;
                                 break;
                             }
                         }
+                        if (tokenizedArticle[i].Sentence != sentenceNumber)
+                        {
+                            flag = false;
+                        }
+                        i++;
+                        if(i >= tokenizedArticle.Count)
+                        {
+                            flag = false;
+                        }
                     }
 
                     int endIndex = i;
-
-                    var newToken = new Token(strValue, tokenizedArticle[startIndex].Position);
-                    newToken.Sentence = tokenizedArticle[i].Sentence;
-                    newToken.NamedEntity = tokenizedArticle[i].NamedEntity;
-                    newToken.PartOfSpeech = tokenizedArticle[i].PartOfSpeech;
-                    newToken.Frequency = tempWs;
-                    candidates.Add(newToken);
+                    if (endMarkerFound)
+                    {
+                        for (int k = startIndex; k < endIndex; k++)
+                        {
+                            if (strValue == null)
+                                strValue = tokenizedArticle[k].Value;
+                            else
+                                strValue += " " + tokenizedArticle[k].Value;
+                            if (tokenizedArticle[k].Frequency > tempWs)
+                            {
+                                tempWs = tokenizedArticle[k].Frequency;
+                            }
+                            if (strValue == null)
+                                strValue = tokenizedArticle[k].Value;
+                            else
+                                strValue += " " + tokenizedArticle[k].Value;
+                            if (tokenizedArticle[k].Frequency > tempWs)
+                            {
+                                tempWs = tokenizedArticle[k].Frequency;
+                            }
+                        }
+                        var newToken = new Token(strValue, tokenizedArticle[startIndex].Position);
+                        newToken.Sentence = tokenizedArticle[startIndex].Sentence;
+                        //newToken.NamedEntity = tokenizedArticle[i].NamedEntity;
+                        //newToken.PartOfSpeech = tokenizedArticle[i].PartOfSpeech;
+                        newToken.Frequency = tempWs;
+                        candidates.Add(newToken);
+                    }
+                    else
+                    {
+                        i = startIndex - 1;
+                    }
+                    j = startMarkers.Length;
                 }
+            }
             return i;
         }
     }
