@@ -51,7 +51,7 @@ namespace IE
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
                 i = getCandidateByNer(NamedEntity.DATE, i, candidates, tokenizedArticle);
-                i = getCandidateByMarkers(startMarkers, endMarkers, i, candidates, tokenizedArticle);
+                getCandidateByMarkers(startMarkers, endMarkers, i, candidates, tokenizedArticle);
             }
 
             for (int can = 0; can < candidates.Count; can++)
@@ -174,7 +174,7 @@ namespace IE
             return i;
         }
 
-        private int getCandidateByMarkers(String[] startMarkers, String[][] endMarkers, int i, List<Token> candidates, List<Token> tokenizedArticle)
+        private void getCandidateByMarkers(String[] startMarkers, String[][] endMarkers, int i, List<Token> candidates, List<Token> tokenizedArticle)
         {
 
             for (int j = 0; j < startMarkers.Length; j++)
@@ -246,7 +246,6 @@ namespace IE
                     j = startMarkers.Length;
                 }
             }
-            return i;
         }
     }
 }
