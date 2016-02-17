@@ -78,3 +78,4 @@ C:\Users\John Paul\Source\Repos\IE\IE\obj\Debug\IE.Properties.Resources.resource
 C:\Users\John Paul\Source\Repos\IE\IE\obj\Debug\IE.csproj.GenerateResource.Cache
 C:\Users\John Paul\Source\Repos\IE\IE\obj\Debug\IE.exe
 C:\Users\John Paul\Source\Repos\IE\IE\obj\Debug\IE.pdb
+C:\Users\John Paul\Source\Repos\IE\IE\obj\Debug\IE.csprojResolveAssemblyReference.cache

@@ -185,6 +185,25 @@ namespace IE
 
                 listLatestTokenizedArticle[i].NamedEntity = ((CoreLabel)nerValues[i]).get(typeof(CoreAnnotations.AnswerAnnotation)).ToString();
             }
+
+            bool hasNickname = false;
+            for (int i = 0; i < listLatestTokenizedArticle.Count; i++)
+            {
+                if (listLatestTokenizedArticle[i].Value.Equals("``") && listLatestTokenizedArticle[i - 1].NamedEntity.Equals("PER"))
+                {
+                    hasNickname = true;
+                }
+
+                if (hasNickname)
+                {
+                    listLatestTokenizedArticle[i].NamedEntity = "PER";
+
+                    if(listLatestTokenizedArticle[i - 1].Value.Equals("\'\'"))
+                    {
+                        hasNickname = false;
+                    }
+                }
+            }
         }
 
         private void performPOST()

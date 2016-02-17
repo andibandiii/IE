@@ -14,8 +14,13 @@ namespace IE
             List<Token> candidates = new List<Token>();
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
-                i = getCandidateByNer(NamedEntity.PER, i, candidates, tokenizedArticle);
-                i = getCandidateByNer(NamedEntity.ORG, i, candidates, tokenizedArticle);
+                i = getCandidateByNer("PER", i, candidates, tokenizedArticle);
+                i = getCandidateByNer("ORG", i, candidates, tokenizedArticle);
+            }
+
+            for (int i = 0; i < tokenizedArticle.Count; i++)
+            {
+                i = getCandidateByPos("NNP", i, candidates, tokenizedArticle);
             }
 
             for (int can = 0; can < candidates.Count; can++)
@@ -34,10 +39,10 @@ namespace IE
                 }
             }
 
-            foreach (var candidate in candidates)
-            {
-                System.Console.WriteLine("CANDIDATE " + candidate.Value);
-            }
+            //foreach (var candidate in candidates)
+            //{
+            //    System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
+            //}
 
             return candidates;
         }
@@ -61,7 +66,7 @@ namespace IE
                 new String[] { "ay", "upang", ",", "."} };
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
-                i = getCandidateByNer(NamedEntity.DATE, i, candidates, tokenizedArticle);
+                i = getCandidateByNer("DATE", i, candidates, tokenizedArticle);
                 getCandidateByMarkers(startMarkers, endMarkers, i, candidates, tokenizedArticle);
             }
 
@@ -81,10 +86,10 @@ namespace IE
                 }
             }
 
-            foreach (var candidate in candidates)
-            {
-                System.Console.WriteLine("CANDIDATE " + candidate.Value);
-            }
+            //foreach (var candidate in candidates)
+            //{
+            //    System.Console.WriteLine("WHEN CANDIDATE " + candidate.Value);
+            //}
 
             return candidates;
         }
@@ -104,7 +109,7 @@ namespace IE
                 new String[] { "na", "noong", "nuong","sa","."} };
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
-                i = getCandidateByNer(NamedEntity.LOC, i, candidates, tokenizedArticle);
+                i = getCandidateByNer("LOC", i, candidates, tokenizedArticle);
                 getCandidateByMarkers(startMarkers, endMarkers, i, candidates, tokenizedArticle);
             }
 
@@ -124,10 +129,10 @@ namespace IE
                 }
             }
 
-            foreach (var candidate in candidates)
-            {
-                System.Console.WriteLine("CANDIDATE " + candidate.Value);
-            }
+            //foreach (var candidate in candidates)
+            //{
+            //    System.Console.WriteLine("WHERE CANDIDATE " + candidate.Value);
+            //}
 
             return candidates;
         }
@@ -166,7 +171,7 @@ namespace IE
             return candidates;
         }
 
-        private int getCandidateByNer(NamedEntity nerTag, int i, List<Token> candidates, List<Token> tokenizedArticle)
+        private int getCandidateByNer(String nerTag, int i, List<Token> candidates, List<Token> tokenizedArticle)
         {
             if (tokenizedArticle[i].NamedEntity.Equals(nerTag))
             {
@@ -192,6 +197,8 @@ namespace IE
                 newToken.PartOfSpeech = tokenizedArticle[i].PartOfSpeech;
                 newToken.Frequency = tempWs;
                 candidates.Add(newToken);
+
+                System.Console.WriteLine("CANDIDATE BY NER [{0}]: {1} (Position {2})", nerTag, newToken.Value, newToken.Position);
             }
             return i;
         }
@@ -260,6 +267,8 @@ namespace IE
                         //newToken.PartOfSpeech = tokenizedArticle[i].PartOfSpeech;
                         newToken.Frequency = tempWs;
                         candidates.Add(newToken);
+
+                        System.Console.WriteLine("CANDIDATE BY MARKERS: {0}", newToken.Value);
                     }
                     else
                     {
@@ -268,6 +277,38 @@ namespace IE
                     j = startMarkers.Length;
                 }
             }
+        }
+
+        private int getCandidateByPos(String posTag, int i, List<Token> candidates, List<Token> tokenizedArticle)
+        {
+            if (tokenizedArticle[i].PartOfSpeech.Equals(posTag))
+            {
+                int startIndex = i;
+                String strValue = tokenizedArticle[i].Value;
+                int tempWs = tokenizedArticle[i].Frequency;
+
+                while (tokenizedArticle[i].PartOfSpeech == tokenizedArticle[i + 1].PartOfSpeech)
+                {
+                    i++;
+                    strValue += " " + tokenizedArticle[i].Value;
+                    if (tokenizedArticle[i].Frequency > tempWs)
+                    {
+                        tempWs = tokenizedArticle[i].Frequency;
+                    }
+                }
+
+                int endIndex = i;
+
+                var newToken = new Token(strValue, tokenizedArticle[startIndex].Position);
+                newToken.Sentence = tokenizedArticle[i].Sentence;
+                newToken.NamedEntity = tokenizedArticle[i].NamedEntity;
+                newToken.PartOfSpeech = tokenizedArticle[i].PartOfSpeech;
+                newToken.Frequency = tempWs;
+                candidates.Add(newToken);
+
+                System.Console.WriteLine("CANDIDATE BY POS [{0}]: {1} (Position {2})", posTag, newToken.Value, newToken.Position);
+            }
+            return i;
         }
     }
 }
