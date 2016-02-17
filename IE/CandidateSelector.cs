@@ -45,9 +45,20 @@ namespace IE
         public List<Token> performWhenCandidateSelection(List<Token> tokenizedArticle)
         {
             List<Token> candidates = new List<Token>();
-            String[] startMarkers = new String[5] { "ang", "nasa", "noong", "nuong", "sa" };
-            String[][] endMarkers = new String[5][] { new String[] { "ay", "."}, new String[] { "para"}, new String[] { "."}, new String[] { "."},
-                                                      new String[] { "na", "noong", "nuong","sa","."} };
+            String[] startMarkers = new String[] { "ang",
+                "mula sa",
+                "mula",
+                "na",
+                "noong",
+                "nuong",
+                "sa" };
+            String[][] endMarkers = new String[][] { new String[] { "para"},
+                new String[] { ","},
+                new String[] { "."},
+                new String[] { "ay"},
+                new String[] { ",", "."},
+                new String[] { ",", "."},
+                new String[] { "ay", "upang", ",", "."} };
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
                 i = getCandidateByNer(NamedEntity.DATE, i, candidates, tokenizedArticle);
@@ -81,9 +92,20 @@ namespace IE
         public List<Token> performWhereCandidateSelection(List<Token> tokenizedArticle)
         {
             List<Token> candidates = new List<Token>();
+            String[] startMarkers = new String[5] { "ang",
+                "nasa",
+                "noong",
+                "nuong",
+                "sa" };
+            String[][] endMarkers = new String[5][] { new String[] { "ay", "."},
+                new String[] { "para"},
+                new String[] { "."},
+                new String[] { "."},
+                new String[] { "na", "noong", "nuong","sa","."} };
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
                 i = getCandidateByNer(NamedEntity.LOC, i, candidates, tokenizedArticle);
+                getCandidateByMarkers(startMarkers, endMarkers, i, candidates, tokenizedArticle);
             }
 
             for (int can = 0; can < candidates.Count; can++)
@@ -179,7 +201,7 @@ namespace IE
 
             for (int j = 0; j < startMarkers.Length; j++)
             {
-                if (tokenizedArticle[i].Value.Equals(startMarkers[j]))
+                if (tokenizedArticle[i].Value.Equals(startMarkers[j], StringComparison.InvariantCultureIgnoreCase))
                 {
                     i++;
                     int startIndex = i;
@@ -204,7 +226,7 @@ namespace IE
                             flag = false;
                         }
                         i++;
-                        if(i >= tokenizedArticle.Count)
+                        if (i >= tokenizedArticle.Count)
                         {
                             flag = false;
                         }
