@@ -74,7 +74,7 @@ namespace IE
             {
                 for (int a = 0; a < can; a++)
                 {
-                    if (candidates[can].Value.Equals(candidates[a].Value))
+                    if (candidates[can].Value != null && candidates[can].Value.Equals(candidates[a].Value))
                     {
                         candidates.RemoveAt(can);
                         if (can > 0)
@@ -117,7 +117,7 @@ namespace IE
             {
                 for (int a = 0; a < can; a++)
                 {
-                    if (candidates[can].Value.Equals(candidates[a].Value))
+                    if (candidates[can].Value != null && candidates[can].Value.Equals(candidates[a].Value))
                     {
                         candidates.RemoveAt(can);
                         if (can > 0)
@@ -198,7 +198,7 @@ namespace IE
                 newToken.Frequency = tempWs;
                 candidates.Add(newToken);
 
-                System.Console.WriteLine("CANDIDATE BY NER [{0}]: {1} (Position {2})", nerTag, newToken.Value, newToken.Position);
+                //System.Console.WriteLine("CANDIDATE BY NER [{0}]: {1} (Position {2})", nerTag, newToken.Value, newToken.Position);
             }
             return i;
         }
@@ -260,7 +260,7 @@ namespace IE
                         newToken.Frequency = tempWs;
                         candidates.Add(newToken);
 
-                        System.Console.WriteLine("CANDIDATE BY MARKERS: {0}", newToken.Value);
+                        //System.Console.WriteLine("CANDIDATE BY MARKERS: {0}", newToken.Value);
                     }
                     else
                     {
@@ -273,13 +273,13 @@ namespace IE
 
         private int getCandidateByPos(String posTag, int i, List<Token> candidates, List<Token> tokenizedArticle)
         {
-            if (tokenizedArticle[i].PartOfSpeech.Equals(posTag))
+            if (i < tokenizedArticle.Count && tokenizedArticle[i].PartOfSpeech != null && tokenizedArticle[i].PartOfSpeech.Equals(posTag))
             {
                 int startIndex = i;
                 String strValue = tokenizedArticle[i].Value;
                 int tempWs = tokenizedArticle[i].Frequency;
 
-                while (tokenizedArticle[i].PartOfSpeech == tokenizedArticle[i + 1].PartOfSpeech)
+                while ((i + 1) < tokenizedArticle.Count && tokenizedArticle[i].PartOfSpeech == tokenizedArticle[i + 1].PartOfSpeech)
                 {
                     i++;
                     strValue += " " + tokenizedArticle[i].Value;
@@ -298,7 +298,7 @@ namespace IE
                 newToken.Frequency = tempWs;
                 candidates.Add(newToken);
 
-                System.Console.WriteLine("CANDIDATE BY POS [{0}]: {1} (Position {2})", posTag, newToken.Value, newToken.Position);
+                //System.Console.WriteLine("CANDIDATE BY POS [{0}]: {1} (Position {2})", posTag, newToken.Value, newToken.Position);
             }
             return i;
         }

@@ -103,13 +103,13 @@ namespace IE
 
             foreach (var token in listLatestTokenizedArticle)
             {
-                System.Console.WriteLine("Value: " + token.Value);
-                System.Console.WriteLine("Sentence: " + token.Sentence);
-                System.Console.WriteLine("Position: " + token.Position);
-                System.Console.WriteLine("NER: " + token.NamedEntity);
-                System.Console.WriteLine("POS: " + token.PartOfSpeech);
-                System.Console.WriteLine("WS: " + token.Frequency);
-                System.Console.WriteLine("=====\n");
+                //System.Console.WriteLine("Value: " + token.Value);
+                //System.Console.WriteLine("Sentence: " + token.Sentence);
+                //System.Console.WriteLine("Position: " + token.Position);
+                //System.Console.WriteLine("NER: " + token.NamedEntity);
+                //System.Console.WriteLine("POS: " + token.PartOfSpeech);
+                //System.Console.WriteLine("WS: " + token.Frequency);
+                //System.Console.WriteLine("=====\n");
             }
 
             return listLatestTokenizedArticle;
@@ -175,11 +175,11 @@ namespace IE
 
             nerValues = classifier.classifySentence(tokens).toArray();
 
-            //System.Console.WriteLine("{0}\n", classifier.classifyToString(article.Body));
+            ////System.Console.WriteLine("{0}\n", classifier.classifyToString(article.Body));
 
             for (int i = 0; i < listLatestTokenizedArticle.Count; i++)
             {
-                //System.Console.WriteLine(((CoreLabel)nerValues[i]).get(typeof(CoreAnnotations.AnswerAnnotation)) + " - " + ((CoreLabel)nerValues[i]).toShorterString());
+                ////System.Console.WriteLine(((CoreLabel)nerValues[i]).get(typeof(CoreAnnotations.AnswerAnnotation)) + " - " + ((CoreLabel)nerValues[i]).toShorterString());
                 //NamedEntity nerValue;
                 //System.Enum.TryParse(((CoreLabel)nerValues[i]).get(typeof(CoreAnnotations.AnswerAnnotation)).ToString(), out nerValue);
 
@@ -189,6 +189,7 @@ namespace IE
             bool hasNickname = false;
             for (int i = 0; i < listLatestTokenizedArticle.Count; i++)
             {
+                if ((i - 1) < 0) continue;
                 if (listLatestTokenizedArticle[i].Value.Equals("``") && listLatestTokenizedArticle[i - 1].NamedEntity.Equals("PER"))
                 {
                     hasNickname = true;
@@ -348,7 +349,7 @@ namespace IE
                     arrAnnotations[r] = arrAnnotations[r].Substring(1);
                 }
 
-                System.Console.WriteLine(annotationType + " ANNOTATIONS-" + arrAnnotations[r]);
+                ////System.Console.WriteLine(annotationType + " ANNOTATIONS-" + arrAnnotations[r]);
                 if (assignmentMethod != null)
                 {
                     assignmentMethod(arrAnnotations[r]);
