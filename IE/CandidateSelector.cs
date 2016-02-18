@@ -242,16 +242,8 @@ namespace IE
                     int endIndex = i;
                     if (endMarkerFound)
                     {
-                        for (int k = startIndex; k < endIndex; k++)
+                        for (int k = startIndex; k < endIndex-1; k++)
                         {
-                            if (strValue == null)
-                                strValue = tokenizedArticle[k].Value;
-                            else
-                                strValue += " " + tokenizedArticle[k].Value;
-                            if (tokenizedArticle[k].Frequency > tempWs)
-                            {
-                                tempWs = tokenizedArticle[k].Frequency;
-                            }
                             if (strValue == null)
                                 strValue = tokenizedArticle[k].Value;
                             else
