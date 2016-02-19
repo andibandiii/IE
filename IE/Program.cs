@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using IE.Models;
+using weka.classifiers;
+using weka.core;
 
 namespace IE
 {

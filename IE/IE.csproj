@@ -176,6 +176,9 @@
       <HintPath>packages\Stanford.NLP.CoreNLP.3.6.0.0\lib\jollyday.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="libsvm">
+      <HintPath>lib\libsvm.dll</HintPath>
+    </Reference>
     <Reference Include="stanford-corenlp-3.6.0, Version=3.6.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Stanford.NLP.CoreNLP.3.6.0.0\lib\stanford-corenlp-3.6.0.dll</HintPath>
       <Private>True</Private>
@@ -191,6 +194,9 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="weka">
+      <HintPath>lib\weka.dll</HintPath>
+    </Reference>
     <Reference Include="xom, Version=1.2.10.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\Stanford.NLP.CoreNLP.3.6.0.0\lib\xom.dll</HintPath>
       <Private>True</Private>
