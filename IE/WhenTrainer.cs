@@ -51,7 +51,7 @@ namespace IE
                         //sw.WriteLine("@attribute named-entity-class-1 {LOC, PER, ORG, DATE, TIME, O}");
                         //sw.WriteLine("@attribute named-entity-class+1 {LOC, PER, ORG, DATE, TIME, O}");
                         //sw.WriteLine("@attribute named-entity-class+2 {LOC, PER, ORG, DATE, TIME, O}");
-                        sw.WriteLine("@attribute who {yes, no}");
+                        sw.WriteLine("@attribute when {yes, no}");
                         sw.WriteLine("\n@data");
                     }
                 }

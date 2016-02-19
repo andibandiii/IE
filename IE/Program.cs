@@ -19,7 +19,7 @@ namespace IE
         public static void Main()
         {
             FileParser fileparserFP = new FileParser();
-            String sourcePath = @"..\..\aprileditorial1.xml";
+            String sourcePath = @"..\..\training_news.xml";
             String destinationPath = @"..\..\result.xml";
 
             List<Article> listCurrentArticles = fileparserFP.parseFile(sourcePath);
