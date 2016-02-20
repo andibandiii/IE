@@ -22,6 +22,10 @@ namespace IE
         private List<List<Token>> listWhatCandidates;
         private List<List<Token>> listWhyCandidates;
         private CRFClassifier nerClassifier;
+        private MaxentTagger posTagger;
+
+        private readonly String nerModelPath = @"..\..\NERModel\filipino.ser.gz";
+        private readonly String posModelPath = @"..\..\POSTagger\filipino.tagger";
 
         public Preprocessor()
         {
@@ -31,7 +35,8 @@ namespace IE
             listWhereCandidates = new List<Token>();
             listWhatCandidates = new List<List<Token>>();
             listWhyCandidates = new List<List<Token>>();
-            nerClassifier = CRFClassifier.getClassifierNoExceptions(@"..\..\NERModel\filipino.ser.gz");
+            nerClassifier = CRFClassifier.getClassifierNoExceptions(nerModelPath);
+            posTagger = new MaxentTagger(posModelPath);
         }
 
         #region Setters
@@ -204,10 +209,6 @@ namespace IE
 
         private void performPOST()
         {
-            //Path to Filipino Tagger Model
-            String modelPath = @"..\..\POSTagger\filipino.tagger";
-            MaxentTagger tagger = new MaxentTagger(modelPath);
-
             //Get all tokens and segregate them into lists based on sentence number
             List<List<Token>> segregatedTokenLists = listLatestTokenizedArticle
                 .GroupBy(token => token.Sentence)
@@ -230,7 +231,7 @@ namespace IE
             //Tag each sentence
             foreach (KeyValuePair<int, java.util.List> entry in tokenizedSentenceLists)
             {
-                var taggedSentence = tagger.tagSentence(entry.Value).toArray();
+                var taggedSentence = posTagger.tagSentence(entry.Value).toArray();
                 foreach (var word in taggedSentence)
                 {
                     var splitWord = word.ToString().Split('/');
