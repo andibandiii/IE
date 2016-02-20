@@ -21,6 +21,7 @@ namespace IE
         private List<Token> listWhereCandidates;
         private List<List<Token>> listWhatCandidates;
         private List<List<Token>> listWhyCandidates;
+        private CRFClassifier nerClassifier;
 
         public Preprocessor()
         {
@@ -30,6 +31,7 @@ namespace IE
             listWhereCandidates = new List<Token>();
             listWhatCandidates = new List<List<Token>>();
             listWhyCandidates = new List<List<Token>>();
+            nerClassifier = CRFClassifier.getClassifierNoExceptions(@"..\..\NERModel\filipino.ser.gz");
         }
 
         #region Setters
@@ -164,7 +166,7 @@ namespace IE
             java.util.List tokens;
             List<string> values = new List<string>();
             object[] nerValues;
-            var classifier = CRFClassifier.getClassifierNoExceptions(@"..\..\NERModel\filipino.ser.gz");
+            bool hasNickname = false;
 
             foreach (Token token in listLatestTokenizedArticle)
             {
@@ -173,20 +175,13 @@ namespace IE
 
             tokens = Sentence.toCoreLabelList(values.ToArray());
 
-            nerValues = classifier.classifySentence(tokens).toArray();
-
-            ////System.Console.WriteLine("{0}\n", classifier.classifyToString(article.Body));
+            nerValues = nerClassifier.classifySentence(tokens).toArray();
 
             for (int i = 0; i < listLatestTokenizedArticle.Count; i++)
             {
-                ////System.Console.WriteLine(((CoreLabel)nerValues[i]).get(typeof(CoreAnnotations.AnswerAnnotation)) + " - " + ((CoreLabel)nerValues[i]).toShorterString());
-                //NamedEntity nerValue;
-                //System.Enum.TryParse(((CoreLabel)nerValues[i]).get(typeof(CoreAnnotations.AnswerAnnotation)).ToString(), out nerValue);
-
                 listLatestTokenizedArticle[i].NamedEntity = ((CoreLabel)nerValues[i]).get(typeof(CoreAnnotations.AnswerAnnotation)).ToString();
             }
 
-            bool hasNickname = false;
             for (int i = 0; i < listLatestTokenizedArticle.Count; i++)
             {
                 if ((i - 1) < 0) continue;

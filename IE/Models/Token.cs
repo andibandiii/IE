@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace IE.Models
 {
-    enum NamedEntity
-    {
-        PER,
-        LOC,
-        DATE,
-        ORG
-    }
+    //enum NamedEntity
+    //{
+    //    PER,
+    //    LOC,
+    //    DATE,
+    //    ORG
+    //}
 
     public class Token
     {
