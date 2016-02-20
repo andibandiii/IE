@@ -220,6 +220,7 @@ namespace IE
                     int startIndex = i;
                     int sentenceNumber = tokenizedArticle[i].Sentence;
                     String strValue = null;
+                    String posValue = null;
                     int tempWs = 0;
                     Boolean flag = true;
                     Boolean endMarkerFound = false;
@@ -259,9 +260,16 @@ namespace IE
                         for (int k = startIndex; k < endIndex; k++)
                         {
                             if (strValue == null)
+                            {
                                 strValue = tokenizedArticle[k].Value;
+                                posValue = tokenizedArticle[k].PartOfSpeech;
+                            }
                             else
+                            {
                                 strValue += " " + tokenizedArticle[k].Value;
+                                posValue += " " + tokenizedArticle[k].PartOfSpeech;
+                            }
+
                             if (tokenizedArticle[k].Frequency > tempWs)
                             {
                                 tempWs = tokenizedArticle[k].Frequency;
@@ -274,7 +282,7 @@ namespace IE
                         newToken.Frequency = tempWs;
                         candidates.Add(newToken);
 
-                        //System.Console.WriteLine("CANDIDATE BY MARKERS: {0}", newToken.Value);
+                        System.Console.WriteLine("CANDIDATE BY MARKERS: {0}\n\t{1}", newToken.Value, posValue);
                     }
                     else
                     {
