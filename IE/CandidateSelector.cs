@@ -256,7 +256,7 @@ namespace IE
                     }
                     if (endMarkerFound)
                     {
-                        for (int k = startIndex; k < endIndex-1; k++)
+                        for (int k = startIndex; k < endIndex; k++)
                         {
                             if (strValue == null)
                                 strValue = tokenizedArticle[k].Value;
@@ -269,8 +269,8 @@ namespace IE
                         }
                         var newToken = new Token(strValue, tokenizedArticle[startIndex].Position);
                         newToken.Sentence = tokenizedArticle[startIndex].Sentence;
-                        //newToken.NamedEntity = tokenizedArticle[i].NamedEntity;
-                        //newToken.PartOfSpeech = tokenizedArticle[i].PartOfSpeech;
+                        newToken.NamedEntity = tokenizedArticle[endIndex].NamedEntity;
+                        newToken.PartOfSpeech = tokenizedArticle[endIndex].PartOfSpeech;
                         newToken.Frequency = tempWs;
                         candidates.Add(newToken);
 
