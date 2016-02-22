@@ -171,7 +171,6 @@ namespace IE
             java.util.List tokens;
             List<string> values = new List<string>();
             object[] nerValues;
-            bool hasNickname = false;
 
             foreach (Token token in listLatestTokenizedArticle)
             {
@@ -185,25 +184,6 @@ namespace IE
             for (int i = 0; i < listLatestTokenizedArticle.Count; i++)
             {
                 listLatestTokenizedArticle[i].NamedEntity = ((CoreLabel)nerValues[i]).get(typeof(CoreAnnotations.AnswerAnnotation)).ToString();
-            }
-
-            for (int i = 0; i < listLatestTokenizedArticle.Count; i++)
-            {
-                if ((i - 1) < 0) continue;
-                if (listLatestTokenizedArticle[i].Value.Equals("``") && listLatestTokenizedArticle[i - 1].NamedEntity.Equals("PER"))
-                {
-                    hasNickname = true;
-                }
-
-                if (hasNickname)
-                {
-                    listLatestTokenizedArticle[i].NamedEntity = "PER";
-
-                    if(listLatestTokenizedArticle[i - 1].Value.Equals("\'\'"))
-                    {
-                        hasNickname = false;
-                    }
-                }
             }
         }
 

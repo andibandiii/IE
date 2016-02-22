@@ -176,7 +176,7 @@ namespace IE
 
         private int getCandidateByNer(String nerTag, int i, List<Token> candidates, List<Token> tokenizedArticle)
         {
-            if (tokenizedArticle[i].NamedEntity.Equals(nerTag))
+            if (tokenizedArticle[i].Sentence <= 3 && tokenizedArticle[i].NamedEntity.Equals(nerTag))
             {
                 int startIndex = i;
                 String strValue = tokenizedArticle[i].Value;
@@ -295,7 +295,7 @@ namespace IE
 
         private int getCandidateByPos(String posTag, int i, List<Token> candidates, List<Token> tokenizedArticle)
         {
-            if (i < tokenizedArticle.Count && tokenizedArticle[i].PartOfSpeech != null && tokenizedArticle[i].PartOfSpeech.Equals(posTag))
+            if (i < tokenizedArticle.Count && tokenizedArticle[i].PartOfSpeech != null && tokenizedArticle[i].PartOfSpeech.Equals(posTag) && tokenizedArticle[i].Sentence <= 3)
             {
                 int startIndex = i;
                 String strValue = tokenizedArticle[i].Value;
