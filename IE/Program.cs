@@ -55,6 +55,8 @@ namespace IE
                     preprocessor.preprocess();
 
                     preprocessor.setCurrentAnnotation(listCurrentTrainingAnnotations[nI]);
+                    System.Console.WriteLine("-------------------------------------");
+                    System.Console.WriteLine("Article " + nI);
                     preprocessor.performAnnotationAssignment();
 
                     listTokenizedArticles.Add(preprocessor.getLatestTokenizedArticle());

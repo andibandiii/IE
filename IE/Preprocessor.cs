@@ -278,6 +278,9 @@ namespace IE
                             if (candidate.Value == annotation)
                             {
                                 candidate.IsWho = true;
+                                System.Console.WriteLine("WHO\nBEFORE: " + (((candidate.Position - 2) >= 0) ? listLatestTokenizedArticle[candidate.Position - 2].Value : "N/A"));
+                                string[] temp = candidate.Value.Split(' ');
+                                System.Console.WriteLine("AFTER: " + (((candidate.Position + temp.Length - 1) <= listLatestTokenizedArticle.Count()) ? listLatestTokenizedArticle[candidate.Position + temp.Length - 1].Value : "N/A"));
                                 break;
                             }
                         }
@@ -291,6 +294,9 @@ namespace IE
                             if (candidate.Value == annotation)
                             {
                                 candidate.IsWhen = true;
+                                System.Console.WriteLine("WHEN\nBEFORE: " + (((candidate.Position - 2) >= 0) ? listLatestTokenizedArticle[candidate.Position - 2].Value : "N/A"));
+                                string[] temp = candidate.Value.Split(' ');
+                                System.Console.WriteLine("AFTER: " + (((candidate.Position + temp.Length - 1) <= listLatestTokenizedArticle.Count()) ? listLatestTokenizedArticle[candidate.Position + temp.Length - 1].Value : "N/A"));
                                 break;
                             }
                         }
@@ -304,6 +310,9 @@ namespace IE
                             if (candidate.Value == annotation)
                             {
                                 candidate.IsWhere = true;
+                                System.Console.WriteLine("WHERE\nBEFORE: " + (((candidate.Position - 2) >= 0) ? listLatestTokenizedArticle[candidate.Position - 2].Value : "N/A"));
+                                string[] temp = candidate.Value.Split(' ');
+                                System.Console.WriteLine("AFTER: " + (((candidate.Position + temp.Length - 1) <= listLatestTokenizedArticle.Count()) ? listLatestTokenizedArticle[candidate.Position + temp.Length - 1].Value : "N/A"));
                                 break;
                             }
                         }
@@ -320,7 +329,7 @@ namespace IE
 
             for (int r = 0; r < arrAnnotations.Length; r++)
             {
-                if (arrAnnotations.Length > 0 && arrAnnotations[r][0] == ' ')
+                if (arrAnnotations[r].Length > 0 && arrAnnotations[r][0] == ' ')
                 {
                     arrAnnotations[r] = arrAnnotations[r].Substring(1);
                 }
