@@ -278,6 +278,9 @@ namespace IE
                             if (candidate.Value == annotation)
                             {
                                 candidate.IsWho = true;
+                                System.Console.WriteLine("WHO\nBEFORE: " + listLatestTokenizedArticle[candidate.Position - 2].Value);
+                                string[] temp = candidate.Value.Split(' ');
+                                System.Console.WriteLine("AFTER: " + listLatestTokenizedArticle[candidate.Position + temp.Length-1].Value);
                                 break;
                             }
                         }
@@ -291,6 +294,9 @@ namespace IE
                             if (candidate.Value == annotation)
                             {
                                 candidate.IsWhen = true;
+                                System.Console.WriteLine("WHEN\nBEFORE: " + listLatestTokenizedArticle[candidate.Position - 2].Value);
+                                string[] temp = candidate.Value.Split(' ');
+                                System.Console.WriteLine("AFTER: " + listLatestTokenizedArticle[candidate.Position + temp.Length - 1].Value);
                                 break;
                             }
                         }
@@ -304,6 +310,9 @@ namespace IE
                             if (candidate.Value == annotation)
                             {
                                 candidate.IsWhere = true;
+                                System.Console.WriteLine("WHERE\nBEFORE: " + listLatestTokenizedArticle[candidate.Position - 2].Value);
+                                string[] temp = candidate.Value.Split(' ');
+                                System.Console.WriteLine("AFTER: " + listLatestTokenizedArticle[candidate.Position + temp.Length - 1].Value);
                                 break;
                             }
                         }

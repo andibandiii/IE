@@ -49,12 +49,14 @@ namespace IE
                 Trainer whereTrainer = new WhereTrainer();
 
                 //Temporarily set to 2 because getting all articles takes longer run time
-                for (int nI = 0; nI < 2; nI++)
+                for (int nI = 0; nI < 5; nI++)
                 {
                     preprocessor.setCurrentArticle(listCurrentArticles[nI]);
                     preprocessor.preprocess();
 
                     preprocessor.setCurrentAnnotation(listCurrentTrainingAnnotations[nI]);
+                    System.Console.WriteLine("-------------------------------------");
+                    System.Console.WriteLine("Article " + nI);
                     preprocessor.performAnnotationAssignment();
 
                     listTokenizedArticles.Add(preprocessor.getLatestTokenizedArticle());

@@ -109,7 +109,7 @@ namespace IE
                 new String[] { "para"},
                 new String[] { "."},
                 new String[] { "."},
-                new String[] { "na", "noong", "nuong","sa","."} };
+                new String[] { "para", "noong", "nuong","sa","."} };
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
                 i = getCandidateByNer("LOC", i, candidates, tokenizedArticle);
@@ -134,7 +134,7 @@ namespace IE
 
             //foreach (var candidate in candidates)
             //{
-            //    System.Console.WriteLine("WHERE CANDIDATE " + candidate.Value);
+            //    //System.Console.WriteLine("WHERE CANDIDATE " + candidate.Value);
             //}
 
             return candidates;
@@ -282,7 +282,7 @@ namespace IE
                         newToken.Frequency = tempWs;
                         candidates.Add(newToken);
 
-                        System.Console.WriteLine("CANDIDATE BY MARKERS: {0}\n\t{1}", newToken.Value, posValue);
+                        //System.Console.WriteLine("CANDIDATE BY MARKERS: {0}\n\t{1}", newToken.Value, posValue);
                     }
                     else
                     {
