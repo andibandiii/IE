@@ -340,7 +340,7 @@ namespace IE
 
             for (int r = 0; r < arrAnnotations.Length; r++)
             {
-                if (arrAnnotations[r][0] == ' ')
+                if (arrAnnotations.Length > 0 && arrAnnotations[r][0] == ' ')
                 {
                     arrAnnotations[r] = arrAnnotations[r].Substring(1);
                 }
