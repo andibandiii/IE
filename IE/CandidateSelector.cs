@@ -182,7 +182,7 @@ namespace IE
                 String strValue = tokenizedArticle[i].Value;
                 int tempWs = tokenizedArticle[i].Frequency;
 
-                while (tokenizedArticle[i].NamedEntity == tokenizedArticle[i + 1].NamedEntity)
+                while ((i + 1) < tokenizedArticle.Count && tokenizedArticle[i].NamedEntity == tokenizedArticle[i + 1].NamedEntity)
                 {
                     i++;
                     strValue += " " + tokenizedArticle[i].Value;
