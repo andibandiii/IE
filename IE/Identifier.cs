@@ -268,7 +268,10 @@ namespace IE
                 if (candidate.Position - i - 1 >= 0)
                 {
                     whoCandidate.setValue((weka.core.Attribute)fvWho.elementAt(10 - i + 4), articleCurrent[candidate.Position - i - 1].Value);
-                    whoCandidate.setValue((weka.core.Attribute)fvWho.elementAt(10 - i + 16), articleCurrent[candidate.Position - i - 1].PartOfSpeech);
+                    if (articleCurrent[candidate.Position - i - 1].PartOfSpeech != null)
+                    {
+                        whoCandidate.setValue((weka.core.Attribute)fvWho.elementAt(10 - i + 16), articleCurrent[candidate.Position - i - 1].PartOfSpeech);
+                    }
                 }
             }
             if (candidate.Position < articleCurrent.Count)
@@ -296,7 +299,10 @@ namespace IE
                 if (candidate.Position - i - 1 >= 0)
                 {
                     whenCandidate.setValue((weka.core.Attribute)fvWhen.elementAt(10 - i + 4), articleCurrent[candidate.Position - i - 1].Value);
-                    whenCandidate.setValue((weka.core.Attribute)fvWhen.elementAt(10 - i + 16), articleCurrent[candidate.Position - i - 1].PartOfSpeech);
+                    if (articleCurrent[candidate.Position - i - 1].PartOfSpeech != null)
+                    {
+                        whenCandidate.setValue((weka.core.Attribute)fvWhen.elementAt(10 - i + 16), articleCurrent[candidate.Position - i - 1].PartOfSpeech);
+                    }
                 }
             }
             if (candidate.Position < articleCurrent.Count)
@@ -324,7 +330,10 @@ namespace IE
                 if (candidate.Position - i - 1 >= 0)
                 {
                     whereCandidate.setValue((weka.core.Attribute)fvWhere.elementAt(10 - i + 4), articleCurrent[candidate.Position - i - 1].Value);
-                    whereCandidate.setValue((weka.core.Attribute)fvWhere.elementAt(10 - i + 16), articleCurrent[candidate.Position - i - 1].PartOfSpeech);
+                    if (articleCurrent[candidate.Position - i - 1].PartOfSpeech != null)
+                    {
+                        whereCandidate.setValue((weka.core.Attribute)fvWhere.elementAt(10 - i + 16), articleCurrent[candidate.Position - i - 1].PartOfSpeech);
+                    }
                 }
             }
             if (candidate.Position < articleCurrent.Count)

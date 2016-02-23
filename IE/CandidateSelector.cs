@@ -41,7 +41,7 @@ namespace IE
 
             //foreach (var candidate in candidates)
             //{
-            //    System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
+            //    //System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
             //}
 
             return candidates;
@@ -91,7 +91,7 @@ namespace IE
 
             //foreach (var candidate in candidates)
             //{
-            //    System.Console.WriteLine("WHEN CANDIDATE " + candidate.Value);
+            //    //System.Console.WriteLine("WHEN CANDIDATE " + candidate.Value);
             //}
 
             return candidates;

@@ -57,7 +57,7 @@ namespace IE
                     String.Join("; ", listAllWhoAnnotations[nI].ToArray()),
                     String.Join("; ", listAllWhenAnnotations[nI].ToArray()),
                     String.Join("; ", listAllWhereAnnotations[nI].ToArray()),
-                    listAllWhatAnnotations[nI], listAllWhyAnnotations[nI]);
+                    listAllWhatAnnotations[nI], listAllWhyAnnotations[nI], nI);
             }
             writer.WriteEndElement();
             writer.WriteEndDocument();
@@ -65,7 +65,7 @@ namespace IE
         }
 
         public void addArticleToXML(XmlTextWriter writer, String title, String author, DateTime date, String body, String link,
-            String who, String when, String where, String what, String why)
+            String who, String when, String where, String what, String why, int index)
         {
             writer.WriteStartElement("article");
             writer.WriteStartElement("title");
@@ -105,6 +105,9 @@ namespace IE
             writer.WriteEndElement();
             writer.WriteStartElement("why");
             writer.WriteString(why);
+            writer.WriteEndElement();
+            writer.WriteStartElement("index");
+            writer.WriteString(index.ToString());
             writer.WriteEndElement();
             writer.WriteEndElement();
         }
