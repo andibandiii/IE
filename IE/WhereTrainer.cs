@@ -10,6 +10,8 @@ namespace IE
 {
     class WhereTrainer : Trainer
     {
+        private static int nNoDataCount = 0;
+
         public WhereTrainer() : base()
         {
 
@@ -137,9 +139,11 @@ namespace IE
                         else
                         {
                             str += "no";
+                            nNoDataCount++;
                         }
 
-                        sw.WriteLine(str);
+                        if (nNoDataCount <= 120 || candidate.IsWhere)
+                            sw.WriteLine(str);
                     }
                 }
             }

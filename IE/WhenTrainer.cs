@@ -10,6 +10,8 @@ namespace IE
 {
     class WhenTrainer : Trainer
     {
+        private static int nNoDataCount = 0;
+
         public WhenTrainer() : base()
         {
 
@@ -137,9 +139,11 @@ namespace IE
                         else
                         {
                             str += "no";
+                            nNoDataCount++;
                         }
 
-                        sw.WriteLine(str);
+                        if (nNoDataCount <= 100 || candidate.IsWhen)
+                            sw.WriteLine(str);
                     }
                 }
             }

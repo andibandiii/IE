@@ -10,6 +10,8 @@ namespace IE
 {
     class WhoTrainer : Trainer
     {
+        private static int nNoDataCount = 0;
+
         public WhoTrainer() : base()
         {
 
@@ -137,9 +139,11 @@ namespace IE
                         else
                         {
                             str += "no";
+                            nNoDataCount++;
                         }
 
-                        sw.WriteLine(str);
+                        if (nNoDataCount <= 600 || candidate.IsWho)
+                            sw.WriteLine(str);
                     }
                 }
             }
