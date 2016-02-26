@@ -49,7 +49,7 @@ namespace IE
                 Trainer whereTrainer = new WhereTrainer();
 
                 //Temporarily set to 2 because getting all articles takes longer run time
-                for (int nI = 0; nI < listCurrentArticles.Count; nI++)
+                for (int nI = 0; nI < 30; nI++)
                 {
                     preprocessor.setCurrentArticle(listCurrentArticles[nI]);
                     preprocessor.preprocess();
@@ -70,7 +70,7 @@ namespace IE
                 whereTrainer.trainMany(listTokenizedArticles, listAllWhereCandidates);
             }
 
-            /*Identifier annotationIdentifier = new Identifier();
+            Identifier annotationIdentifier = new Identifier();
             for (int nI = 0; nI < 30; nI++)
             {
                 annotationIdentifier.setCurrentArticle(listTokenizedArticles[nI]);
@@ -88,7 +88,7 @@ namespace IE
             }
 
             ResultWriter rw = new ResultWriter(destinationPath, listCurrentArticles, listAllWhoAnnotations, listAllWhenAnnotations, listAllWhereAnnotations, listAllWhatAnnotations, listAllWhyAnnotations);
-            rw.generateOutput();*/
+            rw.generateOutput();
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
