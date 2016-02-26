@@ -34,7 +34,7 @@ namespace IE
                     using (StreamWriter sw = File.CreateText(path))
                     {
                         sw.WriteLine("@relation who");
-                        sw.WriteLine("@attribute word string\n@attribute sentence NUMERIC\n@attribute position NUMERIC");
+                        sw.WriteLine("@attribute word string\n@attribute wordCount NUMERIC\n@attribute sentence NUMERIC\n@attribute position NUMERIC");
                         sw.WriteLine("@attribute wordScore NUMERIC");
 
                         for (int c = 10; c > 0; c--)
@@ -142,7 +142,7 @@ namespace IE
                             nNoDataCount++;
                         }
 
-                        if (nNoDataCount <= 600 || candidate.IsWho)
+                        if (nNoDataCount <= 882 || candidate.IsWho)
                             sw.WriteLine(str);
                     }
                 }
