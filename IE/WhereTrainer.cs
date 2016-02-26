@@ -68,7 +68,7 @@ namespace IE
                     int frequency = 0;
                     int endIndex = 0;
                     int wordsbefore = 0;
-                    int sentenceStartProximity = -1;
+                    double sentenceStartProximity = -1.0;
 
                     string[] arrCandidate = null;
 
@@ -91,7 +91,7 @@ namespace IE
                         {
                             if (tokenList.Count > 0 && tokenList[0].Sentence == sentence)
                             {
-                                sentenceStartProximity = (position - tokenList[0].Position) / tokenList.Count;
+                                sentenceStartProximity = (double)(position - tokenList[0].Position) / (double)tokenList.Count;
                                 break;
                             }
                         }
