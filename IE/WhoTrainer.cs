@@ -34,7 +34,7 @@ namespace IE
                     using (StreamWriter sw = File.CreateText(path))
                     {
                         sw.WriteLine("@relation who");
-                        sw.WriteLine("@attribute word string\n@attribute wordCount NUMERIC\n@attribute sentence NUMERIC\n@attribute position NUMERIC");
+                        sw.WriteLine("@attribute word string\n@attribute wordCount NUMERIC\n@attribute sentence NUMERIC\n@attribute position NUMERIC\n@attribute sentenceStartProximity NUMERIC");
                         sw.WriteLine("@attribute wordScore NUMERIC");
 
                         for (int c = 10; c > 0; c--)
@@ -62,13 +62,20 @@ namespace IE
                 {
                     String str = null;
                     String value = null;
+                    int wordcount = 0;
                     int sentence = 0;
                     int position = 0;
                     int frequency = 0;
                     int endIndex = 0;
                     int wordsbefore = 0;
+                    int sentenceStartProximity = -1;
 
                     string[] arrCandidate = null;
+
+                    List<List<Token>> segregatedTokenLists = listTokenizedArticle
+                        .GroupBy(token => token.Sentence)
+                        .Select(tokenGroup => tokenGroup.ToList())
+                        .ToList();
 
                     foreach (var candidate in listCandidates)
                     {
@@ -78,10 +85,20 @@ namespace IE
                         frequency = candidate.Frequency;
                         arrCandidate = candidate.Value.Split(' ');
                         endIndex = position + arrCandidate.Length - 1;
+                        wordcount = arrCandidate.Count();
+
+                        foreach (List<Token> tokenList in segregatedTokenLists)
+                        {
+                            if (tokenList.Count > 0 && tokenList[0].Sentence == sentence)
+                            {
+                                sentenceStartProximity = (position - tokenList[0].Position) / tokenList.Count;
+                                break;
+                            }
+                        }
 
                         wordsbefore = position - 10;
 
-                        str = "\"" + value + "\"," + sentence + "," + position + "," + frequency + ",";
+                        str = "\"" + value + "\"," + wordcount + "," + sentence + "," + position + "," + ((sentenceStartProximity == -1) ? "?" : "" + sentenceStartProximity) + "," + frequency + ",";
 
                         int ctrBefore = wordsbefore;
 
