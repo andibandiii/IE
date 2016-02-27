@@ -69,8 +69,8 @@ namespace IE
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
                 i = getCandidateByNer("DATE", i, candidates, tokenizedArticle);
-                getCandidateByMarkers(startMarkersExclusive, endMarkersExclusive, i, candidates, tokenizedArticle, true);
-                getCandidateByMarkers(startMarkersInclusive, endMarkersInclusive, i, candidates, tokenizedArticle, false);
+                getCandidateByMarkers(startMarkersExclusive, endMarkersExclusive, null, i, candidates, tokenizedArticle, true);
+                getCandidateByMarkers(startMarkersInclusive, endMarkersInclusive, null, i, candidates, tokenizedArticle, false);
             }
 
             for (int can = 0; can < candidates.Count; can++)
@@ -110,10 +110,15 @@ namespace IE
                 new String[] { "."},
                 new String[] { "."},
                 new String[] { "para", "noong", "nuong","sa","."} };
+            String[][] enderMarkers = new String[5][] { new String[] { },
+                new String[] { },
+                new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas"},
+                new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas"},
+                new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas"} };
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
                 i = getCandidateByNer("LOC", i, candidates, tokenizedArticle);
-                getCandidateByMarkers(startMarkers, endMarkers, i, candidates, tokenizedArticle, true);
+                getCandidateByMarkers(startMarkers, endMarkers, enderMarkers, i, candidates, tokenizedArticle, true);
             }
 
             for (int can = 0; can < candidates.Count; can++)
@@ -206,7 +211,7 @@ namespace IE
             return i;
         }
 
-        private void getCandidateByMarkers(String[] startMarkers, String[][] endMarkers, int i, List<Token> candidates, List<Token> tokenizedArticle, Boolean isExclusive)
+        private void getCandidateByMarkers(String[] startMarkers, String[][] endMarkers, String[][] enderMarkers, int i, List<Token> candidates, List<Token> tokenizedArticle, Boolean isExclusive)
         {
 
             for (int j = 0; j < startMarkers.Length; j++)
@@ -233,6 +238,17 @@ namespace IE
                                 endMarkerFound = true;
                                 flag = false;
                                 break;
+                            }
+                        }
+                        if (enderMarkers != null)
+                        {
+                            foreach (String markers in enderMarkers[j])
+                            {
+                                if (tokenizedArticle[i].Value.Equals(markers, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    flag = false;
+                                    break;
+                                }
                             }
                         }
                         if (tokenizedArticle[i].Sentence != sentenceNumber)
