@@ -66,11 +66,13 @@ namespace IE
                 new String[] { "ay", "upang", ",", "."} };
             String[] startMarkersInclusive = new String[] { "kamakalawa" };
             String[][] endMarkersInclusive = new String[][] { new String[] { "gabi", "umaga", "hapon" } };
+            String[] gazette = new String[] { "kahapon" };
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
                 i = getCandidateByNer("DATE", i, candidates, tokenizedArticle);
                 getCandidateByMarkers(startMarkersExclusive, endMarkersExclusive, null, i, candidates, tokenizedArticle, true);
                 getCandidateByMarkers(startMarkersInclusive, endMarkersInclusive, null, i, candidates, tokenizedArticle, false);
+                getCandidateByGazette(gazette, i, candidates, tokenizedArticle);
             }
 
             for (int can = 0; can < candidates.Count; can++)
@@ -339,6 +341,24 @@ namespace IE
                 //System.Console.WriteLine("CANDIDATE BY POS [{0}]: {1} (Position {2})", posTag, newToken.Value, newToken.Position);
             }
             return i;
+        }
+
+        private void getCandidateByGazette(String[] gazette, int i, List<Token> candidates, List<Token> tokenizedArticle)
+        {
+            if (i < tokenizedArticle.Count && tokenizedArticle[i].Sentence <= 3)
+            {
+                if(gazette.Contains(tokenizedArticle[i].Value))
+                {
+                    var newToken = new Token(tokenizedArticle[i].Value, tokenizedArticle[i].Position);
+                    newToken.Sentence = tokenizedArticle[i].Sentence;
+                    newToken.NamedEntity = tokenizedArticle[i].NamedEntity;
+                    newToken.PartOfSpeech = tokenizedArticle[i].PartOfSpeech;
+                    newToken.Frequency = tokenizedArticle[i].Frequency;
+                    candidates.Add(newToken);
+
+                    //System.Console.WriteLine("CANDIDATE BY GAZETTER: {0} (Position {1})", newToken.Value, newToken.Position);
+                }
+            }
         }
     }
 }
