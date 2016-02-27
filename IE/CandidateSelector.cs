@@ -109,12 +109,12 @@ namespace IE
                 new String[] { "para"},
                 new String[] { "."},
                 new String[] { "."},
-                new String[] { "para", "noong", "nuong","sa","."} };
+                new String[] { "para", "noong", "nuong","sa","kamakalawa","kamakala-wa","."} };
             String[][] enderMarkers = new String[5][] { new String[] { },
                 new String[] { },
-                new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas"},
-                new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas"},
-                new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas"} };
+                new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas","oras"},
+                new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas","oras"},
+                new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas","oras"} };
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
                 i = getCandidateByNer("LOC", i, candidates, tokenizedArticle);
