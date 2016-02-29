@@ -12,16 +12,44 @@ namespace IE
         public List<Token> performWhoCandidateSelection(List<Token> tokenizedArticle)
         {
             List<Token> candidates = new List<Token>();
+            String[] startMarkers = new String[7] { "si",
+                "sina",
+                "kay",
+                "ni",
+                "ang",
+                "ng",
+                "sa"};
+            String[][] endMarkers = new String[7][] { new String[] { "na", "ng", ".", "bilang", "ang", "kamakalawa", "alyas", "at", "kay", ",", "sa", "makaraang"},
+                new String[] { "at"},
+                new String[] { "ng", "na"},
+                new String[] { "ng", ",", "na", "ang"},
+                new String[] { "na", "sa", "kay", "at", "ng", "makaraang", "para", "nang", "ang", "-LRB-"},
+                new String[] { "ng", "ang", "si", "ang", ".", "para", "at", "na", "sa", "-LRB-"},
+                new String[] { "sa", "na", "kaugnay", "ang", "upang", ",", ".", "-LRB-"} };
+            String[][] enderMarkers = new String[7][] { new String[] { "dahil", "kapag", "noong"},
+                new String[] { "dahil", "kapag", "noong"},
+                new String[] { "dahil", "kapag", "noong"},
+                new String[] { "dahil", "kapag", "noong"},
+                new String[] { "dahil", "kapag", "noong"},
+                new String[] { "dahil", "kapag", "noong"},
+                new String[] { "dahil", "kapag", "noong"}}; // Add all why start markers
+
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
                 i = getCandidateByNer("PER", i, candidates, tokenizedArticle);
                 i = getCandidateByNer("ORG", i, candidates, tokenizedArticle);
+                getCandidateByMarkers(startMarkers, endMarkers, enderMarkers, i, candidates, tokenizedArticle, true);
+
+                if (tokenizedArticle[i].Sentence > 3)
+                {
+                    break;
+                }
             }
 
-            for (int i = 0; i < tokenizedArticle.Count; i++)
-            {
-                i = getCandidateByPos("NNP", i, candidates, tokenizedArticle);
-            }
+            //for (int i = 0; i < tokenizedArticle.Count; i++)
+            //{
+            //    i = getCandidateByPos("NNC", i, candidates, tokenizedArticle);
+            //}
 
             for (int can = 0; can < candidates.Count; can++)
             {
@@ -39,10 +67,10 @@ namespace IE
                 }
             }
 
-            //foreach (var candidate in candidates)
-            //{
-            //    //System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
-            //}
+            foreach (var candidate in candidates)
+            {
+                System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
+            }
 
             return candidates;
         }
@@ -73,6 +101,11 @@ namespace IE
                 getCandidateByMarkers(startMarkersExclusive, endMarkersExclusive, null, i, candidates, tokenizedArticle, true);
                 getCandidateByMarkers(startMarkersInclusive, endMarkersInclusive, null, i, candidates, tokenizedArticle, false);
                 getCandidateByGazette(gazette, i, candidates, tokenizedArticle);
+
+                if (tokenizedArticle[i].Sentence > 3)
+                {
+                    break;
+                }
             }
 
             for (int can = 0; can < candidates.Count; can++)
@@ -121,6 +154,11 @@ namespace IE
             {
                 i = getCandidateByNer("LOC", i, candidates, tokenizedArticle);
                 getCandidateByMarkers(startMarkers, endMarkers, enderMarkers, i, candidates, tokenizedArticle, true);
+
+                if (tokenizedArticle[i].Sentence > 3)
+                {
+                    break;
+                }
             }
 
             for (int can = 0; can < candidates.Count; can++)
@@ -183,7 +221,7 @@ namespace IE
 
         private int getCandidateByNer(String nerTag, int i, List<Token> candidates, List<Token> tokenizedArticle)
         {
-            if (tokenizedArticle[i].Sentence <= 3 && tokenizedArticle[i].NamedEntity.Equals(nerTag))
+            if (tokenizedArticle[i].NamedEntity.Equals(nerTag))
             {
                 int startIndex = i;
                 String strValue = tokenizedArticle[i].Value;
@@ -300,7 +338,7 @@ namespace IE
                         newToken.Frequency = tempWs;
                         candidates.Add(newToken);
 
-                        //System.Console.WriteLine("CANDIDATE BY MARKERS: {0}\n\t{1}", newToken.Value, posValue);
+                        //System.Console.WriteLine("CANDIDATE BY MARKERS: {0}"/*\n\t{1}*/, newToken.Value/*, posValue*/);
                     }
                     else
                     {
@@ -313,7 +351,7 @@ namespace IE
 
         private int getCandidateByPos(String posTag, int i, List<Token> candidates, List<Token> tokenizedArticle)
         {
-            if (i < tokenizedArticle.Count && tokenizedArticle[i].PartOfSpeech != null && tokenizedArticle[i].PartOfSpeech.Equals(posTag) && tokenizedArticle[i].Sentence <= 3)
+            if (i < tokenizedArticle.Count && tokenizedArticle[i].PartOfSpeech != null && tokenizedArticle[i].PartOfSpeech.Equals(posTag))
             {
                 int startIndex = i;
                 String strValue = tokenizedArticle[i].Value;

@@ -256,7 +256,7 @@ namespace IE
         #endregion
 
         #region Annotation Preprocessing Functions
-        private void performMultipleAnnotationAssignment(String annotationType = "WHO")
+        private void performMultipleAnnotationAssignment(String annotationType)
         {
             annotationType = annotationType.ToUpper();
             if (annotationType != "WHO" && annotationType != "WHEN" && annotationType != "WHERE")
