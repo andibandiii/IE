@@ -64,8 +64,10 @@ namespace IE
                 new String[] { ",", "."},
                 new String[] { ",", "."},
                 new String[] { "ay", "upang", ",", "."} };
-            String[] startMarkersInclusive = new String[] { "kamakalawa" };
-            String[][] endMarkersInclusive = new String[][] { new String[] { "gabi", "umaga", "hapon" } };
+            String[] startMarkersInclusive = new String[] { "kamakalawa",
+                "kamakala-wa" };
+            String[][] endMarkersInclusive = new String[][] { new String[] { "gabi", "umaga", "hapon" },
+                new String[] { "gabi", "umaga", "hapon" } };
             String[] gazette = new String[] { "kahapon" };
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
