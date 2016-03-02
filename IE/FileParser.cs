@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -24,9 +25,9 @@ namespace IE
                 Article article = new Article();
 
                 article.Author = articleNode.SelectSingleNode("author").InnerText;
-                article.Body = articleNode.SelectSingleNode("body").InnerText;
+                article.Body = WebUtility.HtmlDecode(articleNode.SelectSingleNode("body").InnerText);
                 article.Link = articleNode.SelectSingleNode("link").InnerText;
-                article.Title = articleNode.SelectSingleNode("title").InnerText;
+                article.Title = WebUtility.HtmlDecode(articleNode.SelectSingleNode("title").InnerText);
 
                 String date = articleNode.SelectSingleNode("date").SelectSingleNode("month").InnerText + "/" +
                     articleNode.SelectSingleNode("date").SelectSingleNode("day").InnerText + "/" +
@@ -55,11 +56,11 @@ namespace IE
             {
                 Annotation annotation = new Annotation();
 
-                annotation.Who = articleNode.SelectSingleNode("who").InnerText;
-                annotation.Where = articleNode.SelectSingleNode("where").InnerText;
-                annotation.When = articleNode.SelectSingleNode("when").InnerText;
-                annotation.What = articleNode.SelectSingleNode("what").InnerText;
-                annotation.Why = articleNode.SelectSingleNode("why").InnerText;
+                annotation.Who = WebUtility.HtmlDecode(articleNode.SelectSingleNode("who").InnerText);
+                annotation.Where = WebUtility.HtmlDecode(articleNode.SelectSingleNode("where").InnerText);
+                annotation.When = WebUtility.HtmlDecode(articleNode.SelectSingleNode("when").InnerText);
+                annotation.What = WebUtility.HtmlDecode(articleNode.SelectSingleNode("what").InnerText);
+                annotation.Why = WebUtility.HtmlDecode(articleNode.SelectSingleNode("why").InnerText);
 
                 annotationList.Add(annotation);
             }

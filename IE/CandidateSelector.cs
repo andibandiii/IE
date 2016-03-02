@@ -55,7 +55,7 @@ namespace IE
             {
                 for (int a = 0; a < can; a++)
                 {
-                    if (candidates[can].Value.Equals(candidates[a].Value))
+                    if (candidates[can].Value != null && candidates[a].Value != null && candidates[can].Value.Equals(candidates[a].Value))
                     {
                         candidates.RemoveAt(can);
                         if (can > 0)
