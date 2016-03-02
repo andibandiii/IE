@@ -267,6 +267,7 @@ namespace IE
             String strAnnotation = "";
             Action<string> assignmentMethod = null;
             string[] arrAnnotations = null;
+            bool foundMatchingCandidate = false;
 
             switch (annotationType)
             {
@@ -278,8 +279,9 @@ namespace IE
                             if (candidate.Value == annotation)
                             {
                                 candidate.IsWho = true;
+                                foundMatchingCandidate = true;
                                 //System.Console.WriteLine("WHO\nBEFORE: " + (((candidate.Position - 2) >= 0) ? listLatestTokenizedArticle[candidate.Position - 2].Value : "N/A"));
-                                string[] temp = candidate.Value.Split(' ');
+                                //string[] temp = candidate.Value.Split(' ');
                                 //System.Console.WriteLine("AFTER: " + (((candidate.Position + temp.Length - 1) <= listLatestTokenizedArticle.Count()) ? listLatestTokenizedArticle[candidate.Position + temp.Length - 1].Value : "N/A"));
                                 break;
                             }
@@ -294,8 +296,9 @@ namespace IE
                             if (candidate.Value == annotation)
                             {
                                 candidate.IsWhen = true;
+                                foundMatchingCandidate = true;
                                 //System.Console.WriteLine("WHEN\nBEFORE: " + (((candidate.Position - 2) >= 0) ? listLatestTokenizedArticle[candidate.Position - 2].Value : "N/A"));
-                                string[] temp = candidate.Value.Split(' ');
+                                //string[] temp = candidate.Value.Split(' ');
                                 //System.Console.WriteLine("AFTER: " + (((candidate.Position + temp.Length - 1) <= listLatestTokenizedArticle.Count()) ? listLatestTokenizedArticle[candidate.Position + temp.Length - 1].Value : "N/A"));
                                 break;
                             }
@@ -310,8 +313,9 @@ namespace IE
                             if (candidate.Value == annotation)
                             {
                                 candidate.IsWhere = true;
+                                foundMatchingCandidate = true;
                                 //System.Console.WriteLine("WHERE\nBEFORE: " + (((candidate.Position - 2) >= 0) ? listLatestTokenizedArticle[candidate.Position - 2].Value : "N/A"));
-                                string[] temp = candidate.Value.Split(' ');
+                                //string[] temp = candidate.Value.Split(' ');
                                 //System.Console.WriteLine("AFTER: " + (((candidate.Position + temp.Length - 1) <= listLatestTokenizedArticle.Count()) ? listLatestTokenizedArticle[candidate.Position + temp.Length - 1].Value : "N/A"));
                                 break;
                             }
@@ -338,6 +342,60 @@ namespace IE
                 if (assignmentMethod != null)
                 {
                     assignmentMethod(arrAnnotations[r]);
+                }
+
+                if (!foundMatchingCandidate)
+                {
+                    int i = -1;
+                    String[] wordForWordAnnotation = arrAnnotations[r].Split(' ');
+                    for (int ctr = 0; ctr < listLatestTokenizedArticle.Count; ctr++)
+                    {
+                        if (wordForWordAnnotation[0].Contains(listLatestTokenizedArticle[ctr].Value))
+                        {
+                            i = ctr;
+                            break;
+                        }
+                    }
+
+                    if (i > -1)
+                    {
+                        //add as candidate
+                        int startIndex = i;
+                        int tempWs = listLatestTokenizedArticle[i].Frequency;
+
+                        for (int ctr = startIndex; ctr < startIndex + wordForWordAnnotation.Count(); ctr++)
+                        {
+                            if (ctr < listLatestTokenizedArticle.Count && listLatestTokenizedArticle[ctr].Frequency > tempWs)
+                            {
+                                tempWs = listLatestTokenizedArticle[ctr].Frequency;
+                            }
+                        }
+
+                        var newToken = new Token(arrAnnotations[r], listLatestTokenizedArticle[startIndex].Position);
+                        newToken.Sentence = listLatestTokenizedArticle[i].Sentence;
+                        newToken.NamedEntity = listLatestTokenizedArticle[i].NamedEntity;
+                        newToken.PartOfSpeech = listLatestTokenizedArticle[i].PartOfSpeech;
+                        newToken.Frequency = tempWs;
+                        switch (annotationType)
+                        {
+                            case "WHO":
+                                newToken.IsWho = true;
+                                listWhoCandidates.Add(newToken);
+                                break;
+                            case "WHEN":
+                                newToken.IsWhen = true;
+                                listWhenCandidates.Add(newToken);
+                                break;
+                            case "WHERE":
+                                newToken.IsWhere = true;
+                                listWhereCandidates.Add(newToken);
+                                break;
+                        }
+                    }
+                }
+                else
+                {
+                    foundMatchingCandidate = false;
                 }
             }
         }

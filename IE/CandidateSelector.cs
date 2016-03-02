@@ -67,10 +67,10 @@ namespace IE
                 }
             }
 
-            foreach (var candidate in candidates)
-            {
-                System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
-            }
+            //foreach (var candidate in candidates)
+            //{
+            //    System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
+            //}
 
             return candidates;
         }
