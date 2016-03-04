@@ -185,16 +185,48 @@ namespace IE
 
         private void labelWhat()
         {
+            double WEIGHT_PER_WHO = 0.3;
+            double WEIGHT_PER_WHEN = 0.2;
+            double WEIGHT_PER_WHERE = 0.2;
+            double WEIGHT_PER_SENTENCE = 1;
+
+            List<double> candidateWeights = new List<double>();
+            double highestWeight = -1;
+
             if (listWhatCandidates.Count > 0)
             {
-                strWhat = String.Join(" ", listWhatCandidates[0].Select(token => token.Value).ToArray());
-                strWhat = strWhat.Replace("-LRB- ", "(");
-                strWhat = strWhat.Replace(" -RRB-", ")");
-                strWhat = strWhat.Replace(" . ", ".");
-                strWhat = strWhat.Replace(" .", ".");
-                strWhat = strWhat.Replace(" ,", ",");
-                strWhat = strWhat.Replace(" !", "!");
+                foreach(List<Token> candidate in listWhatCandidates)
+                {
+                    String tempWhat = "";
+                    double tempWeight = 0;
+
+                    tempWhat = String.Join(" ", candidate.Select(token => token.Value).ToArray());
+                    tempWhat = tempWhat.Replace("-LRB- ", "(");
+                    tempWhat = tempWhat.Replace(" -RRB-", ")");
+                    tempWhat = tempWhat.Replace(" . ", ".");
+                    tempWhat = tempWhat.Replace(" .", ".");
+                    tempWhat = tempWhat.Replace(" ,", ",");
+                    tempWhat = tempWhat.Replace(" !", "!");
+
+                    tempWeight += listWho.Where(tempWhat.Contains).Count() * WEIGHT_PER_WHO;
+                    tempWeight += listWhen.Where(tempWhat.Contains).Count() * WEIGHT_PER_WHEN;
+                    tempWeight += listWhere.Where(tempWhat.Contains).Count() * WEIGHT_PER_WHERE;
+                    tempWeight += WEIGHT_PER_SENTENCE / candidate[0].Sentence;
+
+                    candidateWeights.Add(tempWeight);
+                    System.Console.WriteLine("---------");
+                    System.Console.WriteLine("Candidate: \t{0}\nWeight: \t{1}", tempWhat, tempWeight);
+
+                    if (tempWeight > highestWeight)
+                    {
+                        strWhat = tempWhat;
+                        highestWeight = tempWeight;
+                    }
+                }
             }
+
+            System.Console.WriteLine("---------");
+            System.Console.WriteLine("Final Candidate: {0}", strWhat);
         }
 
         private void labelWhy()
