@@ -231,15 +231,28 @@ namespace IE
 
         private void labelWhy()
         {
+            String[][] markers = new String[][] {
+                new String[] { "dahil", "START" },
+                new String[] { "kaya", "END" }
+            };
+            
             if (listWhyCandidates.Count > 0)
             {
                 strWhy = String.Join(" ", listWhyCandidates[0].Select(token => token.Value).ToArray());
                 strWhy = strWhy.Replace("-LRB- ", "(");
                 strWhy = strWhy.Replace(" -RRB-", ")");
-                strWhy = strWhy.Replace(" . ", ".");
-                strWhy = strWhy.Replace(" .", ".");
+                strWhy = strWhy.Replace(" . ", "");
+                strWhy = strWhy.Replace(" .", "");
                 strWhy = strWhy.Replace(" ,", ",");
                 strWhy = strWhy.Replace(" !", "!");
+
+                foreach(String[] match in markers.Where(s => strWhy.Contains(s[0])))
+                {
+                    System.Console.WriteLine("---------");
+                    System.Console.WriteLine("Candidate: \t{0}\nMarker: \t{1}", (match[1].Equals("START")) ? 
+                        strWhy.Substring(strWhy.IndexOf(match[0]) + match[0].Count() + 1) : 
+                        strWhy.Substring(0, strWhy.IndexOf(match[0])), match[0]);
+                }
             }
         }
         #endregion
