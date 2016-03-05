@@ -254,7 +254,7 @@ namespace IE
                     bool hasWhat = false;
                     bool hasMarker = false;
 
-                    tempWhy = String.Join(" ", listWhyCandidates[0].Select(token => token.Value).ToArray());
+                    tempWhy = String.Join(" ", candidate.Select(token => token.Value).ToArray());
                     tempWhy = tempWhy.Replace("-LRB- ", "(");
                     tempWhy = tempWhy.Replace(" -RRB-", ")");
                     tempWhy = tempWhy.Replace(" . ", ".");
