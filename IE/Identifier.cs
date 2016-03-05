@@ -215,7 +215,9 @@ namespace IE
 
                     candidateWeights.Add(tempWeight);
                     System.Console.WriteLine("---------");
-                    System.Console.WriteLine("Candidate: \t{0}\nWeight: \t{1}", tempWhat, tempWeight);
+                    System.Console.WriteLine("Candidate: \t{0}\nWeight: \t{1}", 
+                        tempWhat, 
+                        tempWeight);
 
                     if (tempWeight > highestWeight)
                     {
@@ -226,14 +228,18 @@ namespace IE
             }
 
             System.Console.WriteLine("---------");
-            System.Console.WriteLine("Final Candidate: {0}", strWhat);
+            System.Console.WriteLine("WHAT: {0}", 
+                strWhat);
         }
 
         private void labelWhy()
         {
             double WEIGHT_PER_MARKER = 0.5;
             double WEIGHT_PER_WHAT = 0.5;
-
+            double WEIGHT_PER_CHAR = 0.01;
+            double WEIGHT_PER_SENTENCE = 0;
+            double CARRY_OVER = 0;
+            
             String[][] markers = new String[][] {
                 new String[] { "dahil", "START" },
                 new String[] { "para", "START" },
@@ -242,7 +248,7 @@ namespace IE
             };
 
             List<double> candidateWeights = new List<double>();
-            double highestWeight = 0;
+            double highestWeight = 0.5;
 
             if (listWhyCandidates.Count > 0)
             {
@@ -253,7 +259,7 @@ namespace IE
                     String[] match;
                     bool hasWhat = false;
                     bool hasMarker = false;
-
+                    
                     tempWhy = String.Join(" ", candidate.Select(token => token.Value).ToArray());
                     tempWhy = tempWhy.Replace("-LRB- ", "(");
                     tempWhy = tempWhy.Replace(" -RRB-", ")");
@@ -277,25 +283,40 @@ namespace IE
                             tempWhy.Substring(0, tempWhy.IndexOf(match[0]));
                         tempWeight += WEIGHT_PER_WHAT;
                         hasMarker = true;
-
-                        System.Console.WriteLine("---------");
-                        System.Console.WriteLine("Candidate: \t{0}\nMarker: \t{1}", tempWhy, match[0]);
                     }
+
+                    tempWeight += CARRY_OVER;
+                    CARRY_OVER = 0;
 
                     if(strWhat.Contains(tempWhy))
                     {
                         tempWeight = 0;
                     }
 
+                    if(strWhat.Equals(tempWhy))
+                    {
+                        CARRY_OVER = 1;
+                    }
+
+                    System.Console.WriteLine("---------");
+                    System.Console.WriteLine("Candidate: \t{0}\nMarker: \t{1}\nWeight: \t{2}", 
+                        tempWhy, 
+                        match != null ? match[0] : "N/A", 
+                        tempWeight);
+
                     candidateWeights.Add(tempWeight);
 
                     if (tempWeight > highestWeight)
                     {
-                        strWhat = tempWhy;
+                        strWhy = tempWhy;
                         highestWeight = tempWeight;
                     }
                 }
             }
+
+            System.Console.WriteLine("---------");
+            System.Console.WriteLine("WHY: {0}", 
+                strWhy);
         }
         #endregion
 
