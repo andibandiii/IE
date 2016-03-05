@@ -231,27 +231,69 @@ namespace IE
 
         private void labelWhy()
         {
+            double WEIGHT_PER_MARKER = 0.5;
+            double WEIGHT_PER_WHAT = 0.5;
+
             String[][] markers = new String[][] {
                 new String[] { "dahil", "START" },
+                new String[] { "para", "START" },
+                new String[] { "upang", "START" },
                 new String[] { "kaya", "END" }
             };
-            
+
+            List<double> candidateWeights = new List<double>();
+            double highestWeight = 0;
+
             if (listWhyCandidates.Count > 0)
             {
-                strWhy = String.Join(" ", listWhyCandidates[0].Select(token => token.Value).ToArray());
-                strWhy = strWhy.Replace("-LRB- ", "(");
-                strWhy = strWhy.Replace(" -RRB-", ")");
-                strWhy = strWhy.Replace(" . ", "");
-                strWhy = strWhy.Replace(" .", "");
-                strWhy = strWhy.Replace(" ,", ",");
-                strWhy = strWhy.Replace(" !", "!");
-
-                foreach(String[] match in markers.Where(s => strWhy.Contains(s[0])))
+                foreach (List<Token> candidate in listWhyCandidates)
                 {
-                    System.Console.WriteLine("---------");
-                    System.Console.WriteLine("Candidate: \t{0}\nMarker: \t{1}", (match[1].Equals("START")) ? 
-                        strWhy.Substring(strWhy.IndexOf(match[0]) + match[0].Count() + 1) : 
-                        strWhy.Substring(0, strWhy.IndexOf(match[0])), match[0]);
+                    String tempWhy = "";
+                    double tempWeight = 0;
+                    String[] match;
+                    bool hasWhat = false;
+                    bool hasMarker = false;
+
+                    tempWhy = String.Join(" ", listWhyCandidates[0].Select(token => token.Value).ToArray());
+                    tempWhy = tempWhy.Replace("-LRB- ", "(");
+                    tempWhy = tempWhy.Replace(" -RRB-", ")");
+                    tempWhy = tempWhy.Replace(" . ", ".");
+                    tempWhy = tempWhy.Replace(" .", ".");
+                    tempWhy = tempWhy.Replace(" ,", ",");
+                    tempWhy = tempWhy.Replace(" !", "!");
+
+                    if(tempWhy.Contains(strWhat))
+                    {
+                        tempWeight += WEIGHT_PER_MARKER;
+                        hasWhat = true;
+                    }
+                    
+                    match = markers.FirstOrDefault(s => tempWhy.Contains(s[0]));
+
+                    if(match != null)
+                    {
+                        tempWhy = (match[1].Equals("START")) ?
+                            tempWhy.Substring(tempWhy.IndexOf(match[0]) + match[0].Count() + 1) :
+                            tempWhy.Substring(0, tempWhy.IndexOf(match[0]));
+                        tempWeight += WEIGHT_PER_WHAT;
+                        hasMarker = true;
+
+                        System.Console.WriteLine("---------");
+                        System.Console.WriteLine("Candidate: \t{0}\nMarker: \t{1}", tempWhy, match[0]);
+                    }
+
+                    if(strWhat.Contains(tempWhy))
+                    {
+                        tempWeight = 0;
+                    }
+
+                    candidateWeights.Add(tempWeight);
+
+                    if (tempWeight > highestWeight)
+                    {
+                        strWhat = tempWhy;
+                        highestWeight = tempWeight;
+                    }
                 }
             }
         }
