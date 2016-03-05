@@ -20,12 +20,17 @@ namespace IE
         [STAThread]
         public static void Main()
         {
+            Boolean isAnnotated = true;
             FileParser fileparserFP = new FileParser();
             String sourcePath = @"..\..\training_news.xml";
             String destinationPath = @"..\..\result.xml";
 
             List<Article> listCurrentArticles = fileparserFP.parseFile(sourcePath);
-            List<Annotation> listCurrentTrainingAnnotations = fileparserFP.parseAnnotations(sourcePath);
+            List<Annotation> listCurrentTrainingAnnotations = new List<Annotation>();
+            if (isAnnotated)
+            {
+                 listCurrentTrainingAnnotations = fileparserFP.parseAnnotations(sourcePath);
+            }
             List<List<Token>> listTokenizedArticles = new List<List<Token>>();
             List<List<Token>> listAllWhoCandidates = new List<List<Token>>();
             List<List<Token>> listAllWhenCandidates = new List<List<Token>>();
@@ -40,13 +45,10 @@ namespace IE
 
 
             if (listCurrentArticles != null && listCurrentArticles.Count > 0 &&
-                listCurrentTrainingAnnotations != null && listCurrentTrainingAnnotations.Count > 0 &&
-                listCurrentArticles.Count == listCurrentTrainingAnnotations.Count)
+                (!isAnnotated || (listCurrentTrainingAnnotations != null && listCurrentTrainingAnnotations.Count > 0 &&
+                listCurrentArticles.Count == listCurrentTrainingAnnotations.Count)))
             {
                 Preprocessor preprocessor = new Preprocessor();
-                Trainer whoTrainer = new WhoTrainer();
-                Trainer whenTrainer = new WhenTrainer();
-                Trainer whereTrainer = new WhereTrainer();
 
                 //Temporarily set to 2 because getting all articles takes longer run time
                 for (int nI = 0; nI < 30; nI++)
@@ -54,8 +56,11 @@ namespace IE
                     preprocessor.setCurrentArticle(listCurrentArticles[nI]);
                     preprocessor.preprocess();
 
-                    preprocessor.setCurrentAnnotation(listCurrentTrainingAnnotations[nI]);
-                    preprocessor.performAnnotationAssignment();
+                    if (isAnnotated)
+                    {
+                        preprocessor.setCurrentAnnotation(listCurrentTrainingAnnotations[nI]);
+                        preprocessor.performAnnotationAssignment();
+                    }
 
                     listTokenizedArticles.Add(preprocessor.getLatestTokenizedArticle());
                     listAllWhoCandidates.Add(preprocessor.getWhoCandidates());
@@ -65,9 +70,15 @@ namespace IE
                     listAllWhyCandidates.Add(preprocessor.getWhyCandidates());
                 }
 
-                whoTrainer.trainMany(listTokenizedArticles, listAllWhoCandidates);
-                whenTrainer.trainMany(listTokenizedArticles, listAllWhenCandidates);
-                whereTrainer.trainMany(listTokenizedArticles, listAllWhereCandidates);
+                if (isAnnotated)
+                {
+                    Trainer whoTrainer = new WhoTrainer();
+                    Trainer whenTrainer = new WhenTrainer();
+                    Trainer whereTrainer = new WhereTrainer();
+                    whoTrainer.trainMany(listTokenizedArticles, listAllWhoCandidates);
+                    whenTrainer.trainMany(listTokenizedArticles, listAllWhenCandidates);
+                    whereTrainer.trainMany(listTokenizedArticles, listAllWhereCandidates);
+                }
             }
 
             Identifier annotationIdentifier = new Identifier();
