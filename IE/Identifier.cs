@@ -193,12 +193,22 @@ namespace IE
             List<double> candidateWeights = new List<double>();
             double highestWeight = -1;
 
+            String[][] markers = new String[][] {
+                new String[] { "kaya", "START" },
+                new String[] { "para", "END" },
+                new String[] { "dahil", "END" },
+                new String[] { "upang", "END" },
+                new String[] { "makaraang", "END" },
+            };
+
             if (listWhatCandidates.Count > 0)
             {
-                foreach(List<Token> candidate in listWhatCandidates)
+                foreach (List<Token> candidate in listWhatCandidates)
                 {
                     String tempWhat = "";
                     double tempWeight = 0;
+                    String[] match;
+                    bool hasMarker = false;
 
                     tempWhat = String.Join(" ", candidate.Select(token => token.Value).ToArray());
                     tempWhat = tempWhat.Replace("-LRB- ", "(");
@@ -215,15 +225,25 @@ namespace IE
 
                     candidateWeights.Add(tempWeight);
                     System.Console.WriteLine("---------");
-                    System.Console.WriteLine("Candidate: \t{0}\nWeight: \t{1}", 
-                        tempWhat, 
-                        tempWeight);
+                    System.Console.WriteLine("Candidate: \t{0}\nWeight: \t{1}", tempWhat, tempWeight);
+
+                    match = markers.FirstOrDefault(s => tempWhat.Contains(s[0]));
+
+                    if (match != null)
+                    {
+                        tempWhat = (match[1].Equals("START")) ?
+                            tempWhat.Substring(tempWhat.IndexOf(match[0]) + match[0].Count() + 1) :
+                            tempWhat.Substring(0, tempWhat.IndexOf(match[0]));
+                        hasMarker = true;
+                    }
 
                     if (tempWeight > highestWeight)
                     {
                         strWhat = tempWhat;
                         highestWeight = tempWeight;
                     }
+
+
                 }
             }
 
@@ -244,6 +264,7 @@ namespace IE
                 new String[] { "dahil", "START" },
                 new String[] { "para", "START" },
                 new String[] { "upang", "START" },
+                new String[] { "makaraang", "START" },
                 new String[] { "kaya", "END" }
             };
 
@@ -270,7 +291,7 @@ namespace IE
 
                     if(tempWhy.Contains(strWhat))
                     {
-                        tempWeight += WEIGHT_PER_MARKER;
+                        tempWeight += WEIGHT_PER_WHAT;
                         hasWhat = true;
                     }
                     
@@ -281,7 +302,7 @@ namespace IE
                         tempWhy = (match[1].Equals("START")) ?
                             tempWhy.Substring(tempWhy.IndexOf(match[0]) + match[0].Count() + 1) :
                             tempWhy.Substring(0, tempWhy.IndexOf(match[0]));
-                        tempWeight += WEIGHT_PER_WHAT;
+                        tempWeight += WEIGHT_PER_MARKER;
                         hasMarker = true;
                     }
 
