@@ -198,6 +198,7 @@ namespace IE
                 new String[] { "para", "END" },
                 new String[] { "dahil", "END" },
                 new String[] { "upang", "END" },
+                new String[] { "makaraang", "END" },
             };
 
             if (listWhatCandidates.Count > 0)
@@ -263,6 +264,7 @@ namespace IE
                 new String[] { "dahil", "START" },
                 new String[] { "para", "START" },
                 new String[] { "upang", "START" },
+                new String[] { "makaraang", "START" },
                 new String[] { "kaya", "END" }
             };
 
