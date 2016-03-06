@@ -18,7 +18,7 @@ namespace IE
         List<String> listAllWhatAnnotations;
         List<String> listAllWhyAnnotations;
 
-        public ResultWriter(String pPath, 
+        public ResultWriter(String pPath,
             List<Article> pAllArticles,
             List<List<String>> pAllWhoAnnotations,
             List<List<String>> pAllWhenAnnotations,
@@ -110,6 +110,52 @@ namespace IE
             writer.WriteString(index.ToString());
             writer.WriteEndElement();
             writer.WriteEndElement();
+        }
+
+        public void generateInvertedIndex (string strPath)
+        {
+            List<Article> articleList = new List<Article>();
+
+            XmlDocument doc = new XmlDocument();
+            doc.Load(strPath);
+
+            XmlNodeList articleNodes = doc.DocumentElement.SelectNodes("/data/article");
+
+            string[] anotWho = null;
+            List<string> whoArticles = new List<string>();
+
+            Dictionary<string, List<string>> who = new Dictionary<string, List<string>>();
+
+            foreach (XmlNode articleNode in articleNodes)
+            {
+                anotWho = articleNode.SelectSingleNode("who").InnerText.Split(new string[] {";"}, StringSplitOptions.RemoveEmptyEntries);
+
+
+                for (int w = 0; w < anotWho.Length; w++)
+                {
+                    anotWho[w] = anotWho[w].Trim();
+                    if (!who.ContainsKey(anotWho[w]))
+                    { 
+                        List<string> temp = new List<string>();
+                        temp.Add(articleNode.SelectSingleNode("title").InnerText);
+                        who.Add(anotWho[w], temp);
+                    }
+                    else
+                    {
+                        who[anotWho[w]].Add(articleNode.SelectSingleNode("title").InnerText);
+                    }
+                }
+            }
+
+            foreach (KeyValuePair<string, List<string>> kvp in who)
+            {
+                Console.WriteLine("Key = {0}, Value = ", kvp.Key);
+                foreach (string a in kvp.Value)
+                {
+                    Console.WriteLine("TITLE" + a);
+                }
+            }
+
         }
     }
 }

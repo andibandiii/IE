@@ -89,6 +89,7 @@ namespace IE
 
             ResultWriter rw = new ResultWriter(destinationPath, listCurrentArticles, listAllWhoAnnotations, listAllWhenAnnotations, listAllWhereAnnotations, listAllWhatAnnotations, listAllWhyAnnotations);
             rw.generateOutput();
+            rw.generateInvertedIndex(destinationPath);
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
