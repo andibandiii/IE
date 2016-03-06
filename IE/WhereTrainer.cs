@@ -98,7 +98,7 @@ namespace IE
 
                         wordsbefore = position - 10;
 
-                        str = "\"" + value + "\"," + wordcount + "," + sentence + "," + position + "," + ((sentenceStartProximity == -1) ? "?" : "" + sentenceStartProximity) + "," + frequency + ",";
+                        str = "\"" + value.Replace("\"", "'") + "\"," + wordcount + "," + sentence + "," + position + "," + ((sentenceStartProximity == -1) ? "?" : "" + sentenceStartProximity) + "," + frequency + ",";
 
                         int ctrBefore = wordsbefore;
 
@@ -109,14 +109,14 @@ namespace IE
                         }
                         while (ctrBefore < position)
                         {
-                            str += "\"" + listTokenizedArticle[ctrBefore - 1].Value + "\",";
+                            str += "\"" + listTokenizedArticle[ctrBefore - 1].Value.Replace("\"", "'") + "\",";
                             ctrBefore++;
                         }
                         for (int c = 0; c < 2; c++)
                         {
                             if (endIndex + c < listTokenizedArticle.Count)
                             {
-                                str += "\"" + listTokenizedArticle[endIndex + c].Value + "\",";
+                                str += "\"" + listTokenizedArticle[endIndex + c].Value.Replace("\"", "'") + "\",";
                             }
                             else
                             {
@@ -159,7 +159,7 @@ namespace IE
                             nNoDataCount++;
                         }
 
-                        if (nNoDataCount <= 177 || candidate.IsWhere)
+                        if (nNoDataCount <= 327 || candidate.IsWhere)
                             sw.WriteLine(str);
                     }
                 }
