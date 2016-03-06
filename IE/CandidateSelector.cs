@@ -55,7 +55,7 @@ namespace IE
             {
                 for (int a = 0; a < can; a++)
                 {
-                    if (candidates[can].Value.Equals(candidates[a].Value))
+                    if (candidates[can].Value != null && candidates[a].Value != null && candidates[can].Value.Equals(candidates[a].Value))
                     {
                         candidates.RemoveAt(can);
                         if (can > 0)
@@ -67,10 +67,10 @@ namespace IE
                 }
             }
 
-            foreach (var candidate in candidates)
-            {
-                System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
-            }
+            //foreach (var candidate in candidates)
+            //{
+            //    System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
+            //}
 
             return candidates;
         }
@@ -206,14 +206,14 @@ namespace IE
 
         public List<List<Token>> performWhyCandidateSelection(List<Token> tokenizedArticle)
         {
-            int maxNumberOfCandidates = 3;
+            int maxNumberOfCandidates = 4;
             List<List<Token>> candidates = new List<List<Token>>();
             List<List<Token>> segregatedArticle = tokenizedArticle
                 .GroupBy(token => token.Sentence)
                 .Select(tokenGroup => tokenGroup.ToList())
                 .ToList();
 
-            for (int nI = 1; nI < Math.Min(maxNumberOfCandidates + 1, segregatedArticle.Count()); nI++)
+            for (int nI = 0; nI < Math.Min(maxNumberOfCandidates, segregatedArticle.Count()); nI++)
             {
                 candidates.Add(segregatedArticle[nI]);
             }

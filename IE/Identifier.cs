@@ -185,30 +185,138 @@ namespace IE
 
         private void labelWhat()
         {
+            double WEIGHT_PER_WHO = 0.3;
+            double WEIGHT_PER_WHEN = 0.2;
+            double WEIGHT_PER_WHERE = 0.2;
+            double WEIGHT_PER_SENTENCE = 1;
+
+            List<double> candidateWeights = new List<double>();
+            double highestWeight = -1;
+
             if (listWhatCandidates.Count > 0)
             {
-                strWhat = String.Join(" ", listWhatCandidates[0].Select(token => token.Value).ToArray());
-                strWhat = strWhat.Replace("-LRB- ", "(");
-                strWhat = strWhat.Replace(" -RRB-", ")");
-                strWhat = strWhat.Replace(" . ", ".");
-                strWhat = strWhat.Replace(" .", ".");
-                strWhat = strWhat.Replace(" ,", ",");
-                strWhat = strWhat.Replace(" !", "!");
+                foreach(List<Token> candidate in listWhatCandidates)
+                {
+                    String tempWhat = "";
+                    double tempWeight = 0;
+
+                    tempWhat = String.Join(" ", candidate.Select(token => token.Value).ToArray());
+                    tempWhat = tempWhat.Replace("-LRB- ", "(");
+                    tempWhat = tempWhat.Replace(" -RRB-", ")");
+                    tempWhat = tempWhat.Replace(" . ", ".");
+                    tempWhat = tempWhat.Replace(" .", ".");
+                    tempWhat = tempWhat.Replace(" ,", ",");
+                    tempWhat = tempWhat.Replace(" !", "!");
+
+                    tempWeight += listWho.Where(tempWhat.Contains).Count() * WEIGHT_PER_WHO;
+                    tempWeight += listWhen.Where(tempWhat.Contains).Count() * WEIGHT_PER_WHEN;
+                    tempWeight += listWhere.Where(tempWhat.Contains).Count() * WEIGHT_PER_WHERE;
+                    tempWeight += WEIGHT_PER_SENTENCE / candidate[0].Sentence;
+
+                    candidateWeights.Add(tempWeight);
+                    System.Console.WriteLine("---------");
+                    System.Console.WriteLine("Candidate: \t{0}\nWeight: \t{1}", 
+                        tempWhat, 
+                        tempWeight);
+
+                    if (tempWeight > highestWeight)
+                    {
+                        strWhat = tempWhat;
+                        highestWeight = tempWeight;
+                    }
+                }
             }
+
+            System.Console.WriteLine("---------");
+            System.Console.WriteLine("WHAT: {0}", 
+                strWhat);
         }
 
         private void labelWhy()
         {
+            double WEIGHT_PER_MARKER = 0.5;
+            double WEIGHT_PER_WHAT = 0.5;
+            double WEIGHT_PER_CHAR = 0.01;
+            double WEIGHT_PER_SENTENCE = 0;
+            double CARRY_OVER = 0;
+            
+            String[][] markers = new String[][] {
+                new String[] { "dahil", "START" },
+                new String[] { "para", "START" },
+                new String[] { "upang", "START" },
+                new String[] { "kaya", "END" }
+            };
+
+            List<double> candidateWeights = new List<double>();
+            double highestWeight = 0.5;
+
             if (listWhyCandidates.Count > 0)
             {
-                strWhy = String.Join(" ", listWhyCandidates[0].Select(token => token.Value).ToArray());
-                strWhy = strWhy.Replace("-LRB- ", "(");
-                strWhy = strWhy.Replace(" -RRB-", ")");
-                strWhy = strWhy.Replace(" . ", ".");
-                strWhy = strWhy.Replace(" .", ".");
-                strWhy = strWhy.Replace(" ,", ",");
-                strWhy = strWhy.Replace(" !", "!");
+                foreach (List<Token> candidate in listWhyCandidates)
+                {
+                    String tempWhy = "";
+                    double tempWeight = 0;
+                    String[] match;
+                    bool hasWhat = false;
+                    bool hasMarker = false;
+                    
+                    tempWhy = String.Join(" ", candidate.Select(token => token.Value).ToArray());
+                    tempWhy = tempWhy.Replace("-LRB- ", "(");
+                    tempWhy = tempWhy.Replace(" -RRB-", ")");
+                    tempWhy = tempWhy.Replace(" . ", ".");
+                    tempWhy = tempWhy.Replace(" .", ".");
+                    tempWhy = tempWhy.Replace(" ,", ",");
+                    tempWhy = tempWhy.Replace(" !", "!");
+
+                    if(tempWhy.Contains(strWhat))
+                    {
+                        tempWeight += WEIGHT_PER_MARKER;
+                        hasWhat = true;
+                    }
+                    
+                    match = markers.FirstOrDefault(s => tempWhy.Contains(s[0]));
+
+                    if(match != null)
+                    {
+                        tempWhy = (match[1].Equals("START")) ?
+                            tempWhy.Substring(tempWhy.IndexOf(match[0]) + match[0].Count() + 1) :
+                            tempWhy.Substring(0, tempWhy.IndexOf(match[0]));
+                        tempWeight += WEIGHT_PER_WHAT;
+                        hasMarker = true;
+                    }
+
+                    tempWeight += CARRY_OVER;
+                    CARRY_OVER = 0;
+
+                    if(strWhat.Contains(tempWhy))
+                    {
+                        tempWeight = 0;
+                    }
+
+                    if(strWhat.Equals(tempWhy))
+                    {
+                        CARRY_OVER = 1;
+                    }
+
+                    System.Console.WriteLine("---------");
+                    System.Console.WriteLine("Candidate: \t{0}\nMarker: \t{1}\nWeight: \t{2}", 
+                        tempWhy, 
+                        match != null ? match[0] : "N/A", 
+                        tempWeight);
+
+                    candidateWeights.Add(tempWeight);
+
+                    if (tempWeight > highestWeight)
+                    {
+                        strWhy = tempWhy;
+                        highestWeight = tempWeight;
+                    }
+                }
             }
+
+            System.Console.WriteLine("---------");
+            System.Console.WriteLine("WHY: {0}", 
+                strWhy);
         }
         #endregion
 
