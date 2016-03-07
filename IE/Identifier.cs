@@ -188,7 +188,7 @@ namespace IE
             double WEIGHT_PER_WHO = 0.3;
             double WEIGHT_PER_WHEN = 0.2;
             double WEIGHT_PER_WHERE = 0.2;
-            double WEIGHT_PER_SENTENCE = 1;
+            double WEIGHT_PER_SENTENCE = 0.2;
 
             List<double> candidateWeights = new List<double>();
             double highestWeight = -1;
@@ -221,7 +221,7 @@ namespace IE
                     tempWeight += listWho.Where(tempWhat.Contains).Count() * WEIGHT_PER_WHO;
                     tempWeight += listWhen.Where(tempWhat.Contains).Count() * WEIGHT_PER_WHEN;
                     tempWeight += listWhere.Where(tempWhat.Contains).Count() * WEIGHT_PER_WHERE;
-                    tempWeight += WEIGHT_PER_SENTENCE / candidate[0].Sentence;
+                    tempWeight += 1 - WEIGHT_PER_SENTENCE * candidate[0].Sentence;
 
                     candidateWeights.Add(tempWeight);
                     System.Console.WriteLine("---------");
