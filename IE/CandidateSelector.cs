@@ -12,26 +12,26 @@ namespace IE
         public List<Token> performWhoCandidateSelection(List<Token> tokenizedArticle)
         {
             List<Token> candidates = new List<Token>();
-            String[] startMarkers = new String[7] { "si",
-                "sina",
-                "kay",
-                "ni",
+            String[] startMarkers = new String[3] { "si",
+                //"sina",
+                //"kay",
+                //"ni",
                 "ang",
                 "ng",
-                "sa"};
-            String[][] endMarkers = new String[7][] { new String[] { "na", "ng", ".", "bilang", "ang", "kamakalawa", "alyas", "at", "kay", ",", "sa", "makaraang"},
-                new String[] { "at"},
+                /*"sa"*/};
+            String[][] endMarkers = new String[3][] { new String[] { "na", "ng", ".", "bilang", "ang", "kamakalawa", "alyas", "at", "kay", ",", "sa", "makaraang"},
+                /*new String[] { "at"},
                 new String[] { "ng", "na"},
-                new String[] { "ng", ",", "na", "ang"},
+                new String[] { "ng", ",", "na", "ang"},*/
                 new String[] { "na", "sa", "kay", "at", "ng", "makaraang", "para", "nang", "ang", "-LRB-"},
                 new String[] { "ng", "ang", "si", "ang", ".", "para", "at", "na", "sa", "-LRB-"},
-                new String[] { "sa", "na", "kaugnay", "ang", "upang", ",", ".", "-LRB-"} };
-            String[][] enderMarkers = new String[7][] { new String[] { "dahil", "kapag", "noong"},
+                /*new String[] { "sa", "na", "kaugnay", "ang", "upang", ",", ".", "-LRB-"}*/ }; 
+            String[][] enderMarkers = new String[3][] { new String[] { "dahil", "kapag", "noong"},
+                new String[] { "dahil", "kapag", "noong"},
+                /*new String[] { "dahil", "kapag", "noong"},
                 new String[] { "dahil", "kapag", "noong"},
                 new String[] { "dahil", "kapag", "noong"},
-                new String[] { "dahil", "kapag", "noong"},
-                new String[] { "dahil", "kapag", "noong"},
-                new String[] { "dahil", "kapag", "noong"},
+                new String[] { "dahil", "kapag", "noong"},*/
                 new String[] { "dahil", "kapag", "noong"}}; // Add all why start markers
 
             for (int i = 0; i < tokenizedArticle.Count; i++)
@@ -67,10 +67,10 @@ namespace IE
                 }
             }
 
-            //foreach (var candidate in candidates)
-            //{
-            //    System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
-            //}
+            foreach (var candidate in candidates)
+            {
+                System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
+            }
 
             return candidates;
         }
