@@ -324,7 +324,7 @@ namespace IE
                             }
                             else
                             {
-                                strValue += " " + tokenizedArticle[k].Value;
+                                strValue += (tokenizedArticle[k].Value.Equals(",") || tokenizedArticle[k].Value.Equals(".") ? "" : " ") + tokenizedArticle[k].Value;
                                 posValue += " " + tokenizedArticle[k].PartOfSpeech;
                             }
 
