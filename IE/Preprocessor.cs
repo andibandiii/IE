@@ -140,11 +140,11 @@ namespace IE
         private void performCandidateSelection()
         {
             CandidateSelector selector = new CandidateSelector();
-            listWhoCandidates = selector.performWhoCandidateSelection(listLatestTokenizedArticle);
-            listWhenCandidates = selector.performWhenCandidateSelection(listLatestTokenizedArticle);
-            listWhereCandidates = selector.performWhereCandidateSelection(listLatestTokenizedArticle);
-            listWhatCandidates = selector.performWhatCandidateSelection(listLatestTokenizedArticle);
-            listWhyCandidates = selector.performWhyCandidateSelection(listLatestTokenizedArticle);
+            listWhoCandidates = selector.performWhoCandidateSelection(listLatestTokenizedArticle, articleCurrent.Title);
+            listWhenCandidates = selector.performWhenCandidateSelection(listLatestTokenizedArticle, articleCurrent.Title);
+            listWhereCandidates = selector.performWhereCandidateSelection(listLatestTokenizedArticle, articleCurrent.Title);
+            listWhatCandidates = selector.performWhatCandidateSelection(listLatestTokenizedArticle, articleCurrent.Title);
+            listWhyCandidates = selector.performWhyCandidateSelection(listLatestTokenizedArticle, articleCurrent.Title);
         }
 
         #region Article Preprocessing Functions

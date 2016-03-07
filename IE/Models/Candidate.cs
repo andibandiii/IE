@@ -8,11 +8,11 @@ namespace IE.Models
 {
     public class Candidate : Token
     {
-        public int length { get; set; }
+        public int Length { get; set; }
 
         public Candidate(String value, int pos, int length) : base(value, pos)
         {
-            this.length = length;
+            this.Length = length;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace IE
 {
     class CandidateSelector
     {
-        public List<Candidate> performWhoCandidateSelection(List<Token> tokenizedArticle)
+        public List<Candidate> performWhoCandidateSelection(List<Token> tokenizedArticle, String articleTitle)
         {
             List<Candidate> candidates = new List<Candidate>();
             List<Candidate> temporaryCandidates = new List<Candidate>();
@@ -51,18 +51,22 @@ namespace IE
             {
                 double candidateWeight = 0;
                 int numWords = candidate.Value.Split(' ').Count();
-                String[] a = new String[] { ""};
-
                 candidateWeight += 1 - (numWords / 5 + 1) * 0.2;
                 if (candidate.Value.StartsWith("mga"))
                 {
                     candidateWeight += 0.7;
                 }
+                if (articleTitle.Contains(candidate.Value))
+                {
+                    candidateWeight += 0.7;
+                }
 
                 bool found = false;
-                for (int currentIndex = candidate.Position - 1; currentIndex < candidate.Position + candidate.length - 1; currentIndex++)
+      
+                for (int currentIndex = candidate.Position - 1; currentIndex < candidate.Position + candidate.Length - 1; currentIndex++)
                 {
-                    if (tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("V"))
+                    //Console.WriteLine(tokenizedArticle[currentIndex].PartOfSpeech);
+                    if (tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("V") || tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("PR") || tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("RB"))
                     {
                         Console.WriteLine(tokenizedArticle[currentIndex].PartOfSpeech);
                         candidateWeight = 0;
@@ -70,7 +74,7 @@ namespace IE
                     }
                     if (tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("N") && !found)
                     {
-                        Console.WriteLine("was here"+ candidateWeight);
+                        //Console.WriteLine("was here"+ candidateWeight);
                         candidateWeight += 0.3;
                         found = true;
                     }
@@ -111,7 +115,7 @@ namespace IE
             return candidates;
         }
 
-        public List<Candidate> performWhenCandidateSelection(List<Token> tokenizedArticle)
+        public List<Candidate> performWhenCandidateSelection(List<Token> tokenizedArticle, String articleTitle)
         {
             List<Candidate> candidates = new List<Candidate>();
             String[] startMarkersExclusive = new String[] { "ang",
@@ -168,7 +172,7 @@ namespace IE
             return candidates;
         }
 
-        public List<Candidate> performWhereCandidateSelection(List<Token> tokenizedArticle)
+        public List<Candidate> performWhereCandidateSelection(List<Token> tokenizedArticle, String articleTitle)
         {
             List<Candidate> candidates = new List<Candidate>();
             String[] startMarkers = new String[5] { "ang",
@@ -221,7 +225,7 @@ namespace IE
             return candidates;
         }
 
-        public List<List<Token>> performWhatCandidateSelection(List<Token> tokenizedArticle)
+        public List<List<Token>> performWhatCandidateSelection(List<Token> tokenizedArticle, String articleTitle)
         {
             int maxNumberOfCandidates = 3;
             List<List<Token>> candidates = new List<List<Token>>();
@@ -238,7 +242,7 @@ namespace IE
             return candidates;
         }
 
-        public List<List<Token>> performWhyCandidateSelection(List<Token> tokenizedArticle)
+        public List<List<Token>> performWhyCandidateSelection(List<Token> tokenizedArticle, String articleTitle)
         {
             int maxNumberOfCandidates = 4;
             List<List<Token>> candidates = new List<List<Token>>();
@@ -275,7 +279,7 @@ namespace IE
 
                 int endIndex = i;
 
-                var newToken = new Candidate(strValue, tokenizedArticle[startIndex].Position,tokenizedArticle[startIndex].Position - tokenizedArticle[endIndex].Position);
+                var newToken = new Candidate(strValue, tokenizedArticle[startIndex].Position, tokenizedArticle[endIndex].Position - tokenizedArticle[startIndex].Position);
                 newToken.Sentence = tokenizedArticle[i].Sentence; // candidate.token[0].sentence;
                 newToken.NamedEntity = tokenizedArticle[i].NamedEntity; // candidate.token[0].NamedEntity;
                 newToken.PartOfSpeech = tokenizedArticle[i].PartOfSpeech; // candidate.token[0].NamedEntity;
@@ -367,7 +371,7 @@ namespace IE
                                 tempWs = tokenizedArticle[k].Frequency;
                             }
                         }
-                        var newToken = new Candidate(strValue, tokenizedArticle[startIndex].Position, tokenizedArticle[startIndex].Position - tokenizedArticle[endIndex].Position);
+                        var newToken = new Candidate(strValue, tokenizedArticle[startIndex].Position, tokenizedArticle[endIndex].Position - tokenizedArticle[startIndex].Position);
                         newToken.Sentence = tokenizedArticle[startIndex].Sentence;
                         newToken.NamedEntity = tokenizedArticle[endIndex].NamedEntity;
                         newToken.PartOfSpeech = tokenizedArticle[endIndex].PartOfSpeech;
@@ -405,7 +409,7 @@ namespace IE
 
                 int endIndex = i;
 
-                var newToken = new Candidate(strValue, tokenizedArticle[startIndex].Position, tokenizedArticle[startIndex].Position - tokenizedArticle[endIndex].Position);
+                var newToken = new Candidate(strValue, tokenizedArticle[startIndex].Position, tokenizedArticle[endIndex].Position - tokenizedArticle[startIndex].Position);
                 newToken.Sentence = tokenizedArticle[i].Sentence;
                 newToken.NamedEntity = tokenizedArticle[i].NamedEntity;
                 newToken.PartOfSpeech = tokenizedArticle[i].PartOfSpeech;
