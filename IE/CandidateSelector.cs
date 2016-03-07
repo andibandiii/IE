@@ -9,9 +9,10 @@ namespace IE
 {
     class CandidateSelector
     {
-        public List<Token> performWhoCandidateSelection(List<Token> tokenizedArticle)
+        public List<Candidate> performWhoCandidateSelection(List<Token> tokenizedArticle, String articleTitle)
         {
-            List<Token> candidates = new List<Token>();
+            List<Candidate> candidates = new List<Candidate>();
+            List<Candidate> temporaryCandidates = new List<Candidate>();
             String[] startMarkers = new String[3] { "si",
                 //"sina",
                 //"kay",
@@ -19,12 +20,12 @@ namespace IE
                 "ang",
                 "ng",
                 /*"sa"*/};
-            String[][] endMarkers = new String[3][] { new String[] { "na", "ng", ".", "bilang", "ang", "kamakalawa", "alyas", "at", "kay", ",", "sa", "makaraang"},
+            String[][] endMarkers = new String[3][] { new String[] { "na", "ng", ".", "bilang", "ang", "kamakalawa", "alyas", "at", "kay", ",", "sa", "makaraang", "mula"},
                 /*new String[] { "at"},
                 new String[] { "ng", "na"},
                 new String[] { "ng", ",", "na", "ang"},*/
-                new String[] { "na", "sa", "kay", "at", "ng", "makaraang", "para", "nang", "ang", "-LRB-"},
-                new String[] { "ng", "ang", "si", "ang", ".", "para", "at", "na", "sa", "-LRB-"},
+                new String[] { "na", "sa", "kay", "at", "ng", "makaraang", "para", "nang", "ang", "-LRB-", "mula"},
+                new String[] { "ng", "ang", "si", "ang", ".", "para", "at", "na", "sa", "-LRB-", "mula"},
                 /*new String[] { "sa", "na", "kaugnay", "ang", "upang", ",", ".", "-LRB-"}*/ }; 
             String[][] enderMarkers = new String[3][] { new String[] { "dahil", "kapag", "noong"},
                 new String[] { "dahil", "kapag", "noong"},
@@ -38,7 +39,7 @@ namespace IE
             {
                 i = getCandidateByNer("PER", i, candidates, tokenizedArticle);
                 i = getCandidateByNer("ORG", i, candidates, tokenizedArticle);
-                getCandidateByMarkers(startMarkers, endMarkers, enderMarkers, i, candidates, tokenizedArticle, true);
+                getCandidateByMarkers(startMarkers, endMarkers, enderMarkers, i, temporaryCandidates, tokenizedArticle, true);
 
                 if (tokenizedArticle[i].Sentence > 3)
                 {
@@ -46,6 +47,45 @@ namespace IE
                 }
             }
 
+            foreach (Candidate candidate in temporaryCandidates)
+            {
+                double candidateWeight = 0;
+                int numWords = candidate.Value.Split(' ').Count();
+                candidateWeight += 1 - (numWords / 5 + 1) * 0.2;
+                if (candidate.Value.StartsWith("mga"))
+                {
+                    candidateWeight += 0.7;
+                }
+                if (articleTitle.Contains(candidate.Value))
+                {
+                    candidateWeight += 0.7;
+                }
+
+                bool found = false;
+      
+                for (int currentIndex = candidate.Position - 1; currentIndex < candidate.Position + candidate.Length - 1; currentIndex++)
+                {
+                    //Console.WriteLine(tokenizedArticle[currentIndex].PartOfSpeech);
+                    if (tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("V") || tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("PR") || tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("RB"))
+                    {
+                        Console.WriteLine(tokenizedArticle[currentIndex].PartOfSpeech);
+                        candidateWeight = 0;
+                        break;
+                    }
+                    if (tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("N") && !found)
+                    {
+                        //Console.WriteLine("was here"+ candidateWeight);
+                        candidateWeight += 0.3;
+                        found = true;
+                    }
+                }
+
+
+                if (candidateWeight >= 1)
+                {
+                    candidates.Add(candidate);
+                }
+            }
             //for (int i = 0; i < tokenizedArticle.Count; i++)
             //{
             //    i = getCandidateByPos("NNC", i, candidates, tokenizedArticle);
@@ -75,19 +115,17 @@ namespace IE
             return candidates;
         }
 
-        public List<Token> performWhenCandidateSelection(List<Token> tokenizedArticle)
+        public List<Candidate> performWhenCandidateSelection(List<Token> tokenizedArticle, String articleTitle)
         {
-            List<Token> candidates = new List<Token>();
+            List<Candidate> candidates = new List<Candidate>();
             String[] startMarkersExclusive = new String[] { "ang",
-                "mula sa",
                 "mula",
                 "na",
                 "noong",
                 "nuong",
                 "sa" };
             String[][] endMarkersExclusive = new String[][] { new String[] { "para"},
-                new String[] { ","},
-                new String[] { "."},
+                new String[] { ",", "."},
                 new String[] { "ay"},
                 new String[] { ",", "."},
                 new String[] { ",", "."},
@@ -134,9 +172,9 @@ namespace IE
             return candidates;
         }
 
-        public List<Token> performWhereCandidateSelection(List<Token> tokenizedArticle)
+        public List<Candidate> performWhereCandidateSelection(List<Token> tokenizedArticle, String articleTitle)
         {
-            List<Token> candidates = new List<Token>();
+            List<Candidate> candidates = new List<Candidate>();
             String[] startMarkers = new String[5] { "ang",
                 "nasa",
                 "noong",
@@ -187,7 +225,7 @@ namespace IE
             return candidates;
         }
 
-        public List<List<Token>> performWhatCandidateSelection(List<Token> tokenizedArticle)
+        public List<List<Token>> performWhatCandidateSelection(List<Token> tokenizedArticle, String articleTitle)
         {
             int maxNumberOfCandidates = 3;
             List<List<Token>> candidates = new List<List<Token>>();
@@ -204,7 +242,7 @@ namespace IE
             return candidates;
         }
 
-        public List<List<Token>> performWhyCandidateSelection(List<Token> tokenizedArticle)
+        public List<List<Token>> performWhyCandidateSelection(List<Token> tokenizedArticle, String articleTitle)
         {
             int maxNumberOfCandidates = 4;
             List<List<Token>> candidates = new List<List<Token>>();
@@ -221,7 +259,7 @@ namespace IE
             return candidates;
         }
 
-        private int getCandidateByNer(String nerTag, int i, List<Token> candidates, List<Token> tokenizedArticle)
+        private int getCandidateByNer(String nerTag, int i, List<Candidate> candidates, List<Token> tokenizedArticle)
         {
             if (tokenizedArticle[i].NamedEntity.Equals(nerTag))
             {
@@ -241,11 +279,11 @@ namespace IE
 
                 int endIndex = i;
 
-                var newToken = new Token(strValue, tokenizedArticle[startIndex].Position);
-                newToken.Sentence = tokenizedArticle[i].Sentence;
-                newToken.NamedEntity = tokenizedArticle[i].NamedEntity;
-                newToken.PartOfSpeech = tokenizedArticle[i].PartOfSpeech;
-                newToken.Frequency = tempWs;
+                var newToken = new Candidate(strValue, tokenizedArticle[startIndex].Position, tokenizedArticle[endIndex].Position - tokenizedArticle[startIndex].Position);
+                newToken.Sentence = tokenizedArticle[i].Sentence; // candidate.token[0].sentence;
+                newToken.NamedEntity = tokenizedArticle[i].NamedEntity; // candidate.token[0].NamedEntity;
+                newToken.PartOfSpeech = tokenizedArticle[i].PartOfSpeech; // candidate.token[0].NamedEntity;
+                newToken.Frequency = tempWs; // candidate.token[0].Frequency;
                 candidates.Add(newToken);
 
                 //System.Console.WriteLine("CANDIDATE BY NER [{0}]: {1} (Position {2})", nerTag, newToken.Value, newToken.Position);
@@ -253,7 +291,7 @@ namespace IE
             return i;
         }
 
-        private void getCandidateByMarkers(String[] startMarkers, String[][] endMarkers, String[][] enderMarkers, int i, List<Token> candidates, List<Token> tokenizedArticle, Boolean isExclusive)
+        private void getCandidateByMarkers(String[] startMarkers, String[][] endMarkers, String[][] enderMarkers, int i, List<Candidate> candidates, List<Token> tokenizedArticle, Boolean isExclusive)
         {
 
             for (int j = 0; j < startMarkers.Length; j++)
@@ -333,7 +371,7 @@ namespace IE
                                 tempWs = tokenizedArticle[k].Frequency;
                             }
                         }
-                        var newToken = new Token(strValue, tokenizedArticle[startIndex].Position);
+                        var newToken = new Candidate(strValue, tokenizedArticle[startIndex].Position, tokenizedArticle[endIndex].Position - tokenizedArticle[startIndex].Position);
                         newToken.Sentence = tokenizedArticle[startIndex].Sentence;
                         newToken.NamedEntity = tokenizedArticle[endIndex].NamedEntity;
                         newToken.PartOfSpeech = tokenizedArticle[endIndex].PartOfSpeech;
@@ -351,7 +389,7 @@ namespace IE
             }
         }
 
-        private int getCandidateByPos(String posTag, int i, List<Token> candidates, List<Token> tokenizedArticle)
+        private int getCandidateByPos(String posTag, int i, List<Candidate> candidates, List<Token> tokenizedArticle)
         {
             if (i < tokenizedArticle.Count && tokenizedArticle[i].PartOfSpeech != null && tokenizedArticle[i].PartOfSpeech.Equals(posTag))
             {
@@ -371,7 +409,7 @@ namespace IE
 
                 int endIndex = i;
 
-                var newToken = new Token(strValue, tokenizedArticle[startIndex].Position);
+                var newToken = new Candidate(strValue, tokenizedArticle[startIndex].Position, tokenizedArticle[endIndex].Position - tokenizedArticle[startIndex].Position);
                 newToken.Sentence = tokenizedArticle[i].Sentence;
                 newToken.NamedEntity = tokenizedArticle[i].NamedEntity;
                 newToken.PartOfSpeech = tokenizedArticle[i].PartOfSpeech;
@@ -383,13 +421,13 @@ namespace IE
             return i;
         }
 
-        private void getCandidateByGazette(String[] gazette, int i, List<Token> candidates, List<Token> tokenizedArticle)
+        private void getCandidateByGazette(String[] gazette, int i, List<Candidate> candidates, List<Token> tokenizedArticle)
         {
             if (i < tokenizedArticle.Count && tokenizedArticle[i].Sentence <= 3)
             {
                 if(gazette.Contains(tokenizedArticle[i].Value))
                 {
-                    var newToken = new Token(tokenizedArticle[i].Value, tokenizedArticle[i].Position);
+                    var newToken = new Candidate(tokenizedArticle[i].Value, tokenizedArticle[i].Position, 1);
                     newToken.Sentence = tokenizedArticle[i].Sentence;
                     newToken.NamedEntity = tokenizedArticle[i].NamedEntity;
                     newToken.PartOfSpeech = tokenizedArticle[i].PartOfSpeech;

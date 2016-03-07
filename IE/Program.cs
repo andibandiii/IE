@@ -34,9 +34,9 @@ namespace IE
                  listCurrentTrainingAnnotations = fileparserFP.parseAnnotations(sourcePath);
             }
             List<List<Token>> listTokenizedArticles = new List<List<Token>>();
-            List<List<Token>> listAllWhoCandidates = new List<List<Token>>();
-            List<List<Token>> listAllWhenCandidates = new List<List<Token>>();
-            List<List<Token>> listAllWhereCandidates = new List<List<Token>>();
+            List<List<Candidate>> listAllWhoCandidates = new List<List<Candidate>>();
+            List<List<Candidate>> listAllWhenCandidates = new List<List<Candidate>>();
+            List<List<Candidate>> listAllWhereCandidates = new List<List<Candidate>>();
             List<List<List<Token>>> listAllWhatCandidates = new List<List<List<Token>>>();
             List<List<List<Token>>> listAllWhyCandidates = new List<List<List<Token>>>();
             List<List<String>> listAllWhoAnnotations = new List<List<String>>();
