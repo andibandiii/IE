@@ -11,12 +11,12 @@ namespace IE
     abstract class Trainer
     {
         protected List<Token> listTokenizedArticle;
-        protected List<Token> listCandidates;
+        protected List<Candidate> listCandidates;
 
         protected Trainer()
         {
             listTokenizedArticle = new List<Token>();
-            listCandidates = new List<Token>();
+            listCandidates = new List<Candidate>();
         }
 
         public void setTokenizedArticle(List<Token> pTokenizedArticle)
@@ -24,7 +24,7 @@ namespace IE
             listTokenizedArticle = pTokenizedArticle;
         }
 
-        public void setCandidates(List<Token> pCandidates)
+        public void setCandidates(List<Candidate> pCandidates)
         {
             listCandidates = pCandidates;
         }
@@ -36,7 +36,7 @@ namespace IE
         /// </summary>
         public abstract void train(bool isNewFile);
 
-        public void trainMany(List<List<Token>> pTokenizedArticleList, List<List<Token>> pAllCandidateLists)
+        public void trainMany(List<List<Token>> pTokenizedArticleList, List<List<Candidate>> pAllCandidateLists)
         {
             if (pTokenizedArticleList.Count != pAllCandidateLists.Count)
             {

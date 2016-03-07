@@ -24,6 +24,8 @@ namespace IE
             FileParser fileparserFP = new FileParser();
             String sourcePath = @"..\..\training_news.xml";
             String destinationPath = @"..\..\result.xml";
+            String invertedDestinationPath = @"..\..\result_inverted_index.xml";
+            String formatDateDestinationPath = @"..\..\result_format_date.xml";
 
             List<Article> listCurrentArticles = fileparserFP.parseFile(sourcePath);
             List<Annotation> listCurrentTrainingAnnotations = new List<Annotation>();
@@ -32,9 +34,9 @@ namespace IE
                  listCurrentTrainingAnnotations = fileparserFP.parseAnnotations(sourcePath);
             }
             List<List<Token>> listTokenizedArticles = new List<List<Token>>();
-            List<List<Token>> listAllWhoCandidates = new List<List<Token>>();
-            List<List<Token>> listAllWhenCandidates = new List<List<Token>>();
-            List<List<Token>> listAllWhereCandidates = new List<List<Token>>();
+            List<List<Candidate>> listAllWhoCandidates = new List<List<Candidate>>();
+            List<List<Candidate>> listAllWhenCandidates = new List<List<Candidate>>();
+            List<List<Candidate>> listAllWhereCandidates = new List<List<Candidate>>();
             List<List<List<Token>>> listAllWhatCandidates = new List<List<List<Token>>>();
             List<List<List<Token>>> listAllWhyCandidates = new List<List<List<Token>>>();
             List<List<String>> listAllWhoAnnotations = new List<List<String>>();
@@ -98,9 +100,10 @@ namespace IE
                 listAllWhyAnnotations.Add(annotationIdentifier.getWhy());
             }
 
-            ResultWriter rw = new ResultWriter(destinationPath, listCurrentArticles, listAllWhoAnnotations, listAllWhenAnnotations, listAllWhereAnnotations, listAllWhatAnnotations, listAllWhyAnnotations);
+            ResultWriter rw = new ResultWriter(destinationPath, formatDateDestinationPath, invertedDestinationPath, listCurrentArticles, listAllWhoAnnotations, listAllWhenAnnotations, listAllWhereAnnotations, listAllWhatAnnotations, listAllWhyAnnotations);
             rw.generateOutput();
-            rw.generateInvertedIndex(destinationPath);
+            rw.generateOutputFormatDate();
+            rw.generateInvertedIndexOutput();
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
