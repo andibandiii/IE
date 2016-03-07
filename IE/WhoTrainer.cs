@@ -41,14 +41,21 @@ namespace IE
                         {
                             sw.WriteLine("@attribute word-" + c + " string");
                         }
-                        sw.WriteLine("@attribute word+1 string\n@attribute word+2 string");
+                        for (int c = 1; c <= 10; c++)
+                        {
+                            sw.WriteLine("@attribute word+" + c + " string");
+                        }
+                        //sw.WriteLine("@attribute word+1 string\n@attribute word+2 string");
                         for (int c = 10; c > 0; c--)
                         {
                             sw.WriteLine("@attribute postag-" + c + " " + posTags);
                         }
-
-                        sw.WriteLine("@attribute postag+1 " + posTags);
-                        sw.WriteLine("@attribute postag+2 " + posTags);
+                        for (int c = 1; c <= 10; c++)
+                        {
+                            sw.WriteLine("@attribute postag+" + c + " " + posTags);
+                        }
+                        //sw.WriteLine("@attribute postag+1 " + posTags);
+                        //sw.WriteLine("@attribute postag+2 " + posTags);
                         //sw.WriteLine("@attribute named-entity-class-2 {LOC, PER, ORG, DATE, TIME, O}");
                         //sw.WriteLine("@attribute named-entity-class-1 {LOC, PER, ORG, DATE, TIME, O}");
                         //sw.WriteLine("@attribute named-entity-class+1 {LOC, PER, ORG, DATE, TIME, O}");
@@ -112,7 +119,7 @@ namespace IE
                             str += "\"" + listTokenizedArticle[ctrBefore - 1].Value.Replace("\"", "'") + "\",";
                             ctrBefore++;
                         }
-                        for (int c = 0; c < 2; c++)
+                        for (int c = 0; c < 10; c++)
                         {
                             if (endIndex + c < listTokenizedArticle.Count)
                             {
@@ -137,7 +144,7 @@ namespace IE
                             str += listTokenizedArticle[ctrBefore - 1].PartOfSpeech + ",";
                             ctrBefore++;
                         }
-                        for (int c = 0; c < 2; c++)
+                        for (int c = 0; c < 10; c++)
                         {
                             if (endIndex + c < listTokenizedArticle.Count)
                             {
@@ -159,7 +166,7 @@ namespace IE
                             nNoDataCount++;
                         }
 
-                        if (nNoDataCount <= 1251 || candidate.IsWho)
+                        if (nNoDataCount <= 1254 || candidate.IsWho)
                             sw.WriteLine(str);
                     }
                 }
