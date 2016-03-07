@@ -16,9 +16,9 @@ namespace IE
         private Article articleCurrent;
         private Annotation annotationCurrent;
         private List<Token> listLatestTokenizedArticle;
-        private List<Token> listWhoCandidates;
-        private List<Token> listWhenCandidates;
-        private List<Token> listWhereCandidates;
+        private List<Candidate> listWhoCandidates;
+        private List<Candidate> listWhenCandidates;
+        private List<Candidate> listWhereCandidates;
         private List<List<Token>> listWhatCandidates;
         private List<List<Token>> listWhyCandidates;
         private CRFClassifier nerClassifier;
@@ -30,9 +30,9 @@ namespace IE
         public Preprocessor()
         {
             listLatestTokenizedArticle = new List<Token>();
-            listWhoCandidates = new List<Token>();
-            listWhenCandidates = new List<Token>();
-            listWhereCandidates = new List<Token>();
+            listWhoCandidates = new List<Candidate>();
+            listWhenCandidates = new List<Candidate>();
+            listWhereCandidates = new List<Candidate>();
             listWhatCandidates = new List<List<Token>>();
             listWhyCandidates = new List<List<Token>>();
             nerClassifier = CRFClassifier.getClassifierNoExceptions(nerModelPath);
@@ -67,17 +67,17 @@ namespace IE
             return listLatestTokenizedArticle;
         }
 
-        public List<Token> getWhoCandidates()
+        public List<Candidate> getWhoCandidates()
         {
             return listWhoCandidates;
         }
 
-        public List<Token> getWhenCandidates()
+        public List<Candidate> getWhenCandidates()
         {
             return listWhenCandidates;
         }
 
-        public List<Token> getWhereCandidates()
+        public List<Candidate> getWhereCandidates()
         {
             return listWhereCandidates;
         }
@@ -371,7 +371,7 @@ namespace IE
                             }
                         }
 
-                        var newToken = new Token(arrAnnotations[r], listLatestTokenizedArticle[startIndex].Position);
+                        var newToken = new Candidate(arrAnnotations[r], listLatestTokenizedArticle[startIndex].Position, startIndex + wordForWordAnnotation.Count()-1);
                         newToken.Sentence = listLatestTokenizedArticle[i].Sentence;
                         newToken.NamedEntity = listLatestTokenizedArticle[i].NamedEntity;
                         newToken.PartOfSpeech = listLatestTokenizedArticle[i].PartOfSpeech;

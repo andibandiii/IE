@@ -17,9 +17,9 @@ namespace IE
     {
         private List<Token> articleCurrent;
         private List<List<Token>> segregatedArticleCurrent;
-        private List<Token> listWhoCandidates;
-        private List<Token> listWhenCandidates;
-        private List<Token> listWhereCandidates;
+        private List<Candidate> listWhoCandidates;
+        private List<Candidate> listWhenCandidates;
+        private List<Candidate> listWhereCandidates;
         private List<List<Token>> listWhatCandidates;
         private List<List<Token>> listWhyCandidates;
         private List<String> listWho;
@@ -34,9 +34,9 @@ namespace IE
 
         public Identifier()
         {
-            listWhoCandidates = new List<Token>();
-            listWhenCandidates = new List<Token>();
-            listWhereCandidates = new List<Token>();
+            listWhoCandidates = new List<Candidate>();
+            listWhenCandidates = new List<Candidate>();
+            listWhereCandidates = new List<Candidate>();
             listWhatCandidates = new List<List<Token>>();
             listWhyCandidates = new List<List<Token>>();
 
@@ -72,17 +72,17 @@ namespace IE
                         .ToList();
         }
 
-        public void setWhoCandidates(List<Token> pCandidates)
+        public void setWhoCandidates(List<Candidate> pCandidates)
         {
             listWhoCandidates = pCandidates;
         }
 
-        public void setWhenCandidates(List<Token> pCandidates)
+        public void setWhenCandidates(List<Candidate> pCandidates)
         {
             listWhenCandidates = pCandidates;
         }
 
-        public void setWhereCandidates(List<Token> pCandidates)
+        public void setWhereCandidates(List<Candidate> pCandidates)
         {
             listWhereCandidates = pCandidates;
         }

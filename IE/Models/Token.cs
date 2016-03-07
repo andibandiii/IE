@@ -45,7 +45,7 @@ namespace IE.Models
         public Boolean IsWhat { get; set; }
 
         public Boolean IsWhy { get; set; }
-
+        
         public Token(String value, int position)
         {
             Value = value;
