@@ -24,6 +24,8 @@ namespace IE
             FileParser fileparserFP = new FileParser();
             String sourcePath = @"..\..\training_news.xml";
             String destinationPath = @"..\..\result.xml";
+            String invertedDestinationPath = @"..\..\result_inverted_index.xml";
+            String formatDateDestinationPath = @"..\..\result_format_date.xml";
 
             List<Article> listCurrentArticles = fileparserFP.parseFile(sourcePath);
             List<Annotation> listCurrentTrainingAnnotations = new List<Annotation>();
@@ -98,9 +100,10 @@ namespace IE
                 listAllWhyAnnotations.Add(annotationIdentifier.getWhy());
             }
 
-            ResultWriter rw = new ResultWriter(destinationPath, listCurrentArticles, listAllWhoAnnotations, listAllWhenAnnotations, listAllWhereAnnotations, listAllWhatAnnotations, listAllWhyAnnotations);
+            ResultWriter rw = new ResultWriter(destinationPath, formatDateDestinationPath, invertedDestinationPath, listCurrentArticles, listAllWhoAnnotations, listAllWhenAnnotations, listAllWhereAnnotations, listAllWhatAnnotations, listAllWhyAnnotations);
             rw.generateOutput();
-            rw.generateInvertedIndex(destinationPath);
+            rw.generateOutputFormatDate();
+            rw.generateInvertedIndexOutput();
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
