@@ -62,7 +62,6 @@ namespace IE
                 bool found = false;
                 for (int currentIndex = candidate.Position - 1; currentIndex < candidate.Position + candidate.length - 1; currentIndex++)
                 {
-                    ore
                     if (tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("V"))
                     {
                         Console.WriteLine(tokenizedArticle[currentIndex].PartOfSpeech);
