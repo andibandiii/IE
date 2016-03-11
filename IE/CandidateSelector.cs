@@ -73,12 +73,12 @@ namespace IE
                         candidateWeight = 0;
                         break;
                     }
-                    if (tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("N") && !found)
+                    /*if (tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("N") && !found)
                     {
                         //Console.WriteLine("was here"+ candidateWeight);
                         candidateWeight += 0.3;
                         found = true;
-                    }
+                    }*/
                 }
 
 
