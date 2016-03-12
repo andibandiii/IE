@@ -1,42 +1,38 @@
-﻿using System;
-using System.Collections;
+﻿using IE.Models;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
-using IE.Models;
-using weka.classifiers;
-using weka.core;
 
 namespace IE
 {
-    class Program
+    public partial class Main : Form
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        public static void Main()
-        {
-#if DEBUG
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Main());
-#else
-            Boolean isAnnotated = true;
-            FileParser fileparserFP = new FileParser();
-            String sourcePath = @"..\..\training_news.xml";
-            String destinationPath = @"..\..\result.xml";
-            String invertedDestinationPath = @"..\..\result_inverted_index.xml";
-            String formatDateDestinationPath = @"..\..\result_format_date.xml";
+        private Boolean isAnnotated = false;
+        private String sourcePath { get; set; }
+        private String destinationPath { get; set; }
+        private String invertedDestinationPath { get; set; }
+        private String formatDateDestinationPath { get; set; }
+        private FileParser fileparserFP = new FileParser();
 
+        public Main()
+        {
+            InitializeComponent();
+        }
+
+        private void extract()
+        {
             List<Article> listCurrentArticles = fileparserFP.parseFile(sourcePath);
             List<Annotation> listCurrentTrainingAnnotations = new List<Annotation>();
             if (isAnnotated)
             {
-                 listCurrentTrainingAnnotations = fileparserFP.parseAnnotations(sourcePath);
+                listCurrentTrainingAnnotations = fileparserFP.parseAnnotations(sourcePath);
             }
             List<List<Token>> listTokenizedArticles = new List<List<Token>>();
             List<List<Candidate>> listAllWhoCandidates = new List<List<Candidate>>();
@@ -58,7 +54,7 @@ namespace IE
                 Preprocessor preprocessor = new Preprocessor();
 
                 //Temporarily set to 2 because getting all articles takes longer run time
-                for (int nI = 0; nI < 30; nI++)
+                for (int nI = 0; nI < listCurrentArticles.Count; nI++)
                 {
                     preprocessor.setCurrentArticle(listCurrentArticles[nI]);
                     preprocessor.preprocess();
@@ -89,7 +85,7 @@ namespace IE
             }
 
             Identifier annotationIdentifier = new Identifier();
-            for (int nI = 0; nI < 30; nI++)
+            for (int nI = 0; nI < listCurrentArticles.Count; nI++)
             {
                 annotationIdentifier.setCurrentArticle(listTokenizedArticles[nI]);
                 annotationIdentifier.setWhoCandidates(listAllWhoCandidates[nI]);
@@ -105,11 +101,97 @@ namespace IE
                 listAllWhyAnnotations.Add(annotationIdentifier.getWhy());
             }
 
-            ResultWriter rw = new ResultWriter(destinationPath, formatDateDestinationPath, invertedDestinationPath, listCurrentArticles, listAllWhoAnnotations, listAllWhenAnnotations, listAllWhereAnnotations, listAllWhatAnnotations, listAllWhyAnnotations);
+            ResultWriter rw = new ResultWriter(destinationPath, invertedDestinationPath, formatDateDestinationPath, listCurrentArticles, listAllWhoAnnotations, listAllWhenAnnotations, listAllWhereAnnotations, listAllWhatAnnotations, listAllWhyAnnotations);
             rw.generateOutput();
             rw.generateOutputFormatDate();
             rw.generateInvertedIndexOutput();
-#endif
         }
+
+        #region Extractor Methods
+
+        private void btnBrowseImport_Click(object sender, EventArgs e)
+        {
+            Stream s = null;
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Title = "Import news articles (*.xml)";
+            ofd.Filter = "XML files|*.xml";
+            ofd.InitialDirectory = @"C:\";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    if ((s = ofd.OpenFile()) != null)
+                    {
+                        using (s)
+                        {
+                            textBox1.Text = ofd.FileName;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                }
+            }
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            FileInfo fi = new FileInfo(textBox1.Text);
+
+            if (File.Exists(fi.FullName) && fi.Extension.Equals(".xml"))
+            {
+                sourcePath = fi.FullName;
+                groupBox1.Enabled = false;
+                groupBox2.Enabled = true;
+            }
+        }
+
+        private void btnBrowseExtract_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Title = "Extract 5W's to file (*.xml)";
+            sfd.Filter = "XML files|*.xml";
+            sfd.InitialDirectory = @"C:\";
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                textBox2.Text = sfd.FileName;
+            }
+        }
+
+        private void btnExtract_Click(object sender, EventArgs e)
+        {
+            FileInfo fi = new FileInfo(textBox2.Text);
+
+            if (fi.Extension.Equals(".xml"))
+            {
+                destinationPath = fi.FullName;
+                invertedDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_invereted_index");
+                formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4 , "_format_date");
+                extract();
+                MessageBox.Show("Operation completed!");
+                resetExtractor();
+            }
+        }
+
+        private void resetExtractor()
+        {
+            groupBox1.Enabled = true;
+            groupBox2.Enabled = false;
+            textBox1.Text = "";
+            textBox2.Text = "";
+        }
+
+        #endregion
+
+        #region Viewer Methods
+
+        #endregion
+
+        #region Navigator Methods
+
+        #endregion
     }
 }

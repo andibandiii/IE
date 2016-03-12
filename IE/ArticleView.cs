@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace IE
 {
-    public partial class Form1 : Form
+    public partial class ArticleView : Form
     {
-        public Form1()
+        public ArticleView()
         {
             InitializeComponent();
         }
