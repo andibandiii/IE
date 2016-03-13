@@ -21,9 +21,25 @@ namespace IE
         private String formatDateDestinationPath { get; set; }
         private FileParser fileparserFP = new FileParser();
 
+        private List<TextBox> textBoxes = new List<TextBox>();
+        private List<GroupBox> firstBoxes = new List<GroupBox>();
+        private List<GroupBox> secondBoxes = new List<GroupBox>();
+
         public Main()
         {
             InitializeComponent();
+
+            textBoxes.Add(textBox1);
+            textBoxes.Add(textBox3);
+            textBoxes.Add(textBox4);
+
+            firstBoxes.Add(groupBox1);
+            firstBoxes.Add(groupBox3);
+            firstBoxes.Add(groupBox4);
+
+            secondBoxes.Add(groupBox2);
+            secondBoxes.Add(groupBox6);
+            secondBoxes.Add(groupBox5);
         }
 
         private void extract()
@@ -107,8 +123,11 @@ namespace IE
             rw.generateInvertedIndexOutput();
         }
 
-        #region Extractor Methods
+        private void view()
+        {
 
+        }
+        
         private void btnBrowseImport_Click(object sender, EventArgs e)
         {
             Stream s = null;
@@ -125,7 +144,7 @@ namespace IE
                     {
                         using (s)
                         {
-                            textBox1.Text = ofd.FileName;
+                            textBoxes[tabControl1.SelectedIndex].Text = ofd.FileName;
                         }
                     }
                 }
@@ -138,15 +157,29 @@ namespace IE
 
         private void btnImport_Click(object sender, EventArgs e)
         {
-            FileInfo fi = new FileInfo(textBox1.Text);
+            FileInfo fi = new FileInfo(textBoxes[tabControl1.SelectedIndex].Text);
 
             if (File.Exists(fi.FullName) && fi.Extension.Equals(".xml"))
             {
                 sourcePath = fi.FullName;
-                groupBox1.Enabled = false;
-                groupBox2.Enabled = true;
+                firstBoxes[tabControl1.SelectedIndex].Enabled = false;
+
+                if(tabControl1.SelectedIndex == 1)
+                {
+                    view();
+                }
+
+                secondBoxes[tabControl1.SelectedIndex].Enabled = true;
             }
         }
+
+        private void btnView_Click(object sender, EventArgs e)
+        {
+            ArticleView view = new ArticleView();
+            view.ShowDialog();
+        }
+
+        #region Extractor Methods
 
         private void btnBrowseExtract_Click(object sender, EventArgs e)
         {
@@ -193,5 +226,6 @@ namespace IE
         #region Navigator Methods
 
         #endregion
+
     }
 }
