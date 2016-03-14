@@ -15,9 +15,6 @@ namespace IE
     public partial class Main : Form
     {
         private String[] sourcePaths = new String[3];
-        private String destinationPath { get; set; }
-        private String invertedDestinationPath { get; set; }
-        private String formatDateDestinationPath { get; set; }
         private FileParser fileparserFP = new FileParser();
 
         private List<TextBox> textBoxes = new List<TextBox>();
@@ -152,15 +149,11 @@ namespace IE
 
         #region Extractor Methods
 
-        private void extract()
+        private void extract(String destinationPath, String invertedDestinationPath, String formatDateDestinationPath)
         {
             Boolean isAnnotated = false;
             List<Article> listCurrentArticles = fileparserFP.parseFile(sourcePaths[tabControl1.SelectedIndex]);
             List<Annotation> listCurrentTrainingAnnotations = new List<Annotation>();
-            if (isAnnotated)
-            {
-                listCurrentTrainingAnnotations = fileparserFP.parseAnnotations(sourcePaths[tabControl1.SelectedIndex]);
-            }
             List<List<Token>> listTokenizedArticles = new List<List<Token>>();
             List<List<Candidate>> listAllWhoCandidates = new List<List<Candidate>>();
             List<List<Candidate>> listAllWhenCandidates = new List<List<Candidate>>();
@@ -186,28 +179,12 @@ namespace IE
                     preprocessor.setCurrentArticle(listCurrentArticles[nI]);
                     preprocessor.preprocess();
 
-                    if (isAnnotated)
-                    {
-                        preprocessor.setCurrentAnnotation(listCurrentTrainingAnnotations[nI]);
-                        preprocessor.performAnnotationAssignment();
-                    }
-
                     listTokenizedArticles.Add(preprocessor.getLatestTokenizedArticle());
                     listAllWhoCandidates.Add(preprocessor.getWhoCandidates());
                     listAllWhenCandidates.Add(preprocessor.getWhenCandidates());
                     listAllWhereCandidates.Add(preprocessor.getWhereCandidates());
                     listAllWhatCandidates.Add(preprocessor.getWhatCandidates());
                     listAllWhyCandidates.Add(preprocessor.getWhyCandidates());
-                }
-
-                if (isAnnotated)
-                {
-                    Trainer whoTrainer = new WhoTrainer();
-                    Trainer whenTrainer = new WhenTrainer();
-                    Trainer whereTrainer = new WhereTrainer();
-                    whoTrainer.trainMany(listTokenizedArticles, listAllWhoCandidates);
-                    whenTrainer.trainMany(listTokenizedArticles, listAllWhenCandidates);
-                    whereTrainer.trainMany(listTokenizedArticles, listAllWhereCandidates);
                 }
             }
 
@@ -253,12 +230,16 @@ namespace IE
 
             if (fi.Extension.Equals(".xml"))
             {
-                destinationPath = fi.FullName;
-                invertedDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_invereted_index");
-                formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_format_date");
-                extract();
+                String destinationPath = fi.FullName;
+                String invertedDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_invereted_index");
+                String formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_format_date");
+
+                extract(destinationPath, invertedDestinationPath, formatDateDestinationPath);
                 MessageBox.Show("Operation completed!");
                 resetExtractor();
+
+                textBox3.Text = destinationPath;
+                textBox4.Text = invertedDestinationPath;
             }
         }
 

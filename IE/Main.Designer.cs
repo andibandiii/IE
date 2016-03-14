@@ -62,10 +62,10 @@
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.textBox5 = new System.Windows.Forms.TextBox();
-            this.button9 = new System.Windows.Forms.Button();
-            this.button10 = new System.Windows.Forms.Button();
+            this.criteriaBox = new System.Windows.Forms.ComboBox();
+            this.searchQuery = new System.Windows.Forms.TextBox();
+            this.btnAddCriteria = new System.Windows.Forms.Button();
+            this.btnSearch = new System.Windows.Forms.Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -387,6 +387,8 @@
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.panel1);
+            this.groupBox5.Controls.Add(this.btnSearch);
+            this.groupBox5.Controls.Add(this.btnAddCriteria);
             this.groupBox5.Enabled = false;
             this.groupBox5.Location = new System.Drawing.Point(6, 90);
             this.groupBox5.Name = "groupBox5";
@@ -397,20 +399,20 @@
             // 
             // panel1
             // 
+            this.panel1.AutoScroll = true;
             this.panel1.Controls.Add(this.comboBox3);
             this.panel1.Controls.Add(this.comboBox2);
             this.panel1.Controls.Add(this.textBox6);
-            this.panel1.Controls.Add(this.comboBox1);
-            this.panel1.Controls.Add(this.textBox5);
-            this.panel1.Controls.Add(this.button9);
-            this.panel1.Controls.Add(this.button10);
+            this.panel1.Controls.Add(this.criteriaBox);
+            this.panel1.Controls.Add(this.searchQuery);
             this.panel1.Location = new System.Drawing.Point(6, 23);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(503, 147);
+            this.panel1.Size = new System.Drawing.Size(503, 118);
             this.panel1.TabIndex = 8;
             // 
             // comboBox3
             // 
+            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox3.FormattingEnabled = true;
             this.comboBox3.Location = new System.Drawing.Point(3, 28);
             this.comboBox3.Name = "comboBox3";
@@ -419,10 +421,11 @@
             // 
             // comboBox2
             // 
+            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.Location = new System.Drawing.Point(385, 28);
             this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(115, 21);
+            this.comboBox2.Size = new System.Drawing.Size(91, 21);
             this.comboBox2.TabIndex = 13;
             // 
             // textBox6
@@ -432,38 +435,39 @@
             this.textBox6.Size = new System.Drawing.Size(295, 20);
             this.textBox6.TabIndex = 12;
             // 
-            // comboBox1
+            // criteriaBox
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(385, 2);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(115, 21);
-            this.comboBox1.TabIndex = 11;
+            this.criteriaBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.criteriaBox.FormattingEnabled = true;
+            this.criteriaBox.Location = new System.Drawing.Point(385, 2);
+            this.criteriaBox.Name = "criteriaBox";
+            this.criteriaBox.Size = new System.Drawing.Size(91, 21);
+            this.criteriaBox.TabIndex = 11;
             // 
-            // textBox5
+            // searchQuery
             // 
-            this.textBox5.Location = new System.Drawing.Point(3, 3);
-            this.textBox5.Name = "textBox5";
-            this.textBox5.Size = new System.Drawing.Size(376, 20);
-            this.textBox5.TabIndex = 8;
+            this.searchQuery.Location = new System.Drawing.Point(3, 3);
+            this.searchQuery.Name = "searchQuery";
+            this.searchQuery.Size = new System.Drawing.Size(376, 20);
+            this.searchQuery.TabIndex = 8;
             // 
-            // button9
+            // btnAddCriteria
             // 
-            this.button9.Location = new System.Drawing.Point(81, 121);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(87, 23);
-            this.button9.TabIndex = 9;
-            this.button9.Text = "Add Criteria";
-            this.button9.UseVisualStyleBackColor = true;
+            this.btnAddCriteria.Location = new System.Drawing.Point(84, 147);
+            this.btnAddCriteria.Name = "btnAddCriteria";
+            this.btnAddCriteria.Size = new System.Drawing.Size(87, 23);
+            this.btnAddCriteria.TabIndex = 9;
+            this.btnAddCriteria.Text = "Add Criteria";
+            this.btnAddCriteria.UseVisualStyleBackColor = true;
             // 
-            // button10
+            // btnSearch
             // 
-            this.button10.Location = new System.Drawing.Point(3, 121);
-            this.button10.Name = "button10";
-            this.button10.Size = new System.Drawing.Size(75, 23);
-            this.button10.TabIndex = 10;
-            this.button10.Text = "Search";
-            this.button10.UseVisualStyleBackColor = true;
+            this.btnSearch.Location = new System.Drawing.Point(6, 147);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(75, 23);
+            this.btnSearch.TabIndex = 10;
+            this.btnSearch.Text = "Search";
+            this.btnSearch.UseVisualStyleBackColor = true;
             // 
             // groupBox4
             // 
@@ -502,6 +506,7 @@
             this.button7.TabIndex = 2;
             this.button7.Text = "Browse";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.btnBrowseImport_Click);
             // 
             // button8
             // 
@@ -511,6 +516,7 @@
             this.button8.TabIndex = 3;
             this.button8.Text = "Import";
             this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // Main
             // 
@@ -587,10 +593,10 @@
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.ComboBox comboBox2;
         private System.Windows.Forms.TextBox textBox6;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.TextBox textBox5;
-        private System.Windows.Forms.Button button9;
-        private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.ComboBox criteriaBox;
+        private System.Windows.Forms.TextBox searchQuery;
+        private System.Windows.Forms.Button btnAddCriteria;
+        private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.Button btnViewerClear;
         private System.Windows.Forms.Button btnNavigatorClear;
     }
