@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace IE
 {
@@ -27,6 +28,13 @@ namespace IE
 
         private List<Annotation> listViewerAnnotations = new List<Annotation>();
         private List<Annotation> listNavigatorAnnotations = new List<Annotation>();
+
+        private List<TextBox> searchQueries = new List<TextBox>();
+        private List<ComboBox> criteriaBoxes = new List<ComboBox>();
+        private List<ComboBox> criteriaTypes = new List<ComboBox>();
+
+        private String[] criterias = new String[] { "Sino", "Kailan", "Saan", "Ano", "Bakit" };
+        private String[] types = new String[] { "AND", "OR" };
 
         public Main()
         {
@@ -47,6 +55,13 @@ namespace IE
             comboBoxes.Add(null);
             comboBoxes.Add(comboBox4);
             comboBoxes.Add(comboBox5);
+
+            foreach (String s in criterias)
+            {
+                criteriaBox.Items.Add(s);
+            }
+
+            criteriaBox.SelectedIndex = 0;
         }
 
         private void loadArticles()
@@ -66,6 +81,30 @@ namespace IE
         public void saveChanges(int[] i, Annotation a)
         {
             // TODO: Save annotation changes
+            // i[1] = index of article
+
+            XmlDocument doc = new XmlDocument();
+            
+            doc.Load(sourcePaths[i[0]]);
+
+            XmlNode root = doc.DocumentElement;
+
+            root.SelectSingleNode("").Value = a.Who;
+            root.SelectSingleNode("").Value = a.When;
+            root.SelectSingleNode("").Value = a.Where;
+            root.SelectSingleNode("").Value = a.What;
+            root.SelectSingleNode("").Value = a.Why;
+
+            doc.Save(sourcePaths[i[0]]);
+
+            if (tabControl1.SelectedIndex == 1)
+            {
+                listViewerAnnotations[i[1]] = a;
+            }
+            else if (tabControl1.SelectedIndex == 2)
+            {
+                listNavigatorAnnotations[i[1]] = a;
+            }
         }
 
         private void btnBrowseImport_Click(object sender, EventArgs e)
@@ -127,6 +166,9 @@ namespace IE
 
                         if (File.Exists(formatDateDestinationPath))
                         {
+                            listNavigatorArticles = listArticles;
+                            listNavigatorAnnotations = listAnnotations;
+
                             // TODO: Parse inverted index XML
                         }
                         else
@@ -145,7 +187,11 @@ namespace IE
         private void btnView_Click(object sender, EventArgs e)
         {
             ArticleView view = new ArticleView(this,
-                new int[] { tabControl1.SelectedIndex, comboBoxes[tabControl1.SelectedIndex].SelectedIndex },
+                new int[] 
+                {
+                    tabControl1.SelectedIndex,
+                    comboBoxes[tabControl1.SelectedIndex].SelectedIndex
+                },
                 (tabControl1.SelectedIndex == 1 ?
                 listViewerArticles :
                 listNavigatorArticles)[comboBoxes[tabControl1.SelectedIndex].SelectedIndex],
@@ -292,11 +338,66 @@ namespace IE
         private void btnSearch_Click(object sender, EventArgs e)
         {
             // TODO: Parse search queries
+
+            groupBox7.Enabled = true;
         }
 
         private void btnAddCriteria_Click(object sender, EventArgs e)
         {
-            // TODO: Dynamically add criterias
+            TextBox newQuery = new TextBox();
+
+            newQuery.Name = "searchQuery" + searchQueries.Count;
+            newQuery.Location = new Point(181, 
+                searchQueries.Count == 0 ? 
+                29 : 
+                (searchQueries[searchQueries.Count - 1].Location.Y + 25));
+            newQuery.Width = 319;
+            newQuery.Visible = true;
+
+            searchQueries.Add(newQuery);
+            panel1.Controls.Add(newQuery);
+
+            ComboBox newCriteria = new ComboBox();
+
+            newCriteria.Name = "criteriaBox" + criteriaBoxes.Count;
+            newCriteria.Location = new Point(3, 
+                criteriaBoxes.Count == 0 ? 
+                29 : 
+                (criteriaBoxes[criteriaBoxes.Count - 1].Location.Y + 25));
+            newCriteria.Width = 91;
+            newCriteria.Visible = true;
+            newCriteria.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            foreach (String s in criterias)
+            {
+                newCriteria.Items.Add(s);
+            }
+
+            newCriteria.SelectedIndex = 0;
+
+            criteriaBoxes.Add(newCriteria);
+            panel1.Controls.Add(newCriteria);
+
+            ComboBox newType = new ComboBox();
+
+            newType.Name = "criteriaType" + criteriaTypes.Count;
+            newType.Location = new Point(100, 
+                criteriaTypes.Count == 0 ? 
+                29 : 
+                (criteriaTypes[criteriaTypes.Count - 1].Location.Y + 25));
+            newType.Width = 75;
+            newType.Visible = true;
+            newType.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            foreach (String s in types)
+            {
+                newType.Items.Add(s);
+            }
+
+            newType.SelectedIndex = 0;
+
+            criteriaTypes.Add(newType);
+            panel1.Controls.Add(newType);
         }
 
         private void resetNavigator()
@@ -309,6 +410,27 @@ namespace IE
             comboBox5.Items.Clear();
             listNavigatorArticles = null;
             listNavigatorAnnotations = null;
+
+            criteriaBox.SelectedIndex = 0;
+
+            foreach (TextBox t in searchQueries)
+            {
+                panel1.Controls.Remove(t);
+            }
+
+            foreach (ComboBox c in criteriaBoxes)
+            {
+                panel1.Controls.Remove(c);
+            }
+
+            foreach (ComboBox c in criteriaTypes)
+            {
+                panel1.Controls.Remove(c);
+            }
+
+            searchQueries = new List<TextBox>();
+            criteriaBoxes = new List<ComboBox>();
+            criteriaTypes = new List<ComboBox>();
         }
 
         #endregion

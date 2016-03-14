@@ -1,0 +1,21 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/IE/Who.arff
+/IE/Where.arff
+/IE/When.arff
+/IE/result_inverted_index.xml
+/IE/result_format_date.xml
+/IE/result.xml
+/IE/obj/Debug/IE.Form1.resources
+/IE/obj/Debug/IE.csprojResolveAssemblyReference.cache
+/IE/Form1.resx
+/IE/bin/Debug/xom.dll
+/IE/bin/Debug/weka.dll
+/IE/bin/Debug/stanford-corenlp-3.6.0.dll
+/IE/bin/Debug/jollyday.dll
+/IE/bin/Debug/joda-time.dll
+/IE/bin/Debug/javax.json.dll
+/IE/bin/Debug/IE.vshost.exe.manifest
+/IE/bin/Debug/ejml-0.23.dll
