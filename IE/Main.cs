@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace IE
 {
@@ -80,6 +81,21 @@ namespace IE
         public void saveChanges(int[] i, Annotation a)
         {
             // TODO: Save annotation changes
+            // i[1] = index of article
+
+            XmlDocument doc = new XmlDocument();
+            
+            doc.Load(sourcePaths[i[0]]);
+
+            XmlNode root = doc.DocumentElement;
+
+            root.SelectSingleNode("").Value = a.Who;
+            root.SelectSingleNode("").Value = a.When;
+            root.SelectSingleNode("").Value = a.Where;
+            root.SelectSingleNode("").Value = a.What;
+            root.SelectSingleNode("").Value = a.Why;
+
+            doc.Save(sourcePaths[i[0]]);
         }
 
         private void btnBrowseImport_Click(object sender, EventArgs e)
@@ -162,7 +178,11 @@ namespace IE
         private void btnView_Click(object sender, EventArgs e)
         {
             ArticleView view = new ArticleView(this,
-                new int[] { tabControl1.SelectedIndex, comboBoxes[tabControl1.SelectedIndex].SelectedIndex },
+                new int[] 
+                {
+                    tabControl1.SelectedIndex,
+                    comboBoxes[tabControl1.SelectedIndex].SelectedIndex
+                },
                 (tabControl1.SelectedIndex == 1 ?
                 listViewerArticles :
                 listNavigatorArticles)[comboBoxes[tabControl1.SelectedIndex].SelectedIndex],
@@ -318,7 +338,10 @@ namespace IE
             TextBox newQuery = new TextBox();
 
             newQuery.Name = "searchQuery" + searchQueries.Count;
-            newQuery.Location = new Point(181, searchQueries.Count == 0 ? 29 : (searchQueries[searchQueries.Count - 1].Location.Y + 25));
+            newQuery.Location = new Point(181, 
+                searchQueries.Count == 0 ? 
+                29 : 
+                (searchQueries[searchQueries.Count - 1].Location.Y + 25));
             newQuery.Width = 319;
             newQuery.Visible = true;
 
@@ -328,7 +351,10 @@ namespace IE
             ComboBox newCriteria = new ComboBox();
 
             newCriteria.Name = "criteriaBox" + criteriaBoxes.Count;
-            newCriteria.Location = new Point(3, criteriaBoxes.Count == 0 ? 29 : (criteriaBoxes[criteriaBoxes.Count - 1].Location.Y + 25));
+            newCriteria.Location = new Point(3, 
+                criteriaBoxes.Count == 0 ? 
+                29 : 
+                (criteriaBoxes[criteriaBoxes.Count - 1].Location.Y + 25));
             newCriteria.Width = 91;
             newCriteria.Visible = true;
             newCriteria.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -345,8 +371,11 @@ namespace IE
 
             ComboBox newType = new ComboBox();
 
-            newType.Name = "criteriaBox" + criteriaTypes.Count;
-            newType.Location = new Point(100, criteriaTypes.Count == 0 ? 29 : (criteriaTypes[criteriaTypes.Count - 1].Location.Y + 25));
+            newType.Name = "criteriaType" + criteriaTypes.Count;
+            newType.Location = new Point(100, 
+                criteriaTypes.Count == 0 ? 
+                29 : 
+                (criteriaTypes[criteriaTypes.Count - 1].Location.Y + 25));
             newType.Width = 75;
             newType.Visible = true;
             newType.DropDownStyle = ComboBoxStyle.DropDownList;
