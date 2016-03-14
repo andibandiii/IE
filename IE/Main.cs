@@ -31,7 +31,7 @@ namespace IE
         public Main()
         {
             InitializeComponent();
-            
+
             textBoxes.Add(textBox1);
             textBoxes.Add(textBox3);
             textBoxes.Add(textBox4);
@@ -65,7 +65,7 @@ namespace IE
 
         public void saveChanges(int[] i, Annotation a)
         {
-
+            // TODO: Save annotation changes
         }
 
         private void btnBrowseImport_Click(object sender, EventArgs e)
@@ -102,19 +102,34 @@ namespace IE
             if (File.Exists(fi.FullName) && fi.Extension.Equals(".xml"))
             {
                 sourcePaths[tabControl1.SelectedIndex] = fi.FullName;
-                
-                if (tabControl1.SelectedIndex == 1)
-                {
-                    listViewerArticles = fileparserFP.parseFile(sourcePaths[tabControl1.SelectedIndex]);
-                    listViewerAnnotations = fileparserFP.parseAnnotations(sourcePaths[tabControl1.SelectedIndex]);
 
-                    if (listViewerArticles.Count <= 0)
+                if (tabControl1.SelectedIndex > 0)
+                {
+                    List<Article> listArticles = fileparserFP.parseFile(sourcePaths[tabControl1.SelectedIndex]);
+                    List<Annotation> listAnnotations = fileparserFP.parseAnnotations(sourcePaths[tabControl1.SelectedIndex]);
+
+                    if (listArticles.Count <= 0)
                     {
                         MessageBox.Show("No articles found!");
                         return;
                     }
 
-                    loadArticles();
+                    if (tabControl1.SelectedIndex == 1)
+                    {
+                        listViewerArticles = listArticles;
+                        listViewerAnnotations = listAnnotations;
+
+                        loadArticles();
+                    }
+                    else if (tabControl1.SelectedIndex == 2)
+                    {
+                        String formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_format_date");
+
+                        if (File.Exists(formatDateDestinationPath))
+                        {
+                            // TODO: Parse inverted index XML
+                        }
+                    }
                 }
 
                 //firstBoxes[tabControl1.SelectedIndex].Enabled = false;
@@ -239,7 +254,7 @@ namespace IE
                 resetExtractor();
 
                 textBox3.Text = destinationPath;
-                textBox4.Text = invertedDestinationPath;
+                textBox4.Text = destinationPath;
             }
         }
 
@@ -269,14 +284,25 @@ namespace IE
 
         #region Navigator Methods
 
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            // TODO: Parse search queries
+        }
+
+        private void btnAddCriteria_Click(object sender, EventArgs e)
+        {
+            // TODO: Dynamically add criterias
+        }
+
         private void resetNavigator()
         {
-            //groupBox3.Enabled = true;
-            //groupBox6.Enabled = false;
-            //textBox3.Text = "";
-            //comboBox4.Items.Clear();
-            //listViewerArticles = null;
-            //listViewerAnnotations = null;
+            groupBox4.Enabled = true;
+            groupBox5.Enabled = false;
+            textBox4.Text = "";
+            searchQuery.Text = "";
+            comboBox5.Items.Clear();
+            listNavigatorArticles = null;
+            listNavigatorAnnotations = null;
         }
 
         #endregion

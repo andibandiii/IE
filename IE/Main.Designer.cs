@@ -414,7 +414,7 @@
             // 
             this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(3, 28);
+            this.comboBox3.Location = new System.Drawing.Point(100, 29);
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(75, 21);
             this.comboBox3.TabIndex = 14;
@@ -423,32 +423,32 @@
             // 
             this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(385, 28);
+            this.comboBox2.Location = new System.Drawing.Point(3, 30);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(91, 21);
             this.comboBox2.TabIndex = 13;
             // 
             // textBox6
             // 
-            this.textBox6.Location = new System.Drawing.Point(84, 29);
+            this.textBox6.Location = new System.Drawing.Point(181, 29);
             this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(295, 20);
+            this.textBox6.Size = new System.Drawing.Size(319, 20);
             this.textBox6.TabIndex = 12;
             // 
             // criteriaBox
             // 
             this.criteriaBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.criteriaBox.FormattingEnabled = true;
-            this.criteriaBox.Location = new System.Drawing.Point(385, 2);
+            this.criteriaBox.Location = new System.Drawing.Point(3, 3);
             this.criteriaBox.Name = "criteriaBox";
             this.criteriaBox.Size = new System.Drawing.Size(91, 21);
             this.criteriaBox.TabIndex = 11;
             // 
             // searchQuery
             // 
-            this.searchQuery.Location = new System.Drawing.Point(3, 3);
+            this.searchQuery.Location = new System.Drawing.Point(100, 4);
             this.searchQuery.Name = "searchQuery";
-            this.searchQuery.Size = new System.Drawing.Size(376, 20);
+            this.searchQuery.Size = new System.Drawing.Size(400, 20);
             this.searchQuery.TabIndex = 8;
             // 
             // btnAddCriteria
@@ -459,6 +459,7 @@
             this.btnAddCriteria.TabIndex = 9;
             this.btnAddCriteria.Text = "Add Criteria";
             this.btnAddCriteria.UseVisualStyleBackColor = true;
+            this.btnAddCriteria.Click += new System.EventHandler(this.btnAddCriteria_Click);
             // 
             // btnSearch
             // 
@@ -468,6 +469,7 @@
             this.btnSearch.TabIndex = 10;
             this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // groupBox4
             // 
