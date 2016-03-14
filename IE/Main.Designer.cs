@@ -59,9 +59,6 @@
             this.btnNavigatorView = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
             this.criteriaBox = new System.Windows.Forms.ComboBox();
             this.searchQuery = new System.Windows.Forms.TextBox();
             this.btnAddCriteria = new System.Windows.Forms.Button();
@@ -400,40 +397,12 @@
             // panel1
             // 
             this.panel1.AutoScroll = true;
-            this.panel1.Controls.Add(this.comboBox3);
-            this.panel1.Controls.Add(this.comboBox2);
-            this.panel1.Controls.Add(this.textBox6);
             this.panel1.Controls.Add(this.criteriaBox);
             this.panel1.Controls.Add(this.searchQuery);
             this.panel1.Location = new System.Drawing.Point(6, 23);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(503, 118);
             this.panel1.TabIndex = 8;
-            // 
-            // comboBox3
-            // 
-            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Location = new System.Drawing.Point(100, 29);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(75, 21);
-            this.comboBox3.TabIndex = 14;
-            // 
-            // comboBox2
-            // 
-            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(3, 30);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(91, 21);
-            this.comboBox2.TabIndex = 13;
-            // 
-            // textBox6
-            // 
-            this.textBox6.Location = new System.Drawing.Point(181, 29);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(319, 20);
-            this.textBox6.TabIndex = 12;
             // 
             // criteriaBox
             // 
@@ -592,9 +561,6 @@
         private System.Windows.Forms.ComboBox comboBox5;
         private System.Windows.Forms.Button btnNavigatorView;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.ComboBox comboBox3;
-        private System.Windows.Forms.ComboBox comboBox2;
-        private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.ComboBox criteriaBox;
         private System.Windows.Forms.TextBox searchQuery;
         private System.Windows.Forms.Button btnAddCriteria;
