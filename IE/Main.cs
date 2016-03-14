@@ -129,6 +129,11 @@ namespace IE
                         {
                             // TODO: Parse inverted index XML
                         }
+                        else
+                        {
+                            MessageBox.Show("Inverted index file not found!");
+                            return;
+                        }
                     }
                 }
 
@@ -298,6 +303,7 @@ namespace IE
         {
             groupBox4.Enabled = true;
             groupBox5.Enabled = false;
+            groupBox7.Enabled = false;
             textBox4.Text = "";
             searchQuery.Text = "";
             comboBox5.Items.Clear();
