@@ -264,6 +264,7 @@
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
             this.Name = "ArticleView";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Form2";
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -23,6 +23,8 @@ namespace IE
         {
             InitializeComponent();
 
+            this.Text = ar.Title;
+
             textBoxes.Add(textBox6);
             textBoxes.Add(textBox7);
             textBoxes.Add(textBox8);
