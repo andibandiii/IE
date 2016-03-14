@@ -20,6 +20,11 @@ namespace IE
         [STAThread]
         public static void Main()
         {
+#if DEBUG
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Main());
+#else
             Boolean isAnnotated = true;
             FileParser fileparserFP = new FileParser();
             String sourcePath = @"..\..\training_news.xml";
@@ -104,9 +109,7 @@ namespace IE
             rw.generateOutput();
             rw.generateOutputFormatDate();
             rw.generateInvertedIndexOutput();
-            //Application.EnableVisualStyles();
-            //Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new Form1());
+#endif
         }
     }
 }

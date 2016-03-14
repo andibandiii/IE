@@ -49,6 +49,7 @@ namespace IE
 
             foreach (Candidate candidate in temporaryCandidates)
             {
+                if (candidate.Value == null) continue;
                 double candidateWeight = 0;
                 int numWords = candidate.Value.Split(' ').Count();
                 candidateWeight += 1 - (numWords / 5 + 1) * 0.2;
@@ -72,12 +73,12 @@ namespace IE
                         candidateWeight = 0;
                         break;
                     }
-                    if (tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("N") && !found)
+                    /*if (tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("N") && !found)
                     {
                         //Console.WriteLine("was here"+ candidateWeight);
                         candidateWeight += 0.3;
                         found = true;
-                    }
+                    }*/
                 }
 
 
