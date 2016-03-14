@@ -207,29 +207,166 @@ namespace IE
 
         public void processWhen(DateTime date, string annotation, XmlTextWriter writer)
         {
-            Dictionary<string, int> hash = new Dictionary<string, int>();
-            hash.Add("kahapon", -1);
-
-            if (hash.ContainsKey(annotation))
+            //Dictionary<string, int> hash = new Dictionary<string, int>();
+            //hash.Add("kahapon", -1);
+            //hash.Add("bukas", 1);
+            //hash.Add("ngayon", 0);
+            //hash.Add("kamakalawa", -2);
+            //hash.Add("nakaraan", 0);
+            //Lunes
+            //Martes
+            //Miyerkules
+            //Huwebes
+            //Biyernes
+            //
+            //kamakalawa ng gabi
+            //nakaraang linggo
+            //linggo
+            //pasko
+            //nakaraang pasko
+            //linggo
+            //nakaraang linggo
+            //kamakalawa ng gabi
+            //Huwebes -->
+            //Bandang alas - 5:20 ng hapon
+            //nagdaang unang tatlong buwan ng taong kasalukuyan
+            //Abril 18
+            //Abril 27 ng taong ito-- > 4 / 27 only
+            //   kahapon ng umaga
+            //ngayon
+            //ngayong taong ito
+            //kamakailan
+            //linggong ito
+            //Mayo
+            //Abril 23
+            //Mayo 20
+            //Miyerkules
+            //Ngayong linggo(same date)
+            //Marso 11, 2012
+            //Marso 3
+            /*
+            List<string> storedKey = new List<string>();
+            foreach (string k in hash.Keys)
             {
-                writer.WriteStartElement("date");
-                int translate = hash[annotation];
-                date = date.AddDays(translate);
-                writer.WriteStartElement("month");
-                writer.WriteString(date.Month.ToString());
-                writer.WriteEndElement();
-                writer.WriteStartElement("day");
-                writer.WriteString(date.Day.ToString());
-                writer.WriteEndElement();
-                writer.WriteStartElement("year");
-                writer.WriteString(date.Year.ToString());
-                writer.WriteEndElement();
-                writer.WriteEndElement();
+                if (annotation.Contains(k))
+                {
+                    storedKey.Add(k);
+                }
+            }
+
+            if(storedKey.Count > 0)
+            {
+                foreach (string s in storedKey)
+                {
+                    Console.WriteLine("Annotation: " + annotation + "DATE: " + date);
+                    int translate = hash[s];
+                    date = date.AddDays(translate);
+                    writer.WriteString(date.Date.ToString());
+                    Console.WriteLine("NEW DATE: " + date);
+                }
+            }
+            */
+            Console.WriteLine("Annotation: " + annotation + "DATE: " + date);
+            if (annotation.Contains("kahapon"))
+            {
+                date = date.AddDays(-1);
+                writer.WriteString(date.Date.ToString());
+            }
+            else if (annotation.Contains("bukas"))
+            {
+                date = date.AddDays(1);
+                writer.WriteString(date.Date.ToString());
+            }
+            else if (annotation.Contains("ngayon"))
+            {
+                writer.WriteString(date.Date.ToString());
+            }
+            else if (annotation.Contains("kamakalawa"))
+            {
+                date = date.AddDays(-2);
+                writer.WriteString(date.Date.ToString());
+            }
+            else if (annotation.Contains("Linggo"))
+            {
+                while ((int)date.DayOfWeek != 0)
+                {
+                   date = date.AddDays(1);
+                }
+                date = date.AddDays(-7);
+                writer.WriteString(date.Date.ToString());
+            }
+            else if (annotation.Contains("Lunes"))
+            {
+                while ((int)date.DayOfWeek != 1)
+                {
+                    date = date.AddDays(1);
+                }
+                date = date.AddDays(-7);
+                writer.WriteString(date.Date.ToString());
+            }
+            else if (annotation.Contains("Martes"))
+            {
+                while ((int)date.DayOfWeek != 2)
+                {
+                    date = date.AddDays(1);
+                }
+                date = date.AddDays(-7);
+                writer.WriteString(date.Date.ToString());
+            }
+            else if (annotation.Contains("Miyerkules"))
+            {
+                while ((int)date.DayOfWeek != 3)
+                {
+                    date = date.AddDays(1);
+                }
+                date = date.AddDays(-7);
+                writer.WriteString(date.Date.ToString());
+            }
+            else if (annotation.Contains("Huwebes"))
+            {
+                while ((int)date.DayOfWeek != 4)
+                {
+                    date = date.AddDays(1);
+                }
+                date = date.AddDays(-7);
+                writer.WriteString(date.Date.ToString());
+            }
+            else if (annotation.Contains("Biyernes"))
+            {
+                while ((int)date.DayOfWeek != 5)
+                {
+                    date = date.AddDays(1);
+                }
+                date = date.AddDays(-7);
+                writer.WriteString(date.Date.ToString());
+            }
+            else if (annotation.Contains("Sabado"))
+            {
+                while ((int)date.DayOfWeek != 6)
+                {
+                    date = date.AddDays(1);
+                }
+                date = date.AddDays(-7);
+                writer.WriteString(date.Date.ToString());
+            }
+            else if (annotation.Contains("nakaraan"))
+            {
+                if (annotation.Contains("linggo"))
+                {
+                    date = date.AddDays(-1);
+                    writer.WriteString(date.Date.ToString());
+                }
+                else
+                {
+                    writer.WriteString(annotation);
+                }
+
             }
             else
             {
                 writer.WriteString(annotation);
             }
+            Console.WriteLine("NEW DATE: " + date);
         }
 
         public void generateOutputFormatDate()
