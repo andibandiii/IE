@@ -96,6 +96,15 @@ namespace IE
             root.SelectSingleNode("").Value = a.Why;
 
             doc.Save(sourcePaths[i[0]]);
+
+            if (tabControl1.SelectedIndex == 1)
+            {
+                listViewerAnnotations[i[1]] = a;
+            }
+            else if (tabControl1.SelectedIndex == 2)
+            {
+                listNavigatorAnnotations[i[1]] = a;
+            }
         }
 
         private void btnBrowseImport_Click(object sender, EventArgs e)
