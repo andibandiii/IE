@@ -62,17 +62,17 @@
             // 
             // textBox1
             // 
-            this.textBox1.Enabled = false;
             this.textBox1.Location = new System.Drawing.Point(80, 10);
             this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(524, 20);
             this.textBox1.TabIndex = 1;
             // 
             // textBox2
             // 
-            this.textBox2.Enabled = false;
             this.textBox2.Location = new System.Drawing.Point(80, 38);
             this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
             this.textBox2.Size = new System.Drawing.Size(278, 20);
             this.textBox2.TabIndex = 3;
             // 
@@ -96,9 +96,9 @@
             // 
             // textBox4
             // 
-            this.textBox4.Enabled = false;
             this.textBox4.Location = new System.Drawing.Point(80, 66);
             this.textBox4.Name = "textBox4";
+            this.textBox4.ReadOnly = true;
             this.textBox4.Size = new System.Drawing.Size(524, 20);
             this.textBox4.TabIndex = 7;
             // 
@@ -113,10 +113,11 @@
             // 
             // textBox5
             // 
-            this.textBox5.Enabled = false;
             this.textBox5.Location = new System.Drawing.Point(80, 94);
             this.textBox5.Multiline = true;
             this.textBox5.Name = "textBox5";
+            this.textBox5.ReadOnly = true;
+            this.textBox5.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox5.Size = new System.Drawing.Size(524, 120);
             this.textBox5.TabIndex = 9;
             // 
@@ -186,6 +187,7 @@
             this.textBox9.Location = new System.Drawing.Point(80, 310);
             this.textBox9.Multiline = true;
             this.textBox9.Name = "textBox9";
+            this.textBox9.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox9.Size = new System.Drawing.Size(524, 50);
             this.textBox9.TabIndex = 17;
             // 
@@ -213,6 +215,7 @@
             this.textBox10.Location = new System.Drawing.Point(80, 368);
             this.textBox10.Multiline = true;
             this.textBox10.Name = "textBox10";
+            this.textBox10.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox10.Size = new System.Drawing.Size(524, 50);
             this.textBox10.TabIndex = 19;
             // 
@@ -232,6 +235,7 @@
             this.btnEdit.TabIndex = 23;
             this.btnEdit.Text = "Edit";
             this.btnEdit.UseVisualStyleBackColor = true;
+            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
             // ArticleView
             // 

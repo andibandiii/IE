@@ -42,9 +42,10 @@
             this.btnImport = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.btnViewerClear = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.comboBox4 = new System.Windows.Forms.ComboBox();
-            this.btnView = new System.Windows.Forms.Button();
+            this.btnViewerView = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -52,9 +53,10 @@
             this.button6 = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.btnNavigatorClear = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.comboBox5 = new System.Windows.Forms.ComboBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnNavigatorView = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.comboBox3 = new System.Windows.Forms.ComboBox();
@@ -219,9 +221,10 @@
             // 
             // groupBox6
             // 
+            this.groupBox6.Controls.Add(this.btnViewerClear);
             this.groupBox6.Controls.Add(this.label5);
             this.groupBox6.Controls.Add(this.comboBox4);
-            this.groupBox6.Controls.Add(this.btnView);
+            this.groupBox6.Controls.Add(this.btnViewerView);
             this.groupBox6.Enabled = false;
             this.groupBox6.Location = new System.Drawing.Point(6, 90);
             this.groupBox6.Name = "groupBox6";
@@ -229,6 +232,16 @@
             this.groupBox6.TabIndex = 10;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Step 2: View articles";
+            // 
+            // btnViewerClear
+            // 
+            this.btnViewerClear.Location = new System.Drawing.Point(434, 17);
+            this.btnViewerClear.Name = "btnViewerClear";
+            this.btnViewerClear.Size = new System.Drawing.Size(75, 23);
+            this.btnViewerClear.TabIndex = 5;
+            this.btnViewerClear.Text = "Clear";
+            this.btnViewerClear.UseVisualStyleBackColor = true;
+            this.btnViewerClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
             // label5
             // 
@@ -241,21 +254,22 @@
             // 
             // comboBox4
             // 
+            this.comboBox4.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox4.FormattingEnabled = true;
             this.comboBox4.Location = new System.Drawing.Point(99, 19);
             this.comboBox4.Name = "comboBox4";
-            this.comboBox4.Size = new System.Drawing.Size(329, 21);
+            this.comboBox4.Size = new System.Drawing.Size(248, 21);
             this.comboBox4.TabIndex = 3;
             // 
-            // btnView
+            // btnViewerView
             // 
-            this.btnView.Location = new System.Drawing.Point(434, 17);
-            this.btnView.Name = "btnView";
-            this.btnView.Size = new System.Drawing.Size(75, 23);
-            this.btnView.TabIndex = 2;
-            this.btnView.Text = "View";
-            this.btnView.UseVisualStyleBackColor = true;
-            this.btnView.Click += new System.EventHandler(this.btnView_Click);
+            this.btnViewerView.Location = new System.Drawing.Point(353, 17);
+            this.btnViewerView.Name = "btnViewerView";
+            this.btnViewerView.Size = new System.Drawing.Size(75, 23);
+            this.btnViewerView.TabIndex = 2;
+            this.btnViewerView.Text = "View";
+            this.btnViewerView.UseVisualStyleBackColor = true;
+            this.btnViewerView.Click += new System.EventHandler(this.btnView_Click);
             // 
             // groupBox3
             // 
@@ -320,9 +334,10 @@
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.btnNavigatorClear);
             this.groupBox7.Controls.Add(this.label6);
             this.groupBox7.Controls.Add(this.comboBox5);
-            this.groupBox7.Controls.Add(this.button2);
+            this.groupBox7.Controls.Add(this.btnNavigatorView);
             this.groupBox7.Enabled = false;
             this.groupBox7.Location = new System.Drawing.Point(6, 272);
             this.groupBox7.Name = "groupBox7";
@@ -330,6 +345,16 @@
             this.groupBox7.TabIndex = 11;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Step 3: View results";
+            // 
+            // btnNavigatorClear
+            // 
+            this.btnNavigatorClear.Location = new System.Drawing.Point(434, 17);
+            this.btnNavigatorClear.Name = "btnNavigatorClear";
+            this.btnNavigatorClear.Size = new System.Drawing.Size(75, 23);
+            this.btnNavigatorClear.TabIndex = 5;
+            this.btnNavigatorClear.Text = "Clear";
+            this.btnNavigatorClear.UseVisualStyleBackColor = true;
+            this.btnNavigatorClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
             // label6
             // 
@@ -342,20 +367,22 @@
             // 
             // comboBox5
             // 
+            this.comboBox5.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox5.FormattingEnabled = true;
             this.comboBox5.Location = new System.Drawing.Point(99, 19);
             this.comboBox5.Name = "comboBox5";
-            this.comboBox5.Size = new System.Drawing.Size(329, 21);
+            this.comboBox5.Size = new System.Drawing.Size(248, 21);
             this.comboBox5.TabIndex = 3;
             // 
-            // button2
+            // btnNavigatorView
             // 
-            this.button2.Location = new System.Drawing.Point(434, 17);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 2;
-            this.button2.Text = "View";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnNavigatorView.Location = new System.Drawing.Point(353, 17);
+            this.btnNavigatorView.Name = "btnNavigatorView";
+            this.btnNavigatorView.Size = new System.Drawing.Size(75, 23);
+            this.btnNavigatorView.TabIndex = 2;
+            this.btnNavigatorView.Text = "View";
+            this.btnNavigatorView.UseVisualStyleBackColor = true;
+            this.btnNavigatorView.Click += new System.EventHandler(this.btnView_Click);
             // 
             // groupBox5
             // 
@@ -551,11 +578,11 @@
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox comboBox4;
-        private System.Windows.Forms.Button btnView;
+        private System.Windows.Forms.Button btnViewerView;
         private System.Windows.Forms.GroupBox groupBox7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox comboBox5;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnNavigatorView;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ComboBox comboBox3;
         private System.Windows.Forms.ComboBox comboBox2;
@@ -564,6 +591,8 @@
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.Button button9;
         private System.Windows.Forms.Button button10;
+        private System.Windows.Forms.Button btnViewerClear;
+        private System.Windows.Forms.Button btnNavigatorClear;
     }
 }
 

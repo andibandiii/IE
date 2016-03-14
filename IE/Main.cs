@@ -14,8 +14,7 @@ namespace IE
 {
     public partial class Main : Form
     {
-        private Boolean isAnnotated = false;
-        private String sourcePath { get; set; }
+        private String[] sourcePaths = new String[3];
         private String destinationPath { get; set; }
         private String invertedDestinationPath { get; set; }
         private String formatDateDestinationPath { get; set; }
@@ -24,11 +23,18 @@ namespace IE
         private List<TextBox> textBoxes = new List<TextBox>();
         private List<GroupBox> firstBoxes = new List<GroupBox>();
         private List<GroupBox> secondBoxes = new List<GroupBox>();
+        private List<ComboBox> comboBoxes = new List<ComboBox>();
+
+        private List<Article> listViewerArticles = new List<Article>();
+        private List<Article> listNavigatorArticles = new List<Article>();
+
+        private List<Annotation> listViewerAnnotations = new List<Annotation>();
+        private List<Annotation> listNavigatorAnnotations = new List<Annotation>();
 
         public Main()
         {
             InitializeComponent();
-
+            
             textBoxes.Add(textBox1);
             textBoxes.Add(textBox3);
             textBoxes.Add(textBox4);
@@ -40,15 +46,120 @@ namespace IE
             secondBoxes.Add(groupBox2);
             secondBoxes.Add(groupBox6);
             secondBoxes.Add(groupBox5);
+
+            comboBoxes.Add(null);
+            comboBoxes.Add(comboBox4);
+            comboBoxes.Add(comboBox5);
         }
+
+        private void loadArticles()
+        {
+            comboBoxes[tabControl1.SelectedIndex].Items.Clear();
+
+            foreach (Article a in tabControl1.SelectedIndex == 1 ?
+                listViewerArticles :
+                listNavigatorArticles)
+            {
+                comboBoxes[tabControl1.SelectedIndex].Items.Add(a.Title);
+            }
+
+            comboBoxes[tabControl1.SelectedIndex].SelectedIndex = 0;
+        }
+
+        public void saveChanges(int[] i, Annotation a)
+        {
+
+        }
+
+        private void btnBrowseImport_Click(object sender, EventArgs e)
+        {
+            Stream s = null;
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Title = "Import news articles (*.xml)";
+            ofd.Filter = "XML files|*.xml";
+            ofd.InitialDirectory = @"C:\";
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    if ((s = ofd.OpenFile()) != null)
+                    {
+                        using (s)
+                        {
+                            textBoxes[tabControl1.SelectedIndex].Text = ofd.FileName;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                }
+            }
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            FileInfo fi = new FileInfo(textBoxes[tabControl1.SelectedIndex].Text);
+
+            if (File.Exists(fi.FullName) && fi.Extension.Equals(".xml"))
+            {
+                sourcePaths[tabControl1.SelectedIndex] = fi.FullName;
+                
+                if (tabControl1.SelectedIndex == 1)
+                {
+                    listViewerArticles = fileparserFP.parseFile(sourcePaths[tabControl1.SelectedIndex]);
+                    listViewerAnnotations = fileparserFP.parseAnnotations(sourcePaths[tabControl1.SelectedIndex]);
+
+                    if (listViewerArticles.Count <= 0)
+                    {
+                        MessageBox.Show("No articles found!");
+                        return;
+                    }
+
+                    loadArticles();
+                }
+
+                //firstBoxes[tabControl1.SelectedIndex].Enabled = false;
+                secondBoxes[tabControl1.SelectedIndex].Enabled = true;
+            }
+        }
+
+        private void btnView_Click(object sender, EventArgs e)
+        {
+            ArticleView view = new ArticleView(this,
+                new int[] { tabControl1.SelectedIndex, comboBoxes[tabControl1.SelectedIndex].SelectedIndex },
+                (tabControl1.SelectedIndex == 1 ?
+                listViewerArticles :
+                listNavigatorArticles)[comboBoxes[tabControl1.SelectedIndex].SelectedIndex],
+                (tabControl1.SelectedIndex == 1 ?
+                listViewerAnnotations :
+                listNavigatorAnnotations)[comboBoxes[tabControl1.SelectedIndex].SelectedIndex]);
+            view.ShowDialog();
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedIndex == 1)
+            {
+                resetViewer();
+            }
+            else if (tabControl1.SelectedIndex == 2)
+            {
+                resetNavigator();
+            }
+        }
+
+        #region Extractor Methods
 
         private void extract()
         {
-            List<Article> listCurrentArticles = fileparserFP.parseFile(sourcePath);
+            Boolean isAnnotated = false;
+            List<Article> listCurrentArticles = fileparserFP.parseFile(sourcePaths[tabControl1.SelectedIndex]);
             List<Annotation> listCurrentTrainingAnnotations = new List<Annotation>();
             if (isAnnotated)
             {
-                listCurrentTrainingAnnotations = fileparserFP.parseAnnotations(sourcePath);
+                listCurrentTrainingAnnotations = fileparserFP.parseAnnotations(sourcePaths[tabControl1.SelectedIndex]);
             }
             List<List<Token>> listTokenizedArticles = new List<List<Token>>();
             List<List<Candidate>> listAllWhoCandidates = new List<List<Candidate>>();
@@ -123,64 +234,6 @@ namespace IE
             rw.generateInvertedIndexOutput();
         }
 
-        private void view()
-        {
-
-        }
-        
-        private void btnBrowseImport_Click(object sender, EventArgs e)
-        {
-            Stream s = null;
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Title = "Import news articles (*.xml)";
-            ofd.Filter = "XML files|*.xml";
-            ofd.InitialDirectory = @"C:\";
-
-            if (ofd.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    if ((s = ofd.OpenFile()) != null)
-                    {
-                        using (s)
-                        {
-                            textBoxes[tabControl1.SelectedIndex].Text = ofd.FileName;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
-                }
-            }
-        }
-
-        private void btnImport_Click(object sender, EventArgs e)
-        {
-            FileInfo fi = new FileInfo(textBoxes[tabControl1.SelectedIndex].Text);
-
-            if (File.Exists(fi.FullName) && fi.Extension.Equals(".xml"))
-            {
-                sourcePath = fi.FullName;
-                firstBoxes[tabControl1.SelectedIndex].Enabled = false;
-
-                if(tabControl1.SelectedIndex == 1)
-                {
-                    view();
-                }
-
-                secondBoxes[tabControl1.SelectedIndex].Enabled = true;
-            }
-        }
-
-        private void btnView_Click(object sender, EventArgs e)
-        {
-            ArticleView view = new ArticleView();
-            view.ShowDialog();
-        }
-
-        #region Extractor Methods
-
         private void btnBrowseExtract_Click(object sender, EventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();
@@ -202,7 +255,7 @@ namespace IE
             {
                 destinationPath = fi.FullName;
                 invertedDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_invereted_index");
-                formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4 , "_format_date");
+                formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_format_date");
                 extract();
                 MessageBox.Show("Operation completed!");
                 resetExtractor();
@@ -221,11 +274,30 @@ namespace IE
 
         #region Viewer Methods
 
+        private void resetViewer()
+        {
+            groupBox3.Enabled = true;
+            groupBox6.Enabled = false;
+            textBox3.Text = "";
+            comboBox4.Items.Clear();
+            listViewerArticles = null;
+            listViewerAnnotations = null;
+        }
+
         #endregion
 
         #region Navigator Methods
 
-        #endregion
+        private void resetNavigator()
+        {
+            //groupBox3.Enabled = true;
+            //groupBox6.Enabled = false;
+            //textBox3.Text = "";
+            //comboBox4.Items.Clear();
+            //listViewerArticles = null;
+            //listViewerAnnotations = null;
+        }
 
+        #endregion
     }
 }
