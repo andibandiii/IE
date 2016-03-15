@@ -80,20 +80,17 @@ namespace IE
 
         public void saveChanges(int[] i, Annotation a)
         {
-            // TODO: Save annotation changes
-            // i[1] = index of article
-
             XmlDocument doc = new XmlDocument();
             
             doc.Load(sourcePaths[i[0]]);
 
             XmlNode root = doc.DocumentElement;
-
-            root.SelectSingleNode("").Value = a.Who;
-            root.SelectSingleNode("").Value = a.When;
-            root.SelectSingleNode("").Value = a.Where;
-            root.SelectSingleNode("").Value = a.What;
-            root.SelectSingleNode("").Value = a.Why;
+            
+            root.SelectSingleNode("/data/article[" + (i[1] + 1) + "]")["who"].InnerText = a.Who;
+            root.SelectSingleNode("/data/article[" + (i[1] + 1) + "]")["when"].InnerText = a.When;
+            root.SelectSingleNode("/data/article[" + (i[1] + 1) + "]")["where"].InnerText = a.Where;
+            root.SelectSingleNode("/data/article[" + (i[1] + 1) + "]")["what"].InnerText = a.What;
+            root.SelectSingleNode("/data/article[" + (i[1] + 1) + "]")["why"].InnerText = a.Why;
 
             doc.Save(sourcePaths[i[0]]);
 
@@ -292,20 +289,25 @@ namespace IE
 
         private void btnExtract_Click(object sender, EventArgs e)
         {
-            FileInfo fi = new FileInfo(textBox2.Text);
-
-            if (fi.Extension.Equals(".xml"))
+            FileInfo fi;
+            
+            if(!String.IsNullOrWhiteSpace(textBox2.Text))
             {
-                String destinationPath = fi.FullName;
-                String invertedDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_invereted_index");
-                String formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_format_date");
+                fi = new FileInfo(textBox2.Text);
 
-                extract(destinationPath, invertedDestinationPath, formatDateDestinationPath);
-                MessageBox.Show("Operation completed!");
-                resetExtractor();
+                if (fi.Extension.Equals(".xml"))
+                {
+                    String destinationPath = fi.FullName;
+                    String invertedDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_invereted_index");
+                    String formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_format_date");
 
-                textBox3.Text = destinationPath;
-                textBox4.Text = destinationPath;
+                    extract(destinationPath, invertedDestinationPath, formatDateDestinationPath);
+                    MessageBox.Show("Operation completed!");
+                    resetExtractor();
+
+                    textBox3.Text = destinationPath;
+                    textBox4.Text = destinationPath;
+                }
             }
         }
 

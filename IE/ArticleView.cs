@@ -66,6 +66,13 @@ namespace IE
                     t.Enabled = false;
                 }
 
+
+                an.Who = textBox6.Text;
+                an.When = textBox7.Text;
+                an.Where = textBox8.Text;
+                an.What = textBox9.Text;
+                an.Why = textBox10.Text;
+
                 m.saveChanges(i, an);
 
                 btnEdit.Text = "Edit";
