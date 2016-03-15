@@ -33,6 +33,12 @@ namespace IE
         private List<ComboBox> criteriaBoxes = new List<ComboBox>();
         private List<ComboBox> criteriaTypes = new List<ComboBox>();
 
+        private Dictionary<string, List<int>> whoReverseIndex = new Dictionary<string, List<int>>();
+        private Dictionary<string, List<int>> whenReverseIndex = new Dictionary<string, List<int>>();
+        private Dictionary<string, List<int>> whereReverseIndex = new Dictionary<string, List<int>>();
+        private Dictionary<string, List<int>> whatReverseIndex = new Dictionary<string, List<int>>();
+        private Dictionary<string, List<int>> whyReverseIndex = new Dictionary<string, List<int>>();
+
         private String[] criterias = new String[] { "Sino", "Kailan", "Saan", "Ano", "Bakit" };
         private String[] types = new String[] { "AND", "OR" };
 
@@ -167,6 +173,65 @@ namespace IE
                             listNavigatorAnnotations = listAnnotations;
 
                             // TODO: Parse inverted index XML
+                            XmlDocument doc = new XmlDocument();
+
+                            doc.Load(formatDateDestinationPath);
+
+                            XmlNodeList whoNodes = doc.DocumentElement.SelectNodes("/data/who");
+                            XmlNodeList whenNodes = doc.DocumentElement.SelectNodes("/data/when");
+                            XmlNodeList whereNodes = doc.DocumentElement.SelectNodes("/data/where");
+                            XmlNodeList whatNodes = doc.DocumentElement.SelectNodes("/data/what");
+                            XmlNodeList whyNodes = doc.DocumentElement.SelectNodes("/data/why");
+
+                            foreach (XmlNode entry in whoNodes)
+                            {
+                                List<int> indices = new List<int>();
+                                foreach (XmlNode index in entry.SelectNodes("articleIndex"))
+                                {
+                                    indices.Add(Convert.ToInt32(index.InnerText));
+                                }
+                                whoReverseIndex.Add(entry.SelectSingleNode("text").InnerText, indices);
+                            }
+
+                            foreach (XmlNode entry in whenNodes)
+                            {
+                                List<int> indices = new List<int>();
+                                foreach (XmlNode index in entry.SelectNodes("articleIndex"))
+                                {
+                                    indices.Add(Convert.ToInt32(index.InnerText));
+                                }
+                                whenReverseIndex.Add(entry.SelectSingleNode("text").InnerText, indices);
+                            }
+
+                            foreach (XmlNode entry in whereNodes)
+                            {
+                                List<int> indices = new List<int>();
+                                foreach (XmlNode index in entry.SelectNodes("articleIndex"))
+                                {
+                                    indices.Add(Convert.ToInt32(index.InnerText));
+                                }
+                                whereReverseIndex.Add(entry.SelectSingleNode("text").InnerText, indices);
+                            }
+
+                            foreach (XmlNode entry in whatNodes)
+                            {
+                                List<int> indices = new List<int>();
+                                foreach (XmlNode index in entry.SelectNodes("articleIndex"))
+                                {
+                                    indices.Add(Convert.ToInt32(index.InnerText));
+                                }
+                                whatReverseIndex.Add(entry.SelectSingleNode("text").InnerText, indices);
+                            }
+
+                            foreach (XmlNode entry in whyNodes)
+                            {
+                                List<int> indices = new List<int>();
+                                foreach (XmlNode index in entry.SelectNodes("articleIndex"))
+                                {
+                                    indices.Add(Convert.ToInt32(index.InnerText));
+                                }
+                                whyReverseIndex.Add(entry.SelectSingleNode("text").InnerText, indices);
+                            }
                         }
                         else
                         {
