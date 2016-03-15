@@ -177,11 +177,11 @@ namespace IE
 
                             doc.Load(formatDateDestinationPath);
 
-                            XmlNodeList whoNodes = doc.DocumentElement.SelectNodes("/data/who");
-                            XmlNodeList whenNodes = doc.DocumentElement.SelectNodes("/data/when");
-                            XmlNodeList whereNodes = doc.DocumentElement.SelectNodes("/data/where");
-                            XmlNodeList whatNodes = doc.DocumentElement.SelectNodes("/data/what");
-                            XmlNodeList whyNodes = doc.DocumentElement.SelectNodes("/data/why");
+                            XmlNodeList whoNodes = doc.DocumentElement.SelectNodes("/data/who/entry");
+                            XmlNodeList whenNodes = doc.DocumentElement.SelectNodes("/data/when/entry");
+                            XmlNodeList whereNodes = doc.DocumentElement.SelectNodes("/data/where/entry");
+                            XmlNodeList whatNodes = doc.DocumentElement.SelectNodes("/data/what/entry");
+                            XmlNodeList whyNodes = doc.DocumentElement.SelectNodes("/data/why/entry");
 
                             foreach (XmlNode entry in whoNodes)
                             {
@@ -190,7 +190,7 @@ namespace IE
                                 {
                                     indices.Add(Convert.ToInt32(index.InnerText));
                                 }
-                                whoReverseIndex.Add(entry.SelectSingleNode("text").InnerText, indices);
+                                whoReverseIndex.Add(entry["text"].InnerText, indices);
                             }
 
                             foreach (XmlNode entry in whenNodes)
