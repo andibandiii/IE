@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -32,6 +33,8 @@ namespace IE
         private List<TextBox> searchQueries = new List<TextBox>();
         private List<ComboBox> criteriaBoxes = new List<ComboBox>();
         private List<ComboBox> criteriaTypes = new List<ComboBox>();
+
+        private List<Article> searchResult = new List<Article>();
 
         private Dictionary<string, List<int>> whoReverseIndex = new Dictionary<string, List<int>>();
         private Dictionary<string, List<int>> whenReverseIndex = new Dictionary<string, List<int>>();
@@ -68,6 +71,8 @@ namespace IE
             }
 
             criteriaBox.SelectedIndex = 0;
+            searchQueries.Add(searchQuery);
+            criteriaBoxes.Add(criteriaBox);
         }
 
         private void loadArticles()
@@ -76,12 +81,15 @@ namespace IE
 
             foreach (Article a in tabControl1.SelectedIndex == 1 ?
                 listViewerArticles :
-                listNavigatorArticles)
+                searchResult)
             {
                 comboBoxes[tabControl1.SelectedIndex].Items.Add(a.Title);
             }
 
-            comboBoxes[tabControl1.SelectedIndex].SelectedIndex = 0;
+            if(comboBoxes.Count > 0)
+            {
+                comboBoxes[tabControl1.SelectedIndex].SelectedIndex = 0;
+            }
         }
 
         public void saveChanges(int[] i, Annotation a)
@@ -139,110 +147,114 @@ namespace IE
 
         private void btnImport_Click(object sender, EventArgs e)
         {
-            FileInfo fi = new FileInfo(textBoxes[tabControl1.SelectedIndex].Text);
-
-            if (File.Exists(fi.FullName) && fi.Extension.Equals(".xml"))
+            if (!textBoxes[tabControl1.SelectedIndex].Text.Equals(""))
             {
-                sourcePaths[tabControl1.SelectedIndex] = fi.FullName;
+                FileInfo fi = new FileInfo(textBoxes[tabControl1.SelectedIndex].Text);
 
-                if (tabControl1.SelectedIndex > 0)
+
+                if (File.Exists(fi.FullName) && fi.Extension.Equals(".xml"))
                 {
-                    List<Article> listArticles = fileparserFP.parseFile(sourcePaths[tabControl1.SelectedIndex]);
-                    List<Annotation> listAnnotations = fileparserFP.parseAnnotations(sourcePaths[tabControl1.SelectedIndex]);
+                    sourcePaths[tabControl1.SelectedIndex] = fi.FullName;
 
-                    if (listArticles.Count <= 0)
+                    if (tabControl1.SelectedIndex > 0)
                     {
-                        MessageBox.Show("No articles found!");
-                        return;
-                    }
+                        List<Article> listArticles = fileparserFP.parseFile(sourcePaths[tabControl1.SelectedIndex]);
+                        List<Annotation> listAnnotations = fileparserFP.parseAnnotations(sourcePaths[tabControl1.SelectedIndex]);
 
-                    if (tabControl1.SelectedIndex == 1)
-                    {
-                        listViewerArticles = listArticles;
-                        listViewerAnnotations = listAnnotations;
-
-                        loadArticles();
-                    }
-                    else if (tabControl1.SelectedIndex == 2)
-                    {
-                        String formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_format_date");
-
-                        if (File.Exists(formatDateDestinationPath))
+                        if (listArticles.Count <= 0)
                         {
-                            listNavigatorArticles = listArticles;
-                            listNavigatorAnnotations = listAnnotations;
-
-                            // TODO: Parse inverted index XML
-                            XmlDocument doc = new XmlDocument();
-
-                            doc.Load(formatDateDestinationPath);
-
-                            XmlNodeList whoNodes = doc.DocumentElement.SelectNodes("/data/who/entry");
-                            XmlNodeList whenNodes = doc.DocumentElement.SelectNodes("/data/when/entry");
-                            XmlNodeList whereNodes = doc.DocumentElement.SelectNodes("/data/where/entry");
-                            XmlNodeList whatNodes = doc.DocumentElement.SelectNodes("/data/what/entry");
-                            XmlNodeList whyNodes = doc.DocumentElement.SelectNodes("/data/why/entry");
-
-                            foreach (XmlNode entry in whoNodes)
-                            {
-                                List<int> indices = new List<int>();
-                                foreach (XmlNode index in entry.SelectNodes("articleIndex"))
-                                {
-                                    indices.Add(Convert.ToInt32(index.InnerText));
-                                }
-                                whoReverseIndex.Add(entry["text"].InnerText, indices);
-                            }
-
-                            foreach (XmlNode entry in whenNodes)
-                            {
-                                List<int> indices = new List<int>();
-                                foreach (XmlNode index in entry.SelectNodes("articleIndex"))
-                                {
-                                    indices.Add(Convert.ToInt32(index.InnerText));
-                                }
-                                whenReverseIndex.Add(entry.SelectSingleNode("text").InnerText, indices);
-                            }
-
-                            foreach (XmlNode entry in whereNodes)
-                            {
-                                List<int> indices = new List<int>();
-                                foreach (XmlNode index in entry.SelectNodes("articleIndex"))
-                                {
-                                    indices.Add(Convert.ToInt32(index.InnerText));
-                                }
-                                whereReverseIndex.Add(entry.SelectSingleNode("text").InnerText, indices);
-                            }
-
-                            foreach (XmlNode entry in whatNodes)
-                            {
-                                List<int> indices = new List<int>();
-                                foreach (XmlNode index in entry.SelectNodes("articleIndex"))
-                                {
-                                    indices.Add(Convert.ToInt32(index.InnerText));
-                                }
-                                whatReverseIndex.Add(entry.SelectSingleNode("text").InnerText, indices);
-                            }
-
-                            foreach (XmlNode entry in whyNodes)
-                            {
-                                List<int> indices = new List<int>();
-                                foreach (XmlNode index in entry.SelectNodes("articleIndex"))
-                                {
-                                    indices.Add(Convert.ToInt32(index.InnerText));
-                                }
-                                whyReverseIndex.Add(entry.SelectSingleNode("text").InnerText, indices);
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show("Inverted index file not found!");
+                            MessageBox.Show("No articles found!");
                             return;
                         }
-                    }
-                }
 
-                //firstBoxes[tabControl1.SelectedIndex].Enabled = false;
-                secondBoxes[tabControl1.SelectedIndex].Enabled = true;
+                        if (tabControl1.SelectedIndex == 1)
+                        {
+                            listViewerArticles = listArticles;
+                            listViewerAnnotations = listAnnotations;
+
+                            loadArticles();
+                        }
+                        else if (tabControl1.SelectedIndex == 2)
+                        {
+                            String formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_inverted_index");
+
+                            if (File.Exists(formatDateDestinationPath))
+                            {
+                                listNavigatorArticles = listArticles;
+                                listNavigatorAnnotations = listAnnotations;
+
+                                // TODO: Parse inverted index XML
+                                XmlDocument doc = new XmlDocument();
+
+                                doc.Load(formatDateDestinationPath);
+
+                                XmlNodeList whoNodes = doc.DocumentElement.SelectNodes("/data/who/entry");
+                                XmlNodeList whenNodes = doc.DocumentElement.SelectNodes("/data/when/entry");
+                                XmlNodeList whereNodes = doc.DocumentElement.SelectNodes("/data/where/entry");
+                                XmlNodeList whatNodes = doc.DocumentElement.SelectNodes("/data/what/entry");
+                                XmlNodeList whyNodes = doc.DocumentElement.SelectNodes("/data/why/entry");
+
+                                foreach (XmlNode entry in whoNodes)
+                                {
+                                    List<int> indices = new List<int>();
+                                    foreach (XmlNode index in entry.SelectNodes("articleIndex"))
+                                    {
+                                        indices.Add(Convert.ToInt32(index.InnerText));
+                                    }
+                                    whoReverseIndex.Add(entry["text"].InnerText, indices);
+                                }
+
+                                foreach (XmlNode entry in whenNodes)
+                                {
+                                    List<int> indices = new List<int>();
+                                    foreach (XmlNode index in entry.SelectNodes("articleIndex"))
+                                    {
+                                        indices.Add(Convert.ToInt32(index.InnerText));
+                                    }
+                                    whenReverseIndex.Add(entry.SelectSingleNode("text").InnerText, indices);
+                                }
+
+                                foreach (XmlNode entry in whereNodes)
+                                {
+                                    List<int> indices = new List<int>();
+                                    foreach (XmlNode index in entry.SelectNodes("articleIndex"))
+                                    {
+                                        indices.Add(Convert.ToInt32(index.InnerText));
+                                    }
+                                    whereReverseIndex.Add(entry.SelectSingleNode("text").InnerText, indices);
+                                }
+
+                                foreach (XmlNode entry in whatNodes)
+                                {
+                                    List<int> indices = new List<int>();
+                                    foreach (XmlNode index in entry.SelectNodes("articleIndex"))
+                                    {
+                                        indices.Add(Convert.ToInt32(index.InnerText));
+                                    }
+                                    whatReverseIndex.Add(entry.SelectSingleNode("text").InnerText, indices);
+                                }
+
+                                foreach (XmlNode entry in whyNodes)
+                                {
+                                    List<int> indices = new List<int>();
+                                    foreach (XmlNode index in entry.SelectNodes("articleIndex"))
+                                    {
+                                        indices.Add(Convert.ToInt32(index.InnerText));
+                                    }
+                                    whyReverseIndex.Add(entry.SelectSingleNode("text").InnerText, indices);
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("Inverted index file not found!");
+                                return;
+                            }
+                        }
+                    }
+
+                    //firstBoxes[tabControl1.SelectedIndex].Enabled = false;
+                    secondBoxes[tabControl1.SelectedIndex].Enabled = true;
+                }
             }
         }
 
@@ -402,11 +414,152 @@ namespace IE
 
         #region Navigator Methods
 
-        private void btnSearch_Click(object sender, EventArgs e)
+       private void btnSearch_Click(object sender, EventArgs e)
         {
             // TODO: Parse search queries
 
+            //Initialize variables
+            searchResult.Clear();
             groupBox7.Enabled = true;
+            List<int> whoIndex = new List<int>();
+            List<int> whenIndex = new List<int>();
+            List<int> whereIndex = new List<int>();
+            List<int> whatIndex = new List<int>();
+            List<int> whyIndex = new List<int>();
+            List<int> finalResults = new List<int>();
+            List <int>[] queryResults = new List<int>[searchQueries.Count]; // result of each query
+            for(int i = 0; i < searchQueries.Count; i++)
+            {
+                queryResults[i] = new List<int>();
+            }
+            Console.WriteLine("im in");
+            
+            //Find the index of the queries for each w
+            for (int i = 0; i < criteriaBoxes.Count; i++)
+            {
+                switch (criteriaBoxes[i].Text)
+                {
+                    case "Sino" :
+                        whoIndex.Add(i);
+                        break;
+                    case "Kailan":
+                        whenIndex.Add(i);
+                        break;
+                    case "Saan":
+                        whereIndex.Add(i);
+                        break;
+                    case "Ano":
+                        whatIndex.Add(i);
+                        break;
+                    case "Bakit":
+                        whyIndex.Add(i);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            //Find matches for who
+            if(whoIndex.Count > 0)
+            {
+                Console.WriteLine("im in");
+                Console.WriteLine(whoReverseIndex.Count);
+                foreach (KeyValuePair<String, List<int>> entry in whoReverseIndex)
+                {
+                    foreach(int queryIndex in whoIndex)
+                    {
+                        Console.WriteLine(entry.Key + " VS" + searchQueries[queryIndex].Text);
+                        if (entry.Key.IndexOf(searchQueries[queryIndex].Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            Console.WriteLine("im in 2");
+                            queryResults[queryIndex].AddRange(entry.Value);
+                        }
+                    }
+                }
+            }
+
+            //Find matches for when
+            if (whenIndex.Count > 0)
+            {
+                foreach (KeyValuePair<String, List<int>> entry in whenReverseIndex)
+                {
+                    foreach (int queryIndex in whenIndex)
+                    {
+                        if (entry.Key.IndexOf(searchQueries[queryIndex].Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            queryResults[queryIndex].AddRange(entry.Value);
+                        }
+                    }
+                }
+            }
+
+            //Find matches for where
+            if (whereIndex.Count > 0)
+            {
+                foreach (KeyValuePair<String, List<int>> entry in whereReverseIndex)
+                {
+                    foreach (int queryIndex in whereIndex)
+                    {
+                        if (entry.Key.IndexOf(searchQueries[queryIndex].Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            queryResults[queryIndex].AddRange(entry.Value);
+                        }
+                    }
+                }
+            }
+
+            //Find matches for what
+            if (whatIndex.Count > 0)
+            {
+                foreach (KeyValuePair<String, List<int>> entry in whatReverseIndex)
+                {
+                    foreach (int queryIndex in whatIndex)
+                    {
+                        if (entry.Key.IndexOf(searchQueries[queryIndex].Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            queryResults[queryIndex].AddRange(entry.Value);
+                        }
+                    }
+                }
+            }
+
+            //Find matches for why
+            if (whyIndex.Count > 0)
+            {
+                foreach (KeyValuePair<String, List<int>> entry in whyReverseIndex)
+                {
+                    foreach (int queryIndex in whyIndex)
+                    {
+                        if (entry.Key.IndexOf(searchQueries[queryIndex].Text, StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            queryResults[queryIndex].AddRange(entry.Value);
+                        }
+                    }
+                }
+            }
+
+            //Merge results from queries
+            for (int i = 0; i < criteriaTypes.Count; i++)
+            { 
+                if (criteriaTypes[i].Text.Equals("AND"))
+                {
+                    queryResults[i + 1] = queryResults[i].Intersect<int>(queryResults[i + 1]).ToList<int>();
+                }
+                else if (criteriaTypes[i].Text.Equals("OR"))
+                {
+                    queryResults[i + 1].AddRange(queryResults[i]);
+                }
+            }
+            finalResults = queryResults[queryResults.Length - 1].Distinct().ToList();
+
+            foreach(int index in finalResults)
+            {
+                searchResult.Add(listNavigatorArticles[index]);
+            }
+
+            loadArticles();
+
+
         }
 
         private void btnAddCriteria_Click(object sender, EventArgs e)
@@ -495,9 +648,12 @@ namespace IE
                 panel1.Controls.Remove(c);
             }
 
-            searchQueries = new List<TextBox>();
-            criteriaBoxes = new List<ComboBox>();
-            criteriaTypes = new List<ComboBox>();
+            searchQueries.Clear();
+            criteriaBoxes.Clear();
+            criteriaTypes.Clear();
+            searchResult.Clear();
+            searchQueries.Add(searchQuery);
+            criteriaBoxes.Add(criteriaBox);
         }
 
         #endregion
