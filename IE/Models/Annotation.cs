@@ -17,5 +17,7 @@ namespace IE.Models
         public String What { get; set; }
 
         public String Why { get; set; }
+
+        public int Index { get; set; }
     }
 }

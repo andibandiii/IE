@@ -26,15 +26,15 @@ namespace IE
 
         private List<Article> listViewerArticles = new List<Article>();
         private List<Article> listNavigatorArticles = new List<Article>();
+        private List<Article> listSearchArticles = new List<Article>();
 
         private List<Annotation> listViewerAnnotations = new List<Annotation>();
         private List<Annotation> listNavigatorAnnotations = new List<Annotation>();
+        private List<Annotation> listSearchAnnotations = new List<Annotation>();
 
         private List<TextBox> searchQueries = new List<TextBox>();
         private List<ComboBox> criteriaBoxes = new List<ComboBox>();
         private List<ComboBox> criteriaTypes = new List<ComboBox>();
-
-        private List<Article> searchResult = new List<Article>();
 
         private Dictionary<string, List<int>> whoReverseIndex = new Dictionary<string, List<int>>();
         private Dictionary<string, List<int>> whenReverseIndex = new Dictionary<string, List<int>>();
@@ -81,12 +81,12 @@ namespace IE
 
             foreach (Article a in tabControl1.SelectedIndex == 1 ?
                 listViewerArticles :
-                searchResult)
+                listSearchArticles)
             {
                 comboBoxes[tabControl1.SelectedIndex].Items.Add(a.Title);
             }
 
-            if(comboBoxes[tabControl1.SelectedIndex].Items.Count > 0)
+            if (comboBoxes[tabControl1.SelectedIndex].Items.Count > 0)
             {
                 comboBoxes[tabControl1.SelectedIndex].SelectedIndex = 0;
             }
@@ -95,26 +95,28 @@ namespace IE
         public void saveChanges(int[] i, Annotation a)
         {
             XmlDocument doc = new XmlDocument();
-            
+
             doc.Load(sourcePaths[i[0]]);
 
             XmlNode root = doc.DocumentElement;
-            
-            root.SelectSingleNode("/data/article[" + (i[1] + 1) + "]")["who"].InnerText = a.Who;
-            root.SelectSingleNode("/data/article[" + (i[1] + 1) + "]")["when"].InnerText = a.When;
-            root.SelectSingleNode("/data/article[" + (i[1] + 1) + "]")["where"].InnerText = a.Where;
-            root.SelectSingleNode("/data/article[" + (i[1] + 1) + "]")["what"].InnerText = a.What;
-            root.SelectSingleNode("/data/article[" + (i[1] + 1) + "]")["why"].InnerText = a.Why;
+
+            MessageBox.Show("Index: " + a.Index);
+
+            root.SelectSingleNode("/data/article[" + (a.Index + 1) + "]")["who"].InnerText = a.Who;
+            root.SelectSingleNode("/data/article[" + (a.Index + 1) + "]")["when"].InnerText = a.When;
+            root.SelectSingleNode("/data/article[" + (a.Index + 1) + "]")["where"].InnerText = a.Where;
+            root.SelectSingleNode("/data/article[" + (a.Index + 1) + "]")["what"].InnerText = a.What;
+            root.SelectSingleNode("/data/article[" + (a.Index + 1) + "]")["why"].InnerText = a.Why;
 
             doc.Save(sourcePaths[i[0]]);
 
             if (tabControl1.SelectedIndex == 1)
             {
-                listViewerAnnotations[i[1]] = a;
+                listViewerAnnotations[a.Index] = a;
             }
             else if (tabControl1.SelectedIndex == 2)
             {
-                listNavigatorAnnotations[i[1]] = a;
+                listNavigatorAnnotations[a.Index] = a;
             }
         }
 
@@ -167,6 +169,12 @@ namespace IE
                             return;
                         }
 
+                        foreach (int i in Enumerable.Range(0, listAnnotations.Count()))
+                        {
+                            listAnnotations[i].Index = i;
+                            Console.WriteLine(listArticles[i].Title + " " + i);
+                        }
+
                         if (tabControl1.SelectedIndex == 1)
                         {
                             listViewerArticles = listArticles;
@@ -176,14 +184,13 @@ namespace IE
                         }
                         else if (tabControl1.SelectedIndex == 2)
                         {
-                            String formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_inverted_index");
+                            String formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_format_date");
 
                             if (File.Exists(formatDateDestinationPath))
                             {
                                 listNavigatorArticles = listArticles;
                                 listNavigatorAnnotations = listAnnotations;
 
-                                // TODO: Parse inverted index XML
                                 XmlDocument doc = new XmlDocument();
 
                                 doc.Load(formatDateDestinationPath);
@@ -261,17 +268,18 @@ namespace IE
         private void btnView_Click(object sender, EventArgs e)
         {
             ArticleView view = new ArticleView(this,
-                new int[] 
+                new int[]
                 {
                     tabControl1.SelectedIndex,
                     comboBoxes[tabControl1.SelectedIndex].SelectedIndex
                 },
                 (tabControl1.SelectedIndex == 1 ?
                 listViewerArticles :
-                listNavigatorArticles)[comboBoxes[tabControl1.SelectedIndex].SelectedIndex],
+                listSearchArticles)[comboBoxes[tabControl1.SelectedIndex].SelectedIndex],
                 (tabControl1.SelectedIndex == 1 ?
                 listViewerAnnotations :
-                listNavigatorAnnotations)[comboBoxes[tabControl1.SelectedIndex].SelectedIndex]);
+                listSearchAnnotations)[comboBoxes[tabControl1.SelectedIndex].SelectedIndex]);
+
             view.ShowDialog();
         }
 
@@ -367,8 +375,8 @@ namespace IE
         private void btnExtract_Click(object sender, EventArgs e)
         {
             FileInfo fi;
-            
-            if(!String.IsNullOrWhiteSpace(textBox2.Text))
+
+            if (!String.IsNullOrWhiteSpace(textBox2.Text))
             {
                 fi = new FileInfo(textBox2.Text);
 
@@ -414,33 +422,33 @@ namespace IE
 
         #region Navigator Methods
 
-       private void btnSearch_Click(object sender, EventArgs e)
+        private void btnSearch_Click(object sender, EventArgs e)
         {
-            // TODO: Parse search queries
-
             //Initialize variables
-            searchResult.Clear();
+            listSearchArticles.Clear();
+            listSearchAnnotations.Clear();
             groupBox7.Enabled = true;
+
             List<int> whoIndex = new List<int>();
             List<int> whenIndex = new List<int>();
             List<int> whereIndex = new List<int>();
             List<int> whatIndex = new List<int>();
             List<int> whyIndex = new List<int>();
             List<int> finalResults = new List<int>();
-            List <int>[] queryResults = new List<int>[searchQueries.Count]; // result of each query
-            for(int i = 0; i < searchQueries.Count; i++)
+            List<int>[] queryResults = new List<int>[searchQueries.Count]; // result of each query
+            for (int i = 0; i < searchQueries.Count; i++)
             {
                 queryResults[i] = new List<int>();
             }
             List<List<int>> mergedAndResults = new List<List<int>>();
             Console.WriteLine("im in");
-            
+
             //Find the index of the queries for each w
             for (int i = 0; i < criteriaBoxes.Count; i++)
             {
                 switch (criteriaBoxes[i].Text)
                 {
-                    case "Sino" :
+                    case "Sino":
                         whoIndex.Add(i);
                         break;
                     case "Kailan":
@@ -461,13 +469,13 @@ namespace IE
             }
 
             //Find matches for who
-            if(whoIndex.Count > 0)
+            if (whoIndex.Count > 0)
             {
                 Console.WriteLine("im in");
                 Console.WriteLine(whoReverseIndex.Count);
                 foreach (KeyValuePair<String, List<int>> entry in whoReverseIndex)
                 {
-                    foreach(int queryIndex in whoIndex)
+                    foreach (int queryIndex in whoIndex)
                     {
                         Console.WriteLine(entry.Key + " VS" + searchQueries[queryIndex].Text);
                         if (entry.Key.IndexOf(searchQueries[queryIndex].Text, StringComparison.OrdinalIgnoreCase) >= 0)
@@ -539,10 +547,10 @@ namespace IE
                 }
             }
 
-            
+
             //Merge results from queries
             for (int i = 0; i < criteriaTypes.Count; i++)
-            { 
+            {
                 if (criteriaTypes[i].Text.Equals("AND"))
                 {
                     queryResults[i + 1] = queryResults[i].Intersect<int>(queryResults[i + 1]).ToList<int>();
@@ -566,14 +574,22 @@ namespace IE
                 finalResults = queryResults[queryResults.Length - 1].Distinct().ToList();
             }
 
-            foreach(int index in finalResults)
+            foreach (int index in finalResults)
             {
-                searchResult.Add(listNavigatorArticles[index]);
+                listSearchArticles.Add(listNavigatorArticles[index]);
+                listSearchAnnotations.Add(listNavigatorAnnotations[index]);
+            }
+
+            if (finalResults.Count() > 0)
+            {
+                btnNavigatorView.Enabled = true;
+            }
+            else
+            {
+                btnNavigatorView.Enabled = false;
             }
 
             loadArticles();
-
-
         }
 
         private void btnAddCriteria_Click(object sender, EventArgs e)
@@ -581,9 +597,9 @@ namespace IE
             TextBox newQuery = new TextBox();
 
             newQuery.Name = "searchQuery" + searchQueries.Count;
-            newQuery.Location = new Point(181, 
-                searchQueries.Count == 0 ? 
-                29 : 
+            newQuery.Location = new Point(181,
+                searchQueries.Count == 0 ?
+                29 :
                 (searchQueries[searchQueries.Count - 1].Location.Y + 25));
             newQuery.Width = 319;
             newQuery.Visible = true;
@@ -594,9 +610,9 @@ namespace IE
             ComboBox newCriteria = new ComboBox();
 
             newCriteria.Name = "criteriaBox" + criteriaBoxes.Count;
-            newCriteria.Location = new Point(3, 
-                criteriaBoxes.Count == 0 ? 
-                29 : 
+            newCriteria.Location = new Point(3,
+                criteriaBoxes.Count == 0 ?
+                29 :
                 (criteriaBoxes[criteriaBoxes.Count - 1].Location.Y + 25));
             newCriteria.Width = 91;
             newCriteria.Visible = true;
@@ -615,9 +631,9 @@ namespace IE
             ComboBox newType = new ComboBox();
 
             newType.Name = "criteriaType" + criteriaTypes.Count;
-            newType.Location = new Point(100, 
-                criteriaTypes.Count == 0 ? 
-                29 : 
+            newType.Location = new Point(100,
+                criteriaTypes.Count == 0 ?
+                29 :
                 (criteriaTypes[criteriaTypes.Count - 1].Location.Y + 25));
             newType.Width = 75;
             newType.Visible = true;
@@ -649,12 +665,18 @@ namespace IE
 
             foreach (TextBox t in searchQueries)
             {
-                panel1.Controls.Remove(t);
+                if (t != searchQuery)
+                {
+                    panel1.Controls.Remove(t);
+                }
             }
 
             foreach (ComboBox c in criteriaBoxes)
             {
-                panel1.Controls.Remove(c);
+                if (c != criteriaBox)
+                {
+                    panel1.Controls.Remove(c);
+                }
             }
 
             foreach (ComboBox c in criteriaTypes)
@@ -665,9 +687,16 @@ namespace IE
             searchQueries.Clear();
             criteriaBoxes.Clear();
             criteriaTypes.Clear();
-            searchResult.Clear();
+            listSearchArticles.Clear();
+            listSearchAnnotations.Clear();
             searchQueries.Add(searchQuery);
             criteriaBoxes.Add(criteriaBox);
+
+            whoReverseIndex.Clear();
+            whenReverseIndex.Clear();
+            whereReverseIndex.Clear();
+            whatReverseIndex.Clear();
+            whyReverseIndex.Clear();
         }
 
         #endregion
