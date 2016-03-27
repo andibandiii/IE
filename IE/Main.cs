@@ -86,7 +86,7 @@ namespace IE
                 comboBoxes[tabControl1.SelectedIndex].Items.Add(a.Title);
             }
 
-            if(comboBoxes.Count > 0)
+            if(comboBoxes[tabControl1.SelectedIndex].Items.Count > 0)
             {
                 comboBoxes[tabControl1.SelectedIndex].SelectedIndex = 0;
             }
@@ -432,6 +432,7 @@ namespace IE
             {
                 queryResults[i] = new List<int>();
             }
+            List<List<int>> mergedAndResults = new List<List<int>>();
             Console.WriteLine("im in");
             
             //Find the index of the queries for each w
@@ -538,6 +539,7 @@ namespace IE
                 }
             }
 
+            
             //Merge results from queries
             for (int i = 0; i < criteriaTypes.Count; i++)
             { 
@@ -547,10 +549,22 @@ namespace IE
                 }
                 else if (criteriaTypes[i].Text.Equals("OR"))
                 {
-                    queryResults[i + 1].AddRange(queryResults[i]);
+                    mergedAndResults.Add(queryResults[i + 1]);
                 }
             }
-            finalResults = queryResults[queryResults.Length - 1].Distinct().ToList();
+
+            if (mergedAndResults.Count > 0)
+            {
+                foreach (List<int> result in mergedAndResults)
+                {
+                    finalResults.AddRange(result);
+                }
+                finalResults = finalResults.Distinct().ToList();
+            }
+            else
+            {
+                finalResults = queryResults[queryResults.Length - 1].Distinct().ToList();
+            }
 
             foreach(int index in finalResults)
             {
