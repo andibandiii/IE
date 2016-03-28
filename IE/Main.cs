@@ -297,11 +297,9 @@ namespace IE
 
         #region Extractor Methods
 
-        private void extract(String destinationPath, String invertedDestinationPath, String formatDateDestinationPath)
+        private Boolean extract(String destinationPath, String invertedDestinationPath, String formatDateDestinationPath)
         {
-            Boolean isAnnotated = false;
             List<Article> listCurrentArticles = fileparserFP.parseFile(sourcePaths[tabControl1.SelectedIndex]);
-            List<Annotation> listCurrentTrainingAnnotations = new List<Annotation>();
             List<List<Token>> listTokenizedArticles = new List<List<Token>>();
             List<List<Candidate>> listAllWhoCandidates = new List<List<Candidate>>();
             List<List<Candidate>> listAllWhenCandidates = new List<List<Candidate>>();
@@ -315,9 +313,7 @@ namespace IE
             List<String> listAllWhyAnnotations = new List<String>();
 
 
-            if (listCurrentArticles != null && listCurrentArticles.Count > 0 &&
-                (!isAnnotated || (listCurrentTrainingAnnotations != null && listCurrentTrainingAnnotations.Count > 0 &&
-                listCurrentArticles.Count == listCurrentTrainingAnnotations.Count)))
+            if (listCurrentArticles != null && listCurrentArticles.Count > 0)
             {
                 Preprocessor preprocessor = new Preprocessor();
 
@@ -334,6 +330,11 @@ namespace IE
                     listAllWhatCandidates.Add(preprocessor.getWhatCandidates());
                     listAllWhyCandidates.Add(preprocessor.getWhyCandidates());
                 }
+            }
+            else
+            {
+                MessageBox.Show("Invalid XML File!");
+                return false;
             }
 
             Identifier annotationIdentifier = new Identifier();
@@ -357,6 +358,8 @@ namespace IE
             rw.generateOutput();
             rw.generateOutputFormatDate();
             rw.generateInvertedIndexOutput();
+
+            return true;
         }
 
         private void btnBrowseExtract_Click(object sender, EventArgs e)
@@ -386,8 +389,11 @@ namespace IE
                     String invertedDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_inverted_index");
                     String formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_format_date");
 
-                    extract(destinationPath, invertedDestinationPath, formatDateDestinationPath);
-                    MessageBox.Show("Operation completed!");
+                    Boolean success = extract(destinationPath, invertedDestinationPath, formatDateDestinationPath);
+                    if (success)
+                    {
+                        MessageBox.Show("Operation completed successfully!");
+                    }
                     resetExtractor();
 
                     textBox3.Text = destinationPath;

@@ -1,6 +1,7 @@
 ﻿using IE.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -15,29 +16,43 @@ namespace IE
         {
             List<Article> articleList = new List<Article>();
 
-            XmlDocument doc = new XmlDocument();
-            doc.Load(path);
-
-            XmlNodeList articleNodes = doc.DocumentElement.SelectNodes("/data/article");
-
-            foreach (XmlNode articleNode in articleNodes)
+            try
             {
-                Article article = new Article();
+                String xmlContents = "";
+                using (StreamReader streamReader = new StreamReader(path, Encoding.UTF8))
+                {
+                    xmlContents = streamReader.ReadToEnd();
+                }
+                xmlContents = WebUtility.HtmlDecode(xmlContents);
+                xmlContents = xmlContents.Replace("&", "&amp;");
 
-                article.Author = articleNode.SelectSingleNode("author").InnerText;
-                article.Body = WebUtility.HtmlDecode(articleNode.SelectSingleNode("body").InnerText);
-                article.Link = articleNode.SelectSingleNode("link").InnerText;
-                article.Title = WebUtility.HtmlDecode(articleNode.SelectSingleNode("title").InnerText);
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(xmlContents);
+                XmlNodeList articleNodes = doc.DocumentElement.SelectNodes("/data/article");
 
-                String date = articleNode.SelectSingleNode("date").SelectSingleNode("month").InnerText + "/" +
-                    articleNode.SelectSingleNode("date").SelectSingleNode("day").InnerText + "/" +
-                    articleNode.SelectSingleNode("date").SelectSingleNode("year").InnerText;
+                foreach (XmlNode articleNode in articleNodes)
+                {
+                    Article article = new Article();
 
-                DateTime tempDate = new DateTime(2000, 01, 01);
-                DateTime.TryParse(date, out tempDate);
-                article.Date = tempDate;
+                    article.Author = articleNode.SelectSingleNode("author").InnerText;
+                    article.Body = WebUtility.HtmlDecode(articleNode.SelectSingleNode("body").InnerText);
+                    article.Link = articleNode.SelectSingleNode("link").InnerText;
+                    article.Title = WebUtility.HtmlDecode(articleNode.SelectSingleNode("title").InnerText);
 
-                articleList.Add(article);
+                    String date = articleNode.SelectSingleNode("date").SelectSingleNode("month").InnerText + "/" +
+                        articleNode.SelectSingleNode("date").SelectSingleNode("day").InnerText + "/" +
+                        articleNode.SelectSingleNode("date").SelectSingleNode("year").InnerText;
+
+                    DateTime tempDate = new DateTime(2000, 01, 01);
+                    DateTime.TryParse(date, out tempDate);
+                    article.Date = tempDate;
+
+                    articleList.Add(article);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error while parsing file: " + e);
             }
 
             return articleList;
