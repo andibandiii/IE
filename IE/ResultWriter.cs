@@ -21,8 +21,8 @@ namespace IE
         List<String> listAllWhyAnnotations;
 
         public ResultWriter(String pPath,
-            String formatDatePath,
             String invertedPath,
+            String formatDatePath,
             List<Article> pAllArticles,
             List<List<String>> pAllWhoAnnotations,
             List<List<String>> pAllWhenAnnotations,
@@ -207,65 +207,6 @@ namespace IE
 
         public void processWhen(DateTime date, string annotation, XmlTextWriter writer)
         {
-            //Dictionary<string, int> hash = new Dictionary<string, int>();
-            //hash.Add("kahapon", -1);
-            //hash.Add("bukas", 1);
-            //hash.Add("ngayon", 0);
-            //hash.Add("kamakalawa", -2);
-            //hash.Add("nakaraan", 0);
-            //Lunes
-            //Martes
-            //Miyerkules
-            //Huwebes
-            //Biyernes
-            //
-            //kamakalawa ng gabi
-            //nakaraang linggo
-            //linggo
-            //pasko
-            //nakaraang pasko
-            //linggo
-            //nakaraang linggo
-            //kamakalawa ng gabi
-            //Huwebes -->
-            //Bandang alas - 5:20 ng hapon
-            //nagdaang unang tatlong buwan ng taong kasalukuyan
-            //Abril 18
-            //Abril 27 ng taong ito-- > 4 / 27 only
-            //   kahapon ng umaga
-            //ngayon
-            //ngayong taong ito
-            //kamakailan
-            //linggong ito
-            //Mayo
-            //Abril 23
-            //Mayo 20
-            //Miyerkules
-            //Ngayong linggo(same date)
-            //Marso 11, 2012
-            //Marso 3
-            /*
-            List<string> storedKey = new List<string>();
-            foreach (string k in hash.Keys)
-            {
-                if (annotation.Contains(k))
-                {
-                    storedKey.Add(k);
-                }
-            }
-
-            if(storedKey.Count > 0)
-            {
-                foreach (string s in storedKey)
-                {
-                    Console.WriteLine("Annotation: " + annotation + "DATE: " + date);
-                    int translate = hash[s];
-                    date = date.AddDays(translate);
-                    writer.WriteString(date.Date.ToString());
-                    Console.WriteLine("NEW DATE: " + date);
-                }
-            }
-            */
             Console.WriteLine("Annotation: " + annotation + "DATE: " + date);
             if (annotation.Contains("kahapon"))
             {

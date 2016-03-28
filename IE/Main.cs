@@ -383,7 +383,7 @@ namespace IE
                 if (fi.Extension.Equals(".xml"))
                 {
                     String destinationPath = fi.FullName;
-                    String invertedDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_invereted_index");
+                    String invertedDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_inverted_index");
                     String formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_format_date");
 
                     extract(destinationPath, invertedDestinationPath, formatDateDestinationPath);
