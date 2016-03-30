@@ -254,7 +254,8 @@ namespace IE
 
         private void labelWhy()
         {
-            double WEIGHT_PER_MARKER = 0.5;
+            double WEIGHT_PER_MARKER = 0.4;
+            double WEIGHT_PER_VERB_MARKER = 0.2;
             double WEIGHT_PER_WHAT = 0.5;
             double WEIGHT_PER_CHAR = 0.01;
             double WEIGHT_PER_SENTENCE = 0;
@@ -265,11 +266,24 @@ namespace IE
                 new String[] { "para", "START" },
                 new String[] { "upang", "START" },
                 new String[] { "makaraang", "START" },
+                new String[] { "naglalayong", "START" },
                 new String[] { "kaya", "END" }
             };
 
+            String[] verbMarkers = new String[]
+            {
+                "pag-usapan",
+                "sinabi",
+                "pinalalayo",
+                "itatatag",
+                "sinisi",
+                "nakipag-ugnayan",
+                "nagsampa",
+                "hiniling"
+            };
+
             List<double> candidateWeights = new List<double>();
-            double highestWeight = 0.5;
+            double highestWeight = 1;
 
             if (listWhyCandidates.Count > 0)
             {
@@ -314,9 +328,14 @@ namespace IE
                         tempWeight = 0;
                     }
 
+                    if(verbMarkers.Any(s => strWhat.ToLower().Contains(s)))
+                    {
+                        tempWeight += WEIGHT_PER_VERB_MARKER;
+                    }
+
                     if(strWhat.Equals(tempWhy))
                     {
-                        CARRY_OVER = 1;
+                        CARRY_OVER = 0.5;
                     }
 
                     System.Console.WriteLine("---------");

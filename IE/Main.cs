@@ -100,8 +100,6 @@ namespace IE
 
             XmlNode root = doc.DocumentElement;
 
-            MessageBox.Show("Index: " + a.Index);
-
             root.SelectSingleNode("/data/article[" + (a.Index + 1) + "]")["who"].InnerText = a.Who;
             root.SelectSingleNode("/data/article[" + (a.Index + 1) + "]")["when"].InnerText = a.When;
             root.SelectSingleNode("/data/article[" + (a.Index + 1) + "]")["where"].InnerText = a.Where;
