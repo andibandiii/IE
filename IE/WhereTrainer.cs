@@ -166,7 +166,7 @@ namespace IE
                             nNoDataCount++;
                         }
 
-                        if (nNoDataCount <= 348 || candidate.IsWhere)
+                        if (nNoDataCount <= 812 || candidate.IsWhere)
                             sw.WriteLine(str);
                     }
                 }
