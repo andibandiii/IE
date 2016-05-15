@@ -31,10 +31,17 @@ namespace IE
                         File.Delete(path);
                     }
 
+                    /*!!
+                     * RELATION NAME AND ATTRIBUTE DECLARATION
+                     */
                     using (StreamWriter sw = File.CreateText(path))
                     {
                         sw.WriteLine("@relation who");
-                        sw.WriteLine("@attribute word string\n@attribute wordCount NUMERIC\n@attribute sentence NUMERIC\n@attribute position NUMERIC\n@attribute sentenceStartProximity NUMERIC");
+                        sw.WriteLine("@attribute word string");
+                        sw.WriteLine("@attribute wordCount NUMERIC");
+                        sw.WriteLine("@attribute sentence NUMERIC");
+                        sw.WriteLine("@attribute position NUMERIC");
+                        sw.WriteLine("@attribute sentenceStartProximity NUMERIC");
                         sw.WriteLine("@attribute wordScore NUMERIC");
 
                         for (int c = 10; c > 0; c--)
@@ -45,7 +52,6 @@ namespace IE
                         {
                             sw.WriteLine("@attribute word+" + c + " string");
                         }
-                        //sw.WriteLine("@attribute word+1 string\n@attribute word+2 string");
                         for (int c = 10; c > 0; c--)
                         {
                             sw.WriteLine("@attribute postag-" + c + " " + posTags);
@@ -54,12 +60,6 @@ namespace IE
                         {
                             sw.WriteLine("@attribute postag+" + c + " " + posTags);
                         }
-                        //sw.WriteLine("@attribute postag+1 " + posTags);
-                        //sw.WriteLine("@attribute postag+2 " + posTags);
-                        //sw.WriteLine("@attribute named-entity-class-2 {LOC, PER, ORG, DATE, TIME, O}");
-                        //sw.WriteLine("@attribute named-entity-class-1 {LOC, PER, ORG, DATE, TIME, O}");
-                        //sw.WriteLine("@attribute named-entity-class+1 {LOC, PER, ORG, DATE, TIME, O}");
-                        //sw.WriteLine("@attribute named-entity-class+2 {LOC, PER, ORG, DATE, TIME, O}");
                         sw.WriteLine("@attribute who {yes, no}");
                         sw.WriteLine("\n@data");
                     }
@@ -75,6 +75,18 @@ namespace IE
                     int frequency = 0;
                     int endIndex = 0;
                     int wordsbefore = 0;
+
+                    /*!!
+                     * NUMBER OF WORDS TO BE CONSIDERED BEFORE AND AFTER THE CANDIDATE
+                     */
+                    int beforeCount = 10;
+                    int afterCount = 10;
+
+                    /*!!
+                     * MAXIMUM NUMBER OF 'no' DATA ALLOWED
+                     */
+                    int maxCountOfNo = 1254;
+
                     double sentenceStartProximity = -1.0;
 
                     string[] arrCandidate = null;
@@ -103,10 +115,21 @@ namespace IE
                             }
                         }
 
-                        wordsbefore = position - 10;
+                        wordsbefore = position - beforeCount;
 
-                        str = "\"" + value.Replace("\"", "'") + "\"," + wordcount + "," + sentence + "," + position + "," + ((sentenceStartProximity == -1) ? "?" : "" + sentenceStartProximity) + "," + frequency + ",";
+                        /*!!
+                         * INITIAL ATTRIBUTES
+                         */
+                        str = "\"" + value.Replace("\"", "'") + "\",";
+                        str += wordcount + ",";
+                        str += sentence + ",";
+                        str += position + ",";
+                        str += ((sentenceStartProximity == -1) ? "?" : "" + sentenceStartProximity) + ",";
+                        str += frequency + ",";
 
+                        /*
+                         * ADDING WORD STRINGS IN DATASET FOR THE WORDS BEFORE AND AFTER
+                         */
                         int ctrBefore = wordsbefore;
 
                         while (ctrBefore < 1)
@@ -119,7 +142,7 @@ namespace IE
                             str += "\"" + listTokenizedArticle[ctrBefore - 1].Value.Replace("\"", "'") + "\",";
                             ctrBefore++;
                         }
-                        for (int c = 0; c < 10; c++)
+                        for (int c = 0; c < afterCount; c++)
                         {
                             if (endIndex + c < listTokenizedArticle.Count)
                             {
@@ -131,7 +154,9 @@ namespace IE
                             }
                         }
 
-                        // POS tags of words Before and After candidate
+                        /*
+                         * ADDING POS TAGS IN DATASET FOR THE WORDS BEFORE AND AFTER
+                         */
                         ctrBefore = wordsbefore;
 
                         while (ctrBefore < 1)
@@ -144,7 +169,7 @@ namespace IE
                             str += listTokenizedArticle[ctrBefore - 1].PartOfSpeech + ",";
                             ctrBefore++;
                         }
-                        for (int c = 0; c < 10; c++)
+                        for (int c = 0; c < afterCount; c++)
                         {
                             if (endIndex + c < listTokenizedArticle.Count)
                             {
@@ -166,7 +191,7 @@ namespace IE
                             nNoDataCount++;
                         }
 
-                        if (nNoDataCount <= 1254 || candidate.IsWho)
+                        if (nNoDataCount <= maxCountOfNo || candidate.IsWho)
                             sw.WriteLine(str);
                     }
                 }
