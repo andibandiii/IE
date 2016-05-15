@@ -22,6 +22,17 @@ namespace IE
             string path = @"..\..\When.arff";
             string posTags = "{" + String.Join(",", Token.PartOfSpeechTags) + "}";
 
+            /*!!
+             * NUMBER OF WORDS TO BE CONSIDERED BEFORE AND AFTER THE CANDIDATE
+             */
+            int beforeCount = 10;
+            int afterCount = 10;
+
+            /*!!
+             * MAXIMUM NUMBER OF 'no' DATA ALLOWED
+             */
+            int maxCountOfNo = 525;
+
             try
             {
                 if (isNewFile)
@@ -44,19 +55,19 @@ namespace IE
                         sw.WriteLine("@attribute sentenceStartProximity NUMERIC");
                         sw.WriteLine("@attribute wordScore NUMERIC");
 
-                        for (int c = 10; c > 0; c--)
+                        for (int c = beforeCount; c > 0; c--)
                         {
                             sw.WriteLine("@attribute word-" + c + " string");
                         }
-                        for (int c = 1; c <= 10; c++)
+                        for (int c = 1; c <= afterCount; c++)
                         {
                             sw.WriteLine("@attribute word+" + c + " string");
                         }
-                        for (int c = 10; c > 0; c--)
+                        for (int c = beforeCount; c > 0; c--)
                         {
                             sw.WriteLine("@attribute postag-" + c + " " + posTags);
                         }
-                        for (int c = 1; c <= 10; c++)
+                        for (int c = 1; c <= afterCount; c++)
                         {
                             sw.WriteLine("@attribute postag+" + c + " " + posTags);
                         }
@@ -75,18 +86,6 @@ namespace IE
                     int frequency = 0;
                     int endIndex = 0;
                     int wordsbefore = 0;
-
-                    /*!!
-                     * NUMBER OF WORDS TO BE CONSIDERED BEFORE AND AFTER THE CANDIDATE
-                     */
-                    int beforeCount = 10;
-                    int afterCount = 10;
-
-                    /*!!
-                     * MAXIMUM NUMBER OF 'no' DATA ALLOWED
-                     */
-                    int maxCountOfNo = 525;
-
                     double sentenceStartProximity = -1.0;
 
                     string[] arrCandidate = null;
