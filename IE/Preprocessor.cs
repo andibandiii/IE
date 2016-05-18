@@ -262,7 +262,7 @@ namespace IE
         #region Annotation Preprocessing Functions
         private float[] performMultipleAnnotationAssignment(String annotationType)
         {
-            float[] statistics = new float[2]; //[0] = recall, [1] = precision
+            float[] statistics = new float[3] { 0, 0, 0}; //[0] = recall, [1] = precision, [2]  total
             int totalMatch = 0;
             annotationType = annotationType.ToUpper();
             if (annotationType != "WHO" && annotationType != "WHEN" && annotationType != "WHERE")
@@ -409,7 +409,7 @@ namespace IE
             }
 
             System.Console.WriteLine("Annotations Count: {0}", arrAnnotations.GetLength(0));
-
+            statistics[2] += 1;
             statistics[0] = (float) totalMatch / arrAnnotations.GetLength(0);
             switch (annotationType)
             {

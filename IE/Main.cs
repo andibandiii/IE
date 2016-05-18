@@ -323,6 +323,9 @@ namespace IE
                 float recallWhen = 0;
                 float precisionWhere = 0;
                 float recallWhere = 0;
+                float totalWho = 0;
+                float totalWhen = 0;
+                float totalWhere = 0;
                 //Temporarily set to 2 because getting all articles takes longer run time
                 for (int nI = 0; nI < listCurrentArticles.Count; nI++)
                 {
@@ -348,6 +351,9 @@ namespace IE
                         precisionWho += statistics[0][1];
                         precisionWhen += statistics[1][1];
                         precisionWhere += statistics[2][1];
+                        totalWho += statistics[0][2];
+                        totalWhen += statistics[1][2];
+                        totalWhere += statistics[2][2];
                     }
 
                     System.Console.WriteLine("Article #{0}", nI + 1);
@@ -360,12 +366,12 @@ namespace IE
                 }
 
                 System.Console.WriteLine("Average Statistics");
-                System.Console.WriteLine("Recall Who: " + recallWho / listCurrentArticles.Count);
-                System.Console.WriteLine("Recall When: " + recallWhen / listCurrentArticles.Count);
-                System.Console.WriteLine("Recall Where: " + recallWhere / listCurrentArticles.Count);
-                System.Console.WriteLine("Precision Who: " + precisionWho / listCurrentArticles.Count);
-                System.Console.WriteLine("Precision When: " + precisionWhen / listCurrentArticles.Count);
-                System.Console.WriteLine("Precision Where: " + precisionWhere / listCurrentArticles.Count);
+                System.Console.WriteLine("Recall Who: " + recallWho / totalWho);
+                System.Console.WriteLine("Recall When: " + recallWhen / totalWhen);
+                System.Console.WriteLine("Recall Where: " + recallWhere / totalWhere);
+                System.Console.WriteLine("Precision Who: " + precisionWho / totalWho);
+                System.Console.WriteLine("Precision When: " + precisionWhen / totalWhere);
+                System.Console.WriteLine("Precision Where: " + precisionWhere / totalWhen);
             }
             else
             {
