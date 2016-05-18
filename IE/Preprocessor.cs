@@ -125,17 +125,21 @@ namespace IE
         /// <summary>
         /// Assign an article's token to whether or not it is part of a 5W.
         /// </summary>
-        public void performAnnotationAssignment()
+        public float[][] performAnnotationAssignment()
         {
+            float[][] statistics = new float[3][];
             if (annotationCurrent == null)
             {
-                return;
+                return null;
             }
 
-            performMultipleAnnotationAssignment("WHO");
-            performMultipleAnnotationAssignment("WHEN");
-            performMultipleAnnotationAssignment("WHERE");
+            statistics[0] = performMultipleAnnotationAssignment("WHO");
+            statistics[1] = performMultipleAnnotationAssignment("WHEN");
+            statistics[2] = performMultipleAnnotationAssignment("WHERE");
+
+            return statistics;
         }
+
 
         private void performCandidateSelection()
         {
@@ -256,19 +260,20 @@ namespace IE
         #endregion
 
         #region Annotation Preprocessing Functions
-        private void performMultipleAnnotationAssignment(String annotationType)
+        private float[] performMultipleAnnotationAssignment(String annotationType)
         {
+            float[] statistics = new float[2]; //[0] = recall, [1] = precision
+            int totalMatch = 0;
             annotationType = annotationType.ToUpper();
             if (annotationType != "WHO" && annotationType != "WHEN" && annotationType != "WHERE")
             {
-                return;
+                return statistics;
             }
 
             String strAnnotation = "";
             Action<string> assignmentMethod = null;
             string[] arrAnnotations = null;
             bool foundMatchingCandidate = false;
-
             switch (annotationType)
             {
                 case "WHO":
@@ -326,7 +331,7 @@ namespace IE
 
             if (strAnnotation.Count() <= 0 || strAnnotation == "N/A")
             {
-                return;
+                return statistics;
             }
 
             arrAnnotations = strAnnotation.Split(';');
@@ -395,9 +400,24 @@ namespace IE
                 }
                 else
                 {
+                    totalMatch += 1;
                     foundMatchingCandidate = false;
                 }
             }
+            statistics[0] = totalMatch / arrAnnotations.GetLength(0);
+            switch (annotationType)
+            {
+                case "WHO":
+                    statistics[1] = totalMatch / listWhoCandidates.Count;
+                    break;
+                case "WHEN":
+                    statistics[1] = totalMatch / listWhenCandidates.Count;
+                    break;
+                case "WHERE":
+                    statistics[1] = totalMatch / listWhereCandidates.Count;
+                    break;
+            }
+            return statistics;
         }
         #endregion
     }

@@ -182,7 +182,7 @@ namespace IE
                         }
                         else if (tabControl1.SelectedIndex == 2)
                         {
-                            String formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_inverted_index");
+                            String formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_format_date");
 
                             if (File.Exists(formatDateDestinationPath))
                             {
@@ -309,16 +309,21 @@ namespace IE
             List<List<String>> listAllWhereAnnotations = new List<List<String>>();
             List<String> listAllWhatAnnotations = new List<String>();
             List<String> listAllWhyAnnotations = new List<String>();
-            List<String> listAllTokenizedTitles = new List<String>();
 
 
             if (listCurrentArticles != null && listCurrentArticles.Count > 0)
             {
                 Preprocessor preprocessor = new Preprocessor();
-
+                float precisionWho = 0;
+                float recallWho = 0;
+                float precisionWhen = 0;
+                float recallWhen = 0;
+                float precisionWhere = 0;
+                float recallWhere = 0;
                 //Temporarily set to 2 because getting all articles takes longer run time
                 for (int nI = 0; nI < listCurrentArticles.Count; nI++)
                 {
+                    float[][] statistics;
                     preprocessor.setCurrentArticle(listCurrentArticles[nI]);
                     preprocessor.preprocess();
 
@@ -328,8 +333,26 @@ namespace IE
                     listAllWhereCandidates.Add(preprocessor.getWhereCandidates());
                     listAllWhatCandidates.Add(preprocessor.getWhatCandidates());
                     listAllWhyCandidates.Add(preprocessor.getWhyCandidates());
-                    listAllTokenizedTitles.Add(preprocessor.getTokenizedTitle());
+
+                    statistics = preprocessor.performAnnotationAssignment();
+                    if (statistics != null) {
+                        recallWho += statistics[0][0];
+                        recallWhen += statistics[1][0];
+                        recallWhere += statistics[2][0];
+                        precisionWho += statistics[0][1];
+                        precisionWhen += statistics[1][1];
+                        precisionWhere += statistics[2][1];
+                    }
+
+
                 }
+
+                System.Console.WriteLine("Recall Who: " + recallWho/ listCurrentArticles.Count);
+                System.Console.WriteLine("Recall When: " + recallWhen / listCurrentArticles.Count);
+                System.Console.WriteLine("Recall Where: " + recallWhere / listCurrentArticles.Count);
+                System.Console.WriteLine("Precision Who: " + precisionWho / listCurrentArticles.Count);
+                System.Console.WriteLine("Precision When: " + precisionWhen / listCurrentArticles.Count);
+                System.Console.WriteLine("Precision Where: " + precisionWhere / listCurrentArticles.Count);
             }
             else
             {
@@ -346,7 +369,6 @@ namespace IE
                 annotationIdentifier.setWhereCandidates(listAllWhereCandidates[nI]);
                 annotationIdentifier.setWhatCandidates(listAllWhatCandidates[nI]);
                 annotationIdentifier.setWhyCandidates(listAllWhyCandidates[nI]);
-                annotationIdentifier.setTitle(listAllTokenizedTitles[nI]);
                 annotationIdentifier.labelAnnotations();
                 listAllWhoAnnotations.Add(annotationIdentifier.getWho());
                 listAllWhenAnnotations.Add(annotationIdentifier.getWhen());
@@ -411,9 +433,9 @@ namespace IE
             textBox2.Text = "";
         }
 
-        #endregion
+#endregion
 
-        #region Viewer Methods
+#region Viewer Methods
 
         private void resetViewer()
         {
@@ -425,9 +447,9 @@ namespace IE
             listViewerAnnotations = null;
         }
 
-        #endregion
+#endregion
 
-        #region Navigator Methods
+#region Navigator Methods
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
@@ -706,6 +728,6 @@ namespace IE
             whyReverseIndex.Clear();
         }
 
-        #endregion
+#endregion
     }
 }
