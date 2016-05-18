@@ -278,7 +278,8 @@ namespace IE
             {
                 case "WHO":
                     strAnnotation = annotationCurrent.Who;
-                    assignmentMethod = annotation => {
+                    assignmentMethod = annotation =>
+                    {
                         foreach (var candidate in listWhoCandidates)
                         {
                             if (candidate.Value == annotation)
@@ -295,7 +296,8 @@ namespace IE
                     break;
                 case "WHEN":
                     strAnnotation = annotationCurrent.When;
-                    assignmentMethod = annotation => {
+                    assignmentMethod = annotation =>
+                    {
                         foreach (var candidate in listWhenCandidates)
                         {
                             if (candidate.Value == annotation)
@@ -312,7 +314,8 @@ namespace IE
                     break;
                 case "WHERE":
                     strAnnotation = annotationCurrent.Where;
-                    assignmentMethod = annotation => {
+                    assignmentMethod = annotation =>
+                    {
                         foreach (var candidate in listWhereCandidates)
                         {
                             if (candidate.Value == annotation)
@@ -376,7 +379,7 @@ namespace IE
                             }
                         }
 
-                        var newToken = new Candidate(arrAnnotations[r], listLatestTokenizedArticle[startIndex].Position, startIndex + wordForWordAnnotation.Count()-1);
+                        var newToken = new Candidate(arrAnnotations[r], listLatestTokenizedArticle[startIndex].Position, startIndex + wordForWordAnnotation.Count() - 1);
                         newToken.Sentence = listLatestTokenizedArticle[i].Sentence;
                         newToken.NamedEntity = listLatestTokenizedArticle[i].NamedEntity;
                         newToken.PartOfSpeech = listLatestTokenizedArticle[i].PartOfSpeech;
@@ -404,17 +407,23 @@ namespace IE
                     foundMatchingCandidate = false;
                 }
             }
-            statistics[0] = totalMatch / arrAnnotations.GetLength(0);
+
+            System.Console.WriteLine("Annotations Count: {0}", arrAnnotations.GetLength(0));
+
+            statistics[0] = (float) totalMatch / arrAnnotations.GetLength(0);
             switch (annotationType)
             {
                 case "WHO":
-                    statistics[1] = totalMatch / listWhoCandidates.Count;
+                    statistics[1] = (float) totalMatch / listWhoCandidates.Count;
+                    System.Console.WriteLine("Total Match: {0}, Who Candidates Count: {1}", totalMatch, listWhoCandidates.Count);
                     break;
                 case "WHEN":
-                    statistics[1] = totalMatch / listWhenCandidates.Count;
+                    statistics[1] = (float) totalMatch / listWhenCandidates.Count;
+                    System.Console.WriteLine("Total Match: {0}, When Candidates Count: {1}", totalMatch, listWhenCandidates.Count);
                     break;
                 case "WHERE":
-                    statistics[1] = totalMatch / listWhereCandidates.Count;
+                    statistics[1] = (float) totalMatch / listWhereCandidates.Count;
+                    System.Console.WriteLine("Total Match: {0}, Where Candidates Count: {1}", totalMatch, listWhereCandidates.Count);
                     break;
             }
             return statistics;

@@ -310,6 +310,9 @@ namespace IE
             List<String> listAllWhatAnnotations = new List<String>();
             List<String> listAllWhyAnnotations = new List<String>();
 
+            List<Annotation> listCurrentTrainingAnnotations = new List<Annotation>();
+
+            listCurrentTrainingAnnotations = fileparserFP.parseAnnotations(sourcePaths[tabControl1.SelectedIndex]);
 
             if (listCurrentArticles != null && listCurrentArticles.Count > 0)
             {
@@ -334,8 +337,11 @@ namespace IE
                     listAllWhatCandidates.Add(preprocessor.getWhatCandidates());
                     listAllWhyCandidates.Add(preprocessor.getWhyCandidates());
 
+                    preprocessor.setCurrentAnnotation(listCurrentTrainingAnnotations[nI]);
                     statistics = preprocessor.performAnnotationAssignment();
-                    if (statistics != null) {
+
+                    if (statistics != null)
+                    {
                         recallWho += statistics[0][0];
                         recallWhen += statistics[1][0];
                         recallWhere += statistics[2][0];
@@ -344,10 +350,17 @@ namespace IE
                         precisionWhere += statistics[2][1];
                     }
 
-
+                    System.Console.WriteLine("Article #{0}", nI + 1);
+                    System.Console.WriteLine("Recall Who: " + statistics[0][0]);
+                    System.Console.WriteLine("Recall When: " + statistics[1][0]);
+                    System.Console.WriteLine("Recall Where: " + statistics[2][0]);
+                    System.Console.WriteLine("Precision Who: " + statistics[0][1]);
+                    System.Console.WriteLine("Precision When: " + statistics[1][1]);
+                    System.Console.WriteLine("Precision Where: " + statistics[2][1]);
                 }
 
-                System.Console.WriteLine("Recall Who: " + recallWho/ listCurrentArticles.Count);
+                System.Console.WriteLine("Average Statistics");
+                System.Console.WriteLine("Recall Who: " + recallWho / listCurrentArticles.Count);
                 System.Console.WriteLine("Recall When: " + recallWhen / listCurrentArticles.Count);
                 System.Console.WriteLine("Recall Where: " + recallWhere / listCurrentArticles.Count);
                 System.Console.WriteLine("Precision Who: " + precisionWho / listCurrentArticles.Count);
@@ -369,6 +382,7 @@ namespace IE
                 annotationIdentifier.setWhereCandidates(listAllWhereCandidates[nI]);
                 annotationIdentifier.setWhatCandidates(listAllWhatCandidates[nI]);
                 annotationIdentifier.setWhyCandidates(listAllWhyCandidates[nI]);
+                annotationIdentifier.setTitle(listCurrentArticles[nI].Title);
                 annotationIdentifier.labelAnnotations();
                 listAllWhoAnnotations.Add(annotationIdentifier.getWho());
                 listAllWhenAnnotations.Add(annotationIdentifier.getWhen());
@@ -433,9 +447,9 @@ namespace IE
             textBox2.Text = "";
         }
 
-#endregion
+        #endregion
 
-#region Viewer Methods
+        #region Viewer Methods
 
         private void resetViewer()
         {
@@ -447,9 +461,9 @@ namespace IE
             listViewerAnnotations = null;
         }
 
-#endregion
+        #endregion
 
-#region Navigator Methods
+        #region Navigator Methods
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
@@ -728,6 +742,6 @@ namespace IE
             whyReverseIndex.Clear();
         }
 
-#endregion
+        #endregion
     }
 }
