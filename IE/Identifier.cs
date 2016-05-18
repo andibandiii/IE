@@ -16,6 +16,7 @@ namespace IE
     public class Identifier
     {
         private List<Token> articleCurrent;
+        private String titleCurrent;
         private List<List<Token>> segregatedArticleCurrent;
         private List<Candidate> listWhoCandidates;
         private List<Candidate> listWhenCandidates;
@@ -95,6 +96,11 @@ namespace IE
         public void setWhyCandidates(List<List<Token>> pCandidates)
         {
             listWhyCandidates = pCandidates;
+        }
+
+        public void setTitle(String pTitle)
+        {
+            titleCurrent = pTitle;
         }
         #endregion
 
@@ -189,6 +195,7 @@ namespace IE
             double WEIGHT_PER_WHEN = 0.2;
             double WEIGHT_PER_WHERE = 0.2;
             double WEIGHT_PER_SENTENCE = 0.2;
+            double WEIGHT_PER_W_IN_TITLE = 0.1;
 
             List<double> candidateWeights = new List<double>();
             double highestWeight = -1;
@@ -223,6 +230,10 @@ namespace IE
                     tempWeight += listWhere.Where(tempWhat.Contains).Count() * WEIGHT_PER_WHERE;
                     tempWeight += 1 - WEIGHT_PER_SENTENCE * candidate[0].Sentence;
 
+                    tempWeight += listWho.Where(titleCurrent.Contains).Count() * WEIGHT_PER_W_IN_TITLE;
+                    tempWeight += listWhen.Where(titleCurrent.Contains).Count() * WEIGHT_PER_W_IN_TITLE;
+                    tempWeight += listWhere.Where(titleCurrent.Contains).Count() * WEIGHT_PER_W_IN_TITLE;
+
                     candidateWeights.Add(tempWeight);
                     System.Console.WriteLine("---------");
                     System.Console.WriteLine("Candidate: \t{0}\nWeight: \t{1}", tempWhat, tempWeight);
@@ -242,8 +253,6 @@ namespace IE
                         strWhat = tempWhat;
                         highestWeight = tempWeight;
                     }
-
-
                 }
             }
 
@@ -254,11 +263,11 @@ namespace IE
 
         private void labelWhy()
         {
-            double WEIGHT_PER_MARKER = 0.4;
-            double WEIGHT_PER_VERB_MARKER = 0.2;
+            double WEIGHT_PER_MARKER = 0.5;
+            //double WEIGHT_PER_VERB_MARKER = 0.2;
             double WEIGHT_PER_WHAT = 0.5;
-            double WEIGHT_PER_CHAR = 0.01;
-            double WEIGHT_PER_SENTENCE = 0;
+            //double WEIGHT_PER_CHAR = 0.01;
+            //double WEIGHT_PER_SENTENCE = 0;
             double CARRY_OVER = 0;
             
             String[][] markers = new String[][] {
@@ -283,7 +292,7 @@ namespace IE
             };
 
             List<double> candidateWeights = new List<double>();
-            double highestWeight = 1;
+            double highestWeight = 0.5;
 
             if (listWhyCandidates.Count > 0)
             {
@@ -328,10 +337,10 @@ namespace IE
                         tempWeight = 0;
                     }
 
-                    if(verbMarkers.Any(s => strWhat.ToLower().Contains(s)))
-                    {
-                        tempWeight += WEIGHT_PER_VERB_MARKER;
-                    }
+                    //if(verbMarkers.Any(s => strWhat.ToLower().Contains(s)))
+                    //{
+                    //    tempWeight += WEIGHT_PER_VERB_MARKER;
+                    //}
 
                     if(strWhat.Equals(tempWhy))
                     {

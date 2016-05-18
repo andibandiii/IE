@@ -182,7 +182,7 @@ namespace IE
                         }
                         else if (tabControl1.SelectedIndex == 2)
                         {
-                            String formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_format_date");
+                            String formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_inverted_index");
 
                             if (File.Exists(formatDateDestinationPath))
                             {
@@ -309,6 +309,7 @@ namespace IE
             List<List<String>> listAllWhereAnnotations = new List<List<String>>();
             List<String> listAllWhatAnnotations = new List<String>();
             List<String> listAllWhyAnnotations = new List<String>();
+            List<String> listAllTokenizedTitles = new List<String>();
 
 
             if (listCurrentArticles != null && listCurrentArticles.Count > 0)
@@ -327,6 +328,7 @@ namespace IE
                     listAllWhereCandidates.Add(preprocessor.getWhereCandidates());
                     listAllWhatCandidates.Add(preprocessor.getWhatCandidates());
                     listAllWhyCandidates.Add(preprocessor.getWhyCandidates());
+                    listAllTokenizedTitles.Add(preprocessor.getTokenizedTitle());
                 }
             }
             else
@@ -344,6 +346,7 @@ namespace IE
                 annotationIdentifier.setWhereCandidates(listAllWhereCandidates[nI]);
                 annotationIdentifier.setWhatCandidates(listAllWhatCandidates[nI]);
                 annotationIdentifier.setWhyCandidates(listAllWhyCandidates[nI]);
+                annotationIdentifier.setTitle(listAllTokenizedTitles[nI]);
                 annotationIdentifier.labelAnnotations();
                 listAllWhoAnnotations.Add(annotationIdentifier.getWho());
                 listAllWhenAnnotations.Add(annotationIdentifier.getWhen());
