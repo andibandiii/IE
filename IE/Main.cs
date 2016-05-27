@@ -182,7 +182,7 @@ namespace IE
                         }
                         else if (tabControl1.SelectedIndex == 2)
                         {
-                            String formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_format_date");
+                            String formatDateDestinationPath = fi.FullName.Insert(fi.FullName.Length - 4, "_inverted_index");
 
                             if (File.Exists(formatDateDestinationPath))
                             {
