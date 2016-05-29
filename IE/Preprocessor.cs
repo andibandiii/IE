@@ -260,6 +260,83 @@ namespace IE
         #endregion
 
         #region Annotation Preprocessing Functions
+        private float[] performSingleAnnotationAssignment(String annotationType)
+        {
+            float[] statistics = new float[3] { 0, 0, 1 }; //[0] = recall, [1] = precision, [2]  total
+            Boolean totalMatch = false;
+            annotationType = annotationType.ToUpper();
+            String strAnnotation = "";
+            if (annotationType == "WHAT")
+                strAnnotation = String.Copy(annotationCurrent.What);
+            else if (annotationType == "WHY")
+                strAnnotation = String.Copy(annotationCurrent.Why);
+            if (annotationType != "WHAT" && annotationType != "WHY" || strAnnotation.Count() <= 0 || strAnnotation == "N/A")
+            {
+                return statistics;
+            }
+
+            strAnnotation.Replace(" ", "");
+
+            if (annotationType == "WHAT")
+            {
+                foreach (var candidate in listWhatCandidates)
+                {
+                    var tempCandidate = string.Join("", candidate.Select(x => x.Value).ToArray());
+                   
+                    if (tempCandidate == strAnnotation)
+                    {
+                        totalMatch = true;
+                        break;
+                    }
+                    else if (strAnnotation.Contains(tempCandidate))
+                    {
+                        //System.Console.WriteLine("'WHAT' Under-extracted: " + candidate.Value + " - " + annotation);
+                    }
+                    else if (tempCandidate.Contains(strAnnotation))
+                    {
+                        //System.Console.WriteLine("'WHAT' Over-extracted: " + candidate.Value + " - " + annotation);
+                    }
+                    else
+                    {
+                        //System.Console.WriteLine("'WHAT' Complete Mismatch: " + candidate.Value + " - " + annotation);
+                    }
+                }
+
+                statistics[0] = totalMatch ? 1 : 0;
+                statistics[1] = (totalMatch ? 1 : 0) / listWhatCandidates.Count;
+            }
+            else if (annotationType == "WHY")
+            {
+                foreach (var candidate in listWhyCandidates)
+                {
+                    var tempCandidate = string.Join("", candidate.Select(x => x.Value).ToArray());
+
+                    if (tempCandidate == strAnnotation)
+                    {
+                        totalMatch = true;
+                        break;
+                    }
+                    else if (strAnnotation.Contains(tempCandidate))
+                    {
+                        //System.Console.WriteLine("'WHY' Under-extracted: " + candidate.Value + " - " + annotation);
+                    }
+                    else if (tempCandidate.Contains(strAnnotation))
+                    {
+                        //System.Console.WriteLine("'WHY' Over-extracted: " + candidate.Value + " - " + annotation);
+                    }
+                    else
+                    {
+                        //System.Console.WriteLine("'WHY' Complete Mismatch: " + candidate.Value + " - " + annotation);
+                    }
+                }
+
+                statistics[0] = totalMatch ? 1 : 0;
+                statistics[1] = (totalMatch ? 1 : 0) / listWhyCandidates.Count;
+            }
+
+            return statistics;
+        }
+
         private float[] performMultipleAnnotationAssignment(String annotationType)
         {
             float[] statistics = new float[3] { 0, 0, 0}; //[0] = recall, [1] = precision, [2]  total
