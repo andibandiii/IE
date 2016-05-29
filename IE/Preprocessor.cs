@@ -291,6 +291,18 @@ namespace IE
                                 //System.Console.WriteLine("AFTER: " + (((candidate.Position + temp.Length - 1) <= listLatestTokenizedArticle.Count()) ? listLatestTokenizedArticle[candidate.Position + temp.Length - 1].Value : "N/A"));
                                 break;
                             }
+                            else if (annotation.Contains(candidate.Value))
+                            {
+                                //System.Console.WriteLine("'WHO' Under-extracted: " + candidate.Value + " - " + annotation);
+                            }
+                            else if (candidate.Value.Contains(annotation))
+                            {
+                                //System.Console.WriteLine("'WHO' Over-extracted: " + candidate.Value + " - " + annotation);
+                            }
+                            else
+                            {
+                                //System.Console.WriteLine("'WHO' Complete Mismatch: " + candidate.Value + " - " + annotation);
+                            }
                         }
                     };
                     break;
@@ -309,6 +321,18 @@ namespace IE
                                 //System.Console.WriteLine("AFTER: " + (((candidate.Position + temp.Length - 1) <= listLatestTokenizedArticle.Count()) ? listLatestTokenizedArticle[candidate.Position + temp.Length - 1].Value : "N/A"));
                                 break;
                             }
+                            else if (annotation.Contains(candidate.Value))
+                            {
+                                //System.Console.WriteLine("'WHEN' Under-extracted: " + candidate.Value + " - " + annotation);
+                            }
+                            else if (candidate.Value.Contains(annotation))
+                            {
+                                //System.Console.WriteLine("'WHEN' Over-extracted: " + candidate.Value + " - " + annotation);
+                            }
+                            else
+                            {
+                                //System.Console.WriteLine("'WHEN' Complete Mismatch: " + candidate.Value + " - " + annotation);
+                            }
                         }
                     };
                     break;
@@ -326,6 +350,18 @@ namespace IE
                                 //string[] temp = candidate.Value.Split(' ');
                                 //System.Console.WriteLine("AFTER: " + (((candidate.Position + temp.Length - 1) <= listLatestTokenizedArticle.Count()) ? listLatestTokenizedArticle[candidate.Position + temp.Length - 1].Value : "N/A"));
                                 break;
+                            }
+                            else if (annotation.Contains(candidate.Value))
+                            {
+                                //System.Console.WriteLine("'WHERE' Under-extracted: " + candidate.Value + " - " + annotation);
+                            }
+                            else if (candidate.Value.Contains(annotation))
+                            {
+                                //System.Console.WriteLine("'WHERE' Over-extracted: " + candidate.Value + " - " + annotation);
+                            }
+                            else
+                            {
+                                //System.Console.WriteLine("'WHERE' Complete Mismatch: " + candidate.Value + " - " + annotation);
                             }
                         }
                     };
