@@ -7,6 +7,7 @@ using java.io;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace IE
@@ -127,7 +128,7 @@ namespace IE
         /// </summary>
         public float[][] performAnnotationAssignment()
         {
-            float[][] statistics = new float[3][];
+            float[][] statistics = new float[5][];
             if (annotationCurrent == null)
             {
                 return null;
@@ -136,6 +137,8 @@ namespace IE
             statistics[0] = performMultipleAnnotationAssignment("WHO");
             statistics[1] = performMultipleAnnotationAssignment("WHEN");
             statistics[2] = performMultipleAnnotationAssignment("WHERE");
+            statistics[3] = performSingleAnnotationAssignment("WHAT");
+            statistics[4] = performSingleAnnotationAssignment("WHY");
 
             return statistics;
         }
@@ -262,7 +265,7 @@ namespace IE
         #region Annotation Preprocessing Functions
         private float[] performSingleAnnotationAssignment(String annotationType)
         {
-            float[] statistics = new float[3] { 0, 0, 1 }; //[0] = recall, [1] = precision, [2]  total
+            float[] statistics = new float[3] { 0, 0, 0 }; //[0] = recall, [1] = precision, [2]  total
             Boolean totalMatch = false;
             annotationType = annotationType.ToUpper();
             String strAnnotation = "";
@@ -275,63 +278,81 @@ namespace IE
                 return statistics;
             }
 
-            strAnnotation.Replace(" ", "");
+            Regex rgx = new Regex("[^a-zA-Z0-9]");
+            strAnnotation = rgx.Replace(strAnnotation, "");
+
 
             if (annotationType == "WHAT")
             {
-                foreach (var candidate in listWhatCandidates)
+                if (strAnnotation != "")
                 {
-                    var tempCandidate = string.Join("", candidate.Select(x => x.Value).ToArray());
-                   
-                    if (tempCandidate == strAnnotation)
+                    
+                    statistics[2] = 1;
+                    foreach (var candidate in listWhatCandidates)
                     {
-                        totalMatch = true;
-                        break;
+                        var tempCandidate = string.Join("", candidate.Select(x => x.Value).ToArray());
+                        tempCandidate = rgx.Replace(tempCandidate, "");
+                        tempCandidate = tempCandidate.Replace("-LRB- ", "(");
+                        tempCandidate = tempCandidate.Replace(" -RRB-", ")");
+                        tempCandidate = tempCandidate.Replace(" . ", ".");
+                        tempCandidate = tempCandidate.Replace(" .", ".");
+                        tempCandidate = tempCandidate.Replace(" ,", ",");
+                        tempCandidate = tempCandidate.Replace(" !", "!");
+                        if (strAnnotation != "")
+                            if (tempCandidate == strAnnotation)
+                            {
+                                totalMatch = true;
+                                break;
+                            }
+                            else if (strAnnotation.Contains(tempCandidate))
+                            {
+                                //System.Console.WriteLine("'WHAT' Under-extracted: " + candidate.Value + " - " + annotation);
+                            }
+                            else if (tempCandidate.Contains(strAnnotation))
+                            {
+                                //System.Console.WriteLine("'WHAT' Over-extracted: " + candidate.Value + " - " + annotation);
+                            }
+                            else
+                            {
+                                //System.Console.WriteLine("'WHAT' Complete Mismatch: " + candidate.Value + " - " + annotation);
+                            }
                     }
-                    else if (strAnnotation.Contains(tempCandidate))
-                    {
-                        //System.Console.WriteLine("'WHAT' Under-extracted: " + candidate.Value + " - " + annotation);
-                    }
-                    else if (tempCandidate.Contains(strAnnotation))
-                    {
-                        //System.Console.WriteLine("'WHAT' Over-extracted: " + candidate.Value + " - " + annotation);
-                    }
-                    else
-                    {
-                        //System.Console.WriteLine("'WHAT' Complete Mismatch: " + candidate.Value + " - " + annotation);
-                    }
-                }
 
-                statistics[0] = totalMatch ? 1 : 0;
-                statistics[1] = (totalMatch ? 1 : 0) / listWhatCandidates.Count;
+                    statistics[0] = totalMatch ? 1 : 0;
+                    statistics[1] = statistics[0] / listWhatCandidates.Count;
+                }
             }
             else if (annotationType == "WHY")
             {
-                foreach (var candidate in listWhyCandidates)
+                if (strAnnotation != "")
                 {
-                    var tempCandidate = string.Join("", candidate.Select(x => x.Value).ToArray());
+                    statistics[2] = 1;
+                    foreach (var candidate in listWhyCandidates)
+                    {
+                        var tempCandidate = string.Join("", candidate.Select(x => x.Value).ToArray());
+                        tempCandidate = rgx.Replace(tempCandidate, "");
+                        if (tempCandidate == strAnnotation)
+                        {
+                            totalMatch = true;
+                            break;
+                        }
+                        else if (strAnnotation.Contains(tempCandidate))
+                        {
+                            //System.Console.WriteLine("'WHY' Under-extracted: " + candidate.Value + " - " + annotation);
+                        }
+                        else if (tempCandidate.Contains(strAnnotation))
+                        {
+                            //System.Console.WriteLine("'WHY' Over-extracted: " + candidate.Value + " - " + annotation);
+                        }
+                        else
+                        {
+                            //System.Console.WriteLine("'WHY' Complete Mismatch: " + candidate.Value + " - " + annotation);
+                        }
+                    }
 
-                    if (tempCandidate == strAnnotation)
-                    {
-                        totalMatch = true;
-                        break;
-                    }
-                    else if (strAnnotation.Contains(tempCandidate))
-                    {
-                        //System.Console.WriteLine("'WHY' Under-extracted: " + candidate.Value + " - " + annotation);
-                    }
-                    else if (tempCandidate.Contains(strAnnotation))
-                    {
-                        //System.Console.WriteLine("'WHY' Over-extracted: " + candidate.Value + " - " + annotation);
-                    }
-                    else
-                    {
-                        //System.Console.WriteLine("'WHY' Complete Mismatch: " + candidate.Value + " - " + annotation);
-                    }
+                    statistics[0] = totalMatch ? 1 : 0;
+                    statistics[1] = statistics[0] / listWhyCandidates.Count;
                 }
-
-                statistics[0] = totalMatch ? 1 : 0;
-                statistics[1] = (totalMatch ? 1 : 0) / listWhyCandidates.Count;
             }
 
             return statistics;

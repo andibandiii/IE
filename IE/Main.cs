@@ -323,9 +323,15 @@ namespace IE
                 float recallWhen = 0;
                 float precisionWhere = 0;
                 float recallWhere = 0;
+                float precisionWhat = 0;
+                float recallWhat = 0;
+                float precisionWhy = 0;
+                float recallWhy = 0;
                 float totalWho = 0;
                 float totalWhen = 0;
                 float totalWhere = 0;
+                float totalWhat = 0;
+                float totalWhy = 0;
                 //Temporarily set to 2 because getting all articles takes longer run time
                 for (int nI = 0; nI < listCurrentArticles.Count; nI++)
                 {
@@ -348,30 +354,44 @@ namespace IE
                         recallWho += statistics[0][0];
                         recallWhen += statistics[1][0];
                         recallWhere += statistics[2][0];
+                        recallWhat += statistics[3][0];
+                        recallWhy += statistics[4][0];
                         precisionWho += statistics[0][1];
                         precisionWhen += statistics[1][1];
                         precisionWhere += statistics[2][1];
+                        precisionWhat += statistics[3][1];
+                        precisionWhy += statistics[4][1];
                         totalWho += statistics[0][2];
                         totalWhen += statistics[1][2];
                         totalWhere += statistics[2][2];
+                        totalWhat += statistics[3][2];
+                        totalWhy += statistics[4][2];
                     }
 
                     System.Console.WriteLine("Article #{0}", nI + 1);
                     System.Console.WriteLine("Recall Who: " + statistics[0][0]);
                     System.Console.WriteLine("Recall When: " + statistics[1][0]);
                     System.Console.WriteLine("Recall Where: " + statistics[2][0]);
+                    System.Console.WriteLine("Recall What: " + statistics[3][0]);
+                    System.Console.WriteLine("Recall Why: " + statistics[4][0]);
                     System.Console.WriteLine("Precision Who: " + statistics[0][1]);
                     System.Console.WriteLine("Precision When: " + statistics[1][1]);
                     System.Console.WriteLine("Precision Where: " + statistics[2][1]);
+                    System.Console.WriteLine("Precision What: " + statistics[3][1]);
+                    System.Console.WriteLine("Precision Why: " + statistics[4][1]);
                 }
 
                 System.Console.WriteLine("Average Statistics");
                 System.Console.WriteLine("Recall Who: " + recallWho / totalWho);
                 System.Console.WriteLine("Recall When: " + recallWhen / totalWhen);
                 System.Console.WriteLine("Recall Where: " + recallWhere / totalWhere);
+                System.Console.WriteLine("Recall What: " + recallWhat / totalWhat);
+                System.Console.WriteLine("Recall Why: " + recallWhy / totalWhy);
                 System.Console.WriteLine("Precision Who: " + precisionWho / totalWho);
                 System.Console.WriteLine("Precision When: " + precisionWhen / totalWhere);
                 System.Console.WriteLine("Precision Where: " + precisionWhere / totalWhen);
+                System.Console.WriteLine("Precision What: " + precisionWhat / totalWhat);
+                System.Console.WriteLine("Precision Why: " + precisionWhy / totalWhy);
             }
             else
             {

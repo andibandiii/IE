@@ -347,12 +347,12 @@ namespace IE
                         CARRY_OVER = 0.5;
                     }
 
-                    System.Console.WriteLine("---------");
+                    /*System.Console.WriteLine("---------");
                     System.Console.WriteLine("Candidate: \t{0}\nMarker: \t{1}\nWeight: \t{2}", 
                         tempWhy, 
                         match != null ? match[0] : "N/A", 
                         tempWeight);
-
+                    */
                     candidateWeights.Add(tempWeight);
 
                     if (tempWeight > highestWeight)
@@ -362,10 +362,11 @@ namespace IE
                     }
                 }
             }
-
+            /*
             System.Console.WriteLine("---------");
             System.Console.WriteLine("WHY: {0}", 
                 strWhy);
+            */
         }
         #endregion
 

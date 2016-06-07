@@ -62,8 +62,16 @@ namespace IE
         {
             List<Annotation> annotationList = new List<Annotation>();
 
+            String xmlContents = "";
+            using (StreamReader streamReader = new StreamReader(path, Encoding.UTF8))
+            {
+                xmlContents = streamReader.ReadToEnd();
+            }
+            xmlContents = WebUtility.HtmlDecode(xmlContents);
+            xmlContents = xmlContents.Replace("&", "&amp;");
+
             XmlDocument doc = new XmlDocument();
-            doc.Load(path);
+            doc.LoadXml(xmlContents);
 
             XmlNodeList articleNodes = doc.DocumentElement.SelectNodes("/data/article");
 

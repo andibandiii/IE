@@ -39,7 +39,7 @@ namespace IE
             {
                 i = getCandidateByNer("PER", i, candidates, tokenizedArticle);
                 i = getCandidateByNer("ORG", i, candidates, tokenizedArticle);
-                getCandidateByMarkers(startMarkers, endMarkers, enderMarkers, i, temporaryCandidates, tokenizedArticle, true);
+                getCandidateByMarkers(startMarkers, endMarkers, enderMarkers, null, null, i, temporaryCandidates, tokenizedArticle, true);
 
                 if (tokenizedArticle[i].Sentence > 3)
                 {
@@ -110,7 +110,7 @@ namespace IE
 
             foreach (var candidate in candidates)
             {
-                System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
+                //System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
             }
 
             return candidates;
@@ -128,19 +128,27 @@ namespace IE
             String[][] endMarkersExclusive = new String[][] { new String[] { "para"},
                 new String[] { ",", "."},
                 new String[] { "ay"},
-                new String[] { ",", "."},
-                new String[] { ",", "."},
+                new String[] { "ay",",", "."},
+                new String[] { "ay",",", "."},
                 new String[] { "ay", "upang", ",", "."} };
+            String[][] enderPOSTypeExclusive = new String[][] { new String[] { "VB" },
+                new String[] { "VB" },
+                new String[] { "VB"},
+                new String[] { "VB"},
+                new String[] { "VB"},
+                new String[] { "VB" } };
             String[] startMarkersInclusive = new String[] { "kamakalawa",
                 "kamakala-wa" };
             String[][] endMarkersInclusive = new String[][] { new String[] { "gabi", "umaga", "hapon" },
                 new String[] { "gabi", "umaga", "hapon" } };
+            String[][] enderPOSTypeInclusive = new String[][] { new String[] { "VB" },
+                new String[] { "VB" } };
             String[] gazette = new String[] { "kahapon" };
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
                 i = getCandidateByNer("DATE", i, candidates, tokenizedArticle);
-                getCandidateByMarkers(startMarkersExclusive, endMarkersExclusive, null, i, candidates, tokenizedArticle, true);
-                getCandidateByMarkers(startMarkersInclusive, endMarkersInclusive, null, i, candidates, tokenizedArticle, false);
+                getCandidateByMarkers(startMarkersExclusive, endMarkersExclusive, null, null, enderPOSTypeExclusive, i, candidates, tokenizedArticle, true);
+                getCandidateByMarkers(startMarkersInclusive, endMarkersInclusive, null, null, enderPOSTypeInclusive, i, candidates, tokenizedArticle, false);
                 getCandidateByGazette(gazette, i, candidates, tokenizedArticle);
 
                 if (tokenizedArticle[i].Sentence > 3)
@@ -191,10 +199,15 @@ namespace IE
                 new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas","oras"},
                 new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas","oras"},
                 new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas","oras"} };
+            String[][] enderPOSType = new String[5][] { new String[] { "VB" },
+                new String[] { "VB" },
+                new String[] { "VB"},
+                new String[] { "VB"},
+                new String[] { "VB" } };
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
                 i = getCandidateByNer("LOC", i, candidates, tokenizedArticle);
-                getCandidateByMarkers(startMarkers, endMarkers, enderMarkers, i, candidates, tokenizedArticle, true);
+                getCandidateByMarkers(startMarkers, endMarkers, enderMarkers, null, enderPOSType, i, candidates, tokenizedArticle, true);
 
                 if (tokenizedArticle[i].Sentence > 3)
                 {
@@ -218,10 +231,10 @@ namespace IE
                 }
             }
 
-            //foreach (var candidate in candidates)
-            //{
-            //    //System.Console.WriteLine("WHERE CANDIDATE " + candidate.Value);
-            //}
+            foreach (var candidate in candidates)
+            {
+                System.Console.WriteLine("WHERE CANDIDATE " + candidate.Value);
+            }
 
             return candidates;
         }
@@ -292,7 +305,7 @@ namespace IE
             return i;
         }
 
-        private void getCandidateByMarkers(String[] startMarkers, String[][] endMarkers, String[][] enderMarkers, int i, List<Candidate> candidates, List<Token> tokenizedArticle, Boolean isExclusive)
+        private void getCandidateByMarkers(String[] startMarkers, String[][] endMarkers, String[][] enderMarkers, String[][] enderPOS, String[][] enderPOSType, int i, List<Candidate> candidates, List<Token> tokenizedArticle, Boolean isExclusive)
         {
 
             for (int j = 0; j < startMarkers.Length; j++)
@@ -319,6 +332,33 @@ namespace IE
                                 endMarkerFound = true;
                                 flag = false;
                                 break;
+                            }
+                        }
+                        if (enderPOS != null)
+                        {
+                            foreach (String POS in enderPOS[j])
+                            {
+                                if (tokenizedArticle[i].PartOfSpeech.Equals(POS, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    flag = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (enderPOSType != null)
+                        {
+                            if (tokenizedArticle[i].PartOfSpeech == null)
+                            {
+                                flag = false;
+                                break;
+                            }                                
+                            foreach (String Type in enderPOSType[j])
+                            {
+                                if (tokenizedArticle[i].PartOfSpeech.StartsWith(Type))
+                                {
+                                    flag = false;
+                                    break;
+                                }
                             }
                         }
                         if (enderMarkers != null)
