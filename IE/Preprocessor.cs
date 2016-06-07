@@ -265,7 +265,7 @@ namespace IE
         #region Annotation Preprocessing Functions
         private float[] performSingleAnnotationAssignment(String annotationType)
         {
-            float[] statistics = new float[3] { 0, 0, 0 }; //[0] = recall, [1] = precision, [2]  total
+            float[] statistics = new float[4] { 0, 0, 0, -1 }; //[0] = recall, [1] = precision, [2]  total, [3] sentence number
             Boolean totalMatch = false;
             annotationType = annotationType.ToUpper();
             String strAnnotation = "";
@@ -292,30 +292,26 @@ namespace IE
                     {
                         var tempCandidate = string.Join("", candidate.Select(x => x.Value).ToArray());
                         tempCandidate = rgx.Replace(tempCandidate, "");
-                        tempCandidate = tempCandidate.Replace("-LRB- ", "(");
-                        tempCandidate = tempCandidate.Replace(" -RRB-", ")");
-                        tempCandidate = tempCandidate.Replace(" . ", ".");
-                        tempCandidate = tempCandidate.Replace(" .", ".");
-                        tempCandidate = tempCandidate.Replace(" ,", ",");
-                        tempCandidate = tempCandidate.Replace(" !", "!");
-                        if (strAnnotation != "")
-                            if (tempCandidate == strAnnotation)
-                            {
-                                totalMatch = true;
-                                break;
-                            }
-                            else if (strAnnotation.Contains(tempCandidate))
-                            {
-                                //System.Console.WriteLine("'WHAT' Under-extracted: " + candidate.Value + " - " + annotation);
-                            }
-                            else if (tempCandidate.Contains(strAnnotation))
-                            {
-                                //System.Console.WriteLine("'WHAT' Over-extracted: " + candidate.Value + " - " + annotation);
-                            }
-                            else
-                            {
-                                //System.Console.WriteLine("'WHAT' Complete Mismatch: " + candidate.Value + " - " + annotation);
-                            }
+                        if (tempCandidate == strAnnotation)
+                        {
+                            totalMatch = true;
+                            statistics[3] = candidate.ElementAt(0).Sentence;
+                            break;
+                        }
+                        else if (strAnnotation.Contains(tempCandidate))
+                        {
+                            statistics[3] = candidate.ElementAt(0).Sentence;
+                            //System.Console.WriteLine("'WHAT' Under-extracted: " + candidate.Value + " - " + annotation);
+                        }
+                        else if (tempCandidate.Contains(strAnnotation))
+                        {
+                            statistics[3] = candidate.ElementAt(0).Sentence;
+                            //System.Console.WriteLine("'WHAT' Over-extracted: " + candidate.Value + " - " + annotation);
+                        }
+                        else
+                        {
+                            //System.Console.WriteLine("'WHAT' Complete Mismatch: " + candidate.Value + " - " + annotation);
+                        }
                     }
 
                     statistics[0] = totalMatch ? 1 : 0;
@@ -334,14 +330,17 @@ namespace IE
                         if (tempCandidate == strAnnotation)
                         {
                             totalMatch = true;
+                            statistics[3] = candidate.ElementAt(0).Sentence;
                             break;
                         }
                         else if (strAnnotation.Contains(tempCandidate))
                         {
+                            statistics[3] = candidate.ElementAt(0).Sentence;
                             //System.Console.WriteLine("'WHY' Under-extracted: " + candidate.Value + " - " + annotation);
                         }
                         else if (tempCandidate.Contains(strAnnotation))
                         {
+                            statistics[3] = candidate.ElementAt(0).Sentence;
                             //System.Console.WriteLine("'WHY' Over-extracted: " + candidate.Value + " - " + annotation);
                         }
                         else
