@@ -39,7 +39,7 @@ namespace IE
             {
                 i = getCandidateByNer("PER", i, candidates, tokenizedArticle);
                 i = getCandidateByNer("ORG", i, candidates, tokenizedArticle);
-                getCandidateByMarkers(startMarkers, endMarkers, enderMarkers, null, null, i, temporaryCandidates, tokenizedArticle, true);
+                getCandidateByMarkers(null, startMarkers, endMarkers, enderMarkers, null, null, i, temporaryCandidates, tokenizedArticle, true);
 
                 if (tokenizedArticle[i].Sentence > 3)
                 {
@@ -119,6 +119,11 @@ namespace IE
         public List<Candidate> performWhenCandidateSelection(List<Token> tokenizedArticle, String articleTitle)
         {
             List<Candidate> candidates = new List<Candidate>();
+            String[] generalStopWords = new string[] { "mga", 
+                "dahil",
+                "dahilan",
+                "subalit",
+                };
             String[] startMarkersExclusive = new String[] { "ang",
                 "mula",
                 "na",
@@ -126,11 +131,11 @@ namespace IE
                 "nuong",
                 "sa" };
             String[][] endMarkersExclusive = new String[][] { new String[] { "para"},
-                new String[] { ",", "."},
-                new String[] { "ay"},
-                new String[] { "ay",",", "."},
-                new String[] { "ay",",", "."},
-                new String[] { "ay", "upang", ",", "."} };
+                new String[] { "para", ",", "."},
+                new String[] { "para", "ay" },
+                new String[] { "para", "ay",",", "."},
+                new String[] { "para", "ay",",", "."},
+                new String[] { "para", "ay", "upang", ",", ".", "na"} };
             String[][] enderPOSTypeExclusive = new String[][] { new String[] { "VB" },
                 new String[] { "VB" },
                 new String[] { "VB"},
@@ -138,17 +143,20 @@ namespace IE
                 new String[] { "VB"},
                 new String[] { "VB" } };
             String[] startMarkersInclusive = new String[] { "kamakalawa",
-                "kamakala-wa" };
+                "kamakala-wa",
+                "ngayong"};
             String[][] endMarkersInclusive = new String[][] { new String[] { "gabi", "umaga", "hapon" },
+                new String[] { "gabi", "umaga", "hapon" },
                 new String[] { "gabi", "umaga", "hapon" } };
             String[][] enderPOSTypeInclusive = new String[][] { new String[] { "VB" },
+                new String[] { "VB" },
                 new String[] { "VB" } };
             String[] gazette = new String[] { "kahapon" };
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
                 i = getCandidateByNer("DATE", i, candidates, tokenizedArticle);
-                getCandidateByMarkers(startMarkersExclusive, endMarkersExclusive, null, null, enderPOSTypeExclusive, i, candidates, tokenizedArticle, true);
-                getCandidateByMarkers(startMarkersInclusive, endMarkersInclusive, null, null, enderPOSTypeInclusive, i, candidates, tokenizedArticle, false);
+                getCandidateByMarkers(generalStopWords, startMarkersExclusive, endMarkersExclusive, null, null, enderPOSTypeExclusive, i, candidates, tokenizedArticle, true);
+                getCandidateByMarkers(generalStopWords, startMarkersInclusive, endMarkersInclusive, null, null, enderPOSTypeInclusive, i, candidates, tokenizedArticle, false);
                 getCandidateByGazette(gazette, i, candidates, tokenizedArticle);
 
                 if (tokenizedArticle[i].Sentence > 3)
@@ -184,6 +192,10 @@ namespace IE
         public List<Candidate> performWhereCandidateSelection(List<Token> tokenizedArticle, String articleTitle)
         {
             List<Candidate> candidates = new List<Candidate>();
+            String[] generalStopWords = new string[] { "dahil",
+                "dahilan",
+                "subalit",
+                };
             String[] startMarkers = new String[5] { "ang",
                 "nasa",
                 "noong",
@@ -193,7 +205,7 @@ namespace IE
                 new String[] { "para"},
                 new String[] { "."},
                 new String[] { "."},
-                new String[] { "para", "noong", "nuong","sa","kamakalawa","kamakala-wa","."} };
+                new String[] { "para", "noong", "nuong","sa","kamakalawa","kamakala-wa",".", "na"} };
             String[][] enderMarkers = new String[5][] { new String[] { },
                 new String[] { },
                 new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas","oras"},
@@ -207,7 +219,7 @@ namespace IE
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
                 i = getCandidateByNer("LOC", i, candidates, tokenizedArticle);
-                getCandidateByMarkers(startMarkers, endMarkers, enderMarkers, null, enderPOSType, i, candidates, tokenizedArticle, true);
+                getCandidateByMarkers(generalStopWords, startMarkers, endMarkers, enderMarkers, null, enderPOSType, i, candidates, tokenizedArticle, true);
 
                 if (tokenizedArticle[i].Sentence > 3)
                 {
@@ -305,9 +317,16 @@ namespace IE
             return i;
         }
 
-        private void getCandidateByMarkers(String[] startMarkers, String[][] endMarkers, String[][] enderMarkers, String[][] enderPOS, String[][] enderPOSType, int i, List<Candidate> candidates, List<Token> tokenizedArticle, Boolean isExclusive)
+        private void getCandidateByMarkers(String[] generalStopWords, String[] startMarkers, String[][] endMarkers, String[][] enderMarkers, String[][] enderPOS, String[][] enderPOSType, int i, List<Candidate> candidates, List<Token> tokenizedArticle, Boolean isExclusive)
         {
-
+            /*
+            generalStopWords are words that stops a phrase from being a candidate for all start markers
+            startMarkers starts the possibility of a phrase from being a candidate
+            endMarkers determines the end of the candidate (different per startMarker)
+            enderMarkers contains words that stops the phrase from being a candidate if found (different per startMarker)
+            enderPOS contains POS that stops the phrase from being a candidate (different per startMarker)
+            enderPOSType contains POS Type e.g VB for all verbs that stops the phrase from being a candidate (different per startMarker)
+            */
             for (int j = 0; j < startMarkers.Length; j++)
             {
                 if (tokenizedArticle[i].Value.Equals(startMarkers[j], StringComparison.OrdinalIgnoreCase))
@@ -332,6 +351,17 @@ namespace IE
                                 endMarkerFound = true;
                                 flag = false;
                                 break;
+                            }
+                        }
+                        if (generalStopWords != null)
+                        {
+                            foreach (String stopWords in generalStopWords)
+                            {
+                                if (tokenizedArticle[i].Value.Equals(stopWords, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    flag = false;
+                                    break;
+                                }
                             }
                         }
                         if (enderPOS != null)
