@@ -123,19 +123,20 @@ namespace IE
                 "dahil",
                 "dahilan",
                 "subalit",
-                };
+                "makaraang",
+                "naglalayong" };
             String[] startMarkersExclusive = new String[] { "ang",
                 "mula",
                 "na",
                 "noong",
                 "nuong",
                 "sa" };
-            String[][] endMarkersExclusive = new String[][] { new String[] { "para"},
-                new String[] { "para", ",", "."},
-                new String[] { "para", "ay" },
-                new String[] { "para", "ay",",", "."},
-                new String[] { "para", "ay",",", "."},
-                new String[] { "para", "ay", "upang", ",", ".", "na"} };
+            String[][] endMarkersExclusive = new String[][] { new String[] { "para", "upang"},
+                new String[] { "upang", "para", ",", "."},
+                new String[] { "upang", "para", "ay" },
+                new String[] { "upang", "para", "ay",",", "."},
+                new String[] { "upang", "para", "ay",",", "."},
+                new String[] { "para", "ay", "upang", ",", "."} };
             String[][] enderPOSTypeExclusive = new String[][] { new String[] { "VB" },
                 new String[] { "VB" },
                 new String[] { "VB"},
@@ -205,7 +206,7 @@ namespace IE
                 new String[] { "para"},
                 new String[] { "."},
                 new String[] { "."},
-                new String[] { "para", "noong", "nuong","sa","kamakalawa","kamakala-wa",".", "na"} };
+                new String[] { "para", "noong", "nuong","sa","kamakalawa","kamakala-wa","."} };
             String[][] enderMarkers = new String[5][] { new String[] { },
                 new String[] { },
                 new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas","oras"},
@@ -442,12 +443,14 @@ namespace IE
                                 tempWs = tokenizedArticle[k].Frequency;
                             }
                         }
-                        var newToken = new Candidate(strValue, tokenizedArticle[startIndex].Position, tokenizedArticle[endIndex].Position - tokenizedArticle[startIndex].Position);
-                        newToken.Sentence = tokenizedArticle[startIndex].Sentence;
-                        newToken.NamedEntity = tokenizedArticle[endIndex].NamedEntity;
-                        newToken.PartOfSpeech = tokenizedArticle[endIndex].PartOfSpeech;
-                        newToken.Frequency = tempWs;
-                        candidates.Add(newToken);
+                        if (strValue != null) {
+                            var newToken = new Candidate(strValue, tokenizedArticle[startIndex].Position, tokenizedArticle[endIndex].Position - tokenizedArticle[startIndex].Position);
+                            newToken.Sentence = tokenizedArticle[startIndex].Sentence;
+                            newToken.NamedEntity = tokenizedArticle[endIndex].NamedEntity;
+                            newToken.PartOfSpeech = tokenizedArticle[endIndex].PartOfSpeech;
+                            newToken.Frequency = tempWs;
+                            candidates.Add(newToken);
+                        }
 
                         //System.Console.WriteLine("CANDIDATE BY MARKERS: {0}"/*\n\t{1}*/, newToken.Value/*, posValue*/);
                     }
