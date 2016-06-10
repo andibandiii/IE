@@ -79,12 +79,10 @@ namespace IE
 
                 if (isAnnotated)
                 {
-                    Trainer whoTrainer = new WhoTrainer();
-                    Trainer whenTrainer = new WhenTrainer();
-                    Trainer whereTrainer = new WhereTrainer();
-                    whoTrainer.trainMany(listTokenizedArticles, listAllWhoCandidates);
-                    whenTrainer.trainMany(listTokenizedArticles, listAllWhenCandidates);
-                    whereTrainer.trainMany(listTokenizedArticles, listAllWhereCandidates);
+                    Trainer trainer = new Trainer();
+                    trainer.trainMany("who", listTokenizedArticles, listAllWhoCandidates);
+                    trainer.trainMany("when", listTokenizedArticles, listAllWhenCandidates);
+                    trainer.trainMany("where", listTokenizedArticles, listAllWhereCandidates);
                 }
             }
 
