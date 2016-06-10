@@ -382,6 +382,8 @@ namespace IE
                         int sentenceNumber = (int)statistics[3][3];
                         switch (sentenceNumber)
                         {
+                            case -1:
+                                break;
                             case 0:
                                 sentenceZeroWhat += 1;
                                 break;
@@ -400,10 +402,15 @@ namespace IE
                             case 5:
                                 sentenceFiveWhat += 1;
                                 break;
+                            default:
+                                sentenceFiveWhat += 1;
+                                break;
                         }
                         sentenceNumber = (int)statistics[4][3];
                         switch (sentenceNumber)
                         {
+                            case -1:
+                                break;
                             case 0:
                                 sentenceZeroWhy += 1;
                                 break;
@@ -420,6 +427,9 @@ namespace IE
                                 sentenceFourWhy += 1;
                                 break;
                             case 5:
+                                sentenceFiveWhy += 1;
+                                break;
+                            default:
                                 sentenceFiveWhy += 1;
                                 break;
                         }
@@ -455,14 +465,14 @@ namespace IE
                 System.Console.WriteLine("Sentence 2: " + sentenceTwoWhat + " Percentage: " + sentenceTwoWhat / totalWhat);
                 System.Console.WriteLine("Sentence 3: " + sentenceThreeWhat + " Percentage: " + sentenceThreeWhat / totalWhat);
                 System.Console.WriteLine("Sentence 4: " + sentenceFourWhat + " Percentage: " + sentenceFourWhat / totalWhat);
-                System.Console.WriteLine("Sentence 5: " + sentenceFiveWhat + " Percentage: " + sentenceFiveWhat / totalWhat);
+                System.Console.WriteLine("Sentence >= 5: " + sentenceFiveWhat + " Percentage: " + sentenceFiveWhat / totalWhat);
                 System.Console.WriteLine("Why sentence location :");
                 System.Console.WriteLine("Sentence 0: " + sentenceZeroWhy + " Percentage: " + sentenceZeroWhy / totalWhy);
                 System.Console.WriteLine("Sentence 1: " + sentenceOneWhy + " Percentage: " + sentenceOneWhy / totalWhy);
                 System.Console.WriteLine("Sentence 2: " + sentenceTwoWhy + " Percentage: " + sentenceTwoWhy / totalWhy);
                 System.Console.WriteLine("Sentence 3: " + sentenceThreeWhy + " Percentage: " + sentenceThreeWhy / totalWhy);
                 System.Console.WriteLine("Sentence 4: " + sentenceFourWhy + " Percentage: " + sentenceFourWhy / totalWhy);
-                System.Console.WriteLine("Sentence 5: " + sentenceFiveWhy + " Percentage: " + sentenceFiveWhy / totalWhy);
+                System.Console.WriteLine("Sentence >= 5: " + sentenceFiveWhy + " Percentage: " + sentenceFiveWhy / totalWhy);
             }
             else
             {

@@ -286,7 +286,7 @@ namespace IE
             {
                 if (strAnnotation != "")
                 {
-
+                    System.Console.WriteLine("WHAT Annotation: " + strAnnotation);
                     statistics[2] = 1;
                     foreach (var candidate in listWhatCandidates)
                     {
@@ -322,6 +322,7 @@ namespace IE
             {
                 if (strAnnotation != "")
                 {
+                    System.Console.WriteLine("WHY Annotation: " + strAnnotation);
                     statistics[2] = 1;
                     foreach (var candidate in listWhyCandidates)
                     {
@@ -377,6 +378,7 @@ namespace IE
                     strAnnotation = annotationCurrent.Who;
                     if (strAnnotation != null)
                     {
+                        System.Console.WriteLine("WHO Annotation: " + strAnnotation);
                         assignmentMethod = annotation =>
                         {
                             foreach (var candidate in listWhoCandidates)
@@ -410,6 +412,7 @@ namespace IE
                     strAnnotation = annotationCurrent.When;
                     if (strAnnotation != null)
                     {
+                        System.Console.WriteLine("WHEN Annotation: " + strAnnotation);
                         assignmentMethod = annotation =>
                         {
                             foreach (var candidate in listWhenCandidates)
@@ -443,6 +446,7 @@ namespace IE
                     strAnnotation = annotationCurrent.Where;
                     if (strAnnotation != null)
                     {
+                        System.Console.WriteLine("WHERE Annotation: " + strAnnotation);
                         assignmentMethod = annotation =>
                         {
                             foreach (var candidate in listWhereCandidates)
