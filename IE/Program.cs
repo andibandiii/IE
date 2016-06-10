@@ -95,6 +95,7 @@ namespace IE
                 annotationIdentifier.setWhereCandidates(listAllWhereCandidates[nI]);
                 annotationIdentifier.setWhatCandidates(listAllWhatCandidates[nI]);
                 annotationIdentifier.setWhyCandidates(listAllWhyCandidates[nI]);
+                annotationIdentifier.setTitle(listCurrentArticles[nI].Title);
                 annotationIdentifier.labelAnnotations();
                 listAllWhoAnnotations.Add(annotationIdentifier.getWho());
                 listAllWhenAnnotations.Add(annotationIdentifier.getWhen());

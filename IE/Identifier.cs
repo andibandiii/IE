@@ -418,10 +418,28 @@ namespace IE
         }
         #endregion
 
+        private const int whoWordsBefore = 6;
+        private const int whoWordsAfter = 3;
+        private const int whenWordsBefore = 8;
+        private const int whenWordsAfter = 1;
+        private const int whereWordsBefore = 10;
+        private const int whereWordsAfter = 10;
+
         #region Single Instance Creation
         private Instance createSingleWhoInstance(FastVector fvWho, Token candidate)
         {
-            Instance whoCandidate = new DenseInstance(25);
+            //first word-n attribute number
+            int wordsBeforeFirstAttributeNumber = 6;
+            //first pos-n attribute number
+            int posBeforeFirstAttributeNumber = wordsBeforeFirstAttributeNumber + whoWordsBefore + whoWordsAfter;
+            //word+1 attribute number
+            int wordsAfterFirstAttributeNumber = wordsBeforeFirstAttributeNumber + whoWordsBefore;
+            //pos+1 attribute number
+            int posAfterFirstAttributeNumber = posBeforeFirstAttributeNumber + whoWordsBefore;
+
+            int totalAttributeCount = wordsBeforeFirstAttributeNumber + whoWordsBefore * 2 + whoWordsAfter * 2 + 1;
+
+            Instance whoCandidate = new DenseInstance(totalAttributeCount);
             whoCandidate.setValue((weka.core.Attribute)fvWho.elementAt(0), candidate.Value);
             whoCandidate.setValue((weka.core.Attribute)fvWho.elementAt(1), candidate.Value.Split(' ').Count());
             whoCandidate.setValue((weka.core.Attribute)fvWho.elementAt(2), candidate.Sentence);
@@ -440,25 +458,26 @@ namespace IE
                 whoCandidate.setValue((weka.core.Attribute)fvWho.elementAt(4), sentenceStartProximity);
             }
             whoCandidate.setValue((weka.core.Attribute)fvWho.elementAt(5), candidate.Frequency);
-            for (int i = 6; i > 0; i--)
+
+            for (int i = whoWordsBefore; i > 0; i--)
             {
                 if (candidate.Position - i - 1 >= 0)
                 {
-                    whoCandidate.setValue((weka.core.Attribute)fvWho.elementAt(6 - i + 6), articleCurrent[candidate.Position - i - 1].Value);
+                    whoCandidate.setValue((weka.core.Attribute)fvWho.elementAt(whoWordsBefore - i + wordsBeforeFirstAttributeNumber), articleCurrent[candidate.Position - i - 1].Value);
                     if (articleCurrent[candidate.Position - i - 1].PartOfSpeech != null)
                     {
-                        whoCandidate.setValue((weka.core.Attribute)fvWho.elementAt(6 - i + 15), articleCurrent[candidate.Position - i - 1].PartOfSpeech);
+                        whoCandidate.setValue((weka.core.Attribute)fvWho.elementAt(whoWordsBefore - i + posBeforeFirstAttributeNumber), articleCurrent[candidate.Position - i - 1].PartOfSpeech);
                     }
                 }
             }
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < whoWordsAfter; i++)
             {
                 if (candidate.Position + i < articleCurrent.Count)
                 {
-                    whoCandidate.setValue((weka.core.Attribute)fvWho.elementAt(12 + i), articleCurrent[candidate.Position + i].Value);
+                    whoCandidate.setValue((weka.core.Attribute)fvWho.elementAt(wordsAfterFirstAttributeNumber + i), articleCurrent[candidate.Position + i].Value);
                     if (articleCurrent[candidate.Position + i].PartOfSpeech != null)
                     {
-                        whoCandidate.setValue((weka.core.Attribute)fvWho.elementAt(21 + i), articleCurrent[candidate.Position + i].PartOfSpeech);
+                        whoCandidate.setValue((weka.core.Attribute)fvWho.elementAt(posAfterFirstAttributeNumber + i), articleCurrent[candidate.Position + i].PartOfSpeech);
                     }
                 }
             }
@@ -467,7 +486,18 @@ namespace IE
 
         private Instance createSingleWhenInstance(FastVector fvWhen, Token candidate)
         {
-            Instance whenCandidate = new DenseInstance(25);
+            //first word-n attribute number
+            int wordsBeforeFirstAttributeNumber = 6;
+            //first pos-n attribute number
+            int posBeforeFirstAttributeNumber = wordsBeforeFirstAttributeNumber + whenWordsBefore + whenWordsAfter;
+            //word+1 attribute number
+            int wordsAfterFirstAttributeNumber = wordsBeforeFirstAttributeNumber + whenWordsBefore;
+            //pos+1 attribute number
+            int posAfterFirstAttributeNumber = posBeforeFirstAttributeNumber + whenWordsBefore;
+
+            int totalAttributeCount = wordsBeforeFirstAttributeNumber + whenWordsBefore * 2 + whenWordsAfter * 2 + 1;
+
+            Instance whenCandidate = new DenseInstance(totalAttributeCount);
             whenCandidate.setValue((weka.core.Attribute)fvWhen.elementAt(0), candidate.Value);
             whenCandidate.setValue((weka.core.Attribute)fvWhen.elementAt(1), candidate.Value.Split(' ').Count());
             whenCandidate.setValue((weka.core.Attribute)fvWhen.elementAt(2), candidate.Sentence);
@@ -486,25 +516,25 @@ namespace IE
                 whenCandidate.setValue((weka.core.Attribute)fvWhen.elementAt(4), sentenceStartProximity);
             }
             whenCandidate.setValue((weka.core.Attribute)fvWhen.elementAt(5), candidate.Frequency);
-            for (int i = 8; i > 0; i--)
+            for (int i = whenWordsBefore; i > 0; i--)
             {
                 if (candidate.Position - i - 1 >= 0)
                 {
-                    whenCandidate.setValue((weka.core.Attribute)fvWhen.elementAt(8 - i + 6), articleCurrent[candidate.Position - i - 1].Value);
+                    whenCandidate.setValue((weka.core.Attribute)fvWhen.elementAt(whenWordsBefore - i + wordsBeforeFirstAttributeNumber), articleCurrent[candidate.Position - i - 1].Value);
                     if (articleCurrent[candidate.Position - i - 1].PartOfSpeech != null)
                     {
-                        whenCandidate.setValue((weka.core.Attribute)fvWhen.elementAt(8 - i + 15), articleCurrent[candidate.Position - i - 1].PartOfSpeech);
+                        whenCandidate.setValue((weka.core.Attribute)fvWhen.elementAt(whenWordsBefore - i + posBeforeFirstAttributeNumber), articleCurrent[candidate.Position - i - 1].PartOfSpeech);
                     }
                 }
             }
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < whenWordsAfter; i++)
             {
                 if (candidate.Position + i < articleCurrent.Count)
                 {
-                    whenCandidate.setValue((weka.core.Attribute)fvWhen.elementAt(14 + i), articleCurrent[candidate.Position + i].Value);
+                    whenCandidate.setValue((weka.core.Attribute)fvWhen.elementAt(wordsAfterFirstAttributeNumber + i), articleCurrent[candidate.Position + i].Value);
                     if (articleCurrent[candidate.Position + i].PartOfSpeech != null)
                     {
-                        whenCandidate.setValue((weka.core.Attribute)fvWhen.elementAt(23 + i), articleCurrent[candidate.Position + i].PartOfSpeech);
+                        whenCandidate.setValue((weka.core.Attribute)fvWhen.elementAt(posAfterFirstAttributeNumber + i), articleCurrent[candidate.Position + i].PartOfSpeech);
                     }
                 }
             }
@@ -513,7 +543,18 @@ namespace IE
 
         private Instance createSingleWhereInstance(FastVector fvWhere, Token candidate)
         {
-            Instance whereCandidate = new DenseInstance(47);
+            //first word-n attribute number
+            int wordsBeforeFirstAttributeNumber = 6;
+            //first pos-n attribute number
+            int posBeforeFirstAttributeNumber = wordsBeforeFirstAttributeNumber + whereWordsBefore + whereWordsAfter;
+            //word+1 attribute number
+            int wordsAfterFirstAttributeNumber = wordsBeforeFirstAttributeNumber + whereWordsBefore;
+            //pos+1 attribute number
+            int posAfterFirstAttributeNumber = posBeforeFirstAttributeNumber + whereWordsBefore;
+
+            int totalAttributeCount = wordsBeforeFirstAttributeNumber + whereWordsBefore * 2 + whereWordsAfter * 2 + 1;
+
+            Instance whereCandidate = new DenseInstance(totalAttributeCount);
             whereCandidate.setValue((weka.core.Attribute)fvWhere.elementAt(0), candidate.Value);
             whereCandidate.setValue((weka.core.Attribute)fvWhere.elementAt(1), candidate.Value.Split(' ').Count());
             whereCandidate.setValue((weka.core.Attribute)fvWhere.elementAt(2), candidate.Sentence);
@@ -532,25 +573,25 @@ namespace IE
                 whereCandidate.setValue((weka.core.Attribute)fvWhere.elementAt(4), sentenceStartProximity);
             }
             whereCandidate.setValue((weka.core.Attribute)fvWhere.elementAt(5), candidate.Frequency);
-            for (int i = 10; i > 0; i--)
+            for (int i = whereWordsBefore; i > 0; i--)
             {
                 if (candidate.Position - i - 1 >= 0)
                 {
-                    whereCandidate.setValue((weka.core.Attribute)fvWhere.elementAt(10 - i + 6), articleCurrent[candidate.Position - i - 1].Value);
+                    whereCandidate.setValue((weka.core.Attribute)fvWhere.elementAt(whereWordsBefore - i + wordsBeforeFirstAttributeNumber), articleCurrent[candidate.Position - i - 1].Value);
                     if (articleCurrent[candidate.Position - i - 1].PartOfSpeech != null)
                     {
-                        whereCandidate.setValue((weka.core.Attribute)fvWhere.elementAt(10 - i + 26), articleCurrent[candidate.Position - i - 1].PartOfSpeech);
+                        whereCandidate.setValue((weka.core.Attribute)fvWhere.elementAt(whereWordsBefore - i + posBeforeFirstAttributeNumber), articleCurrent[candidate.Position - i - 1].PartOfSpeech);
                     }
                 }
             }
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < whereWordsAfter; i++)
             {
                 if (candidate.Position + i < articleCurrent.Count)
                 {
-                    whereCandidate.setValue((weka.core.Attribute)fvWhere.elementAt(16 + i), articleCurrent[candidate.Position + i].Value);
+                    whereCandidate.setValue((weka.core.Attribute)fvWhere.elementAt(wordsAfterFirstAttributeNumber + i), articleCurrent[candidate.Position + i].Value);
                     if (articleCurrent[candidate.Position + i].PartOfSpeech != null)
                     {
-                        whereCandidate.setValue((weka.core.Attribute)fvWhere.elementAt(36 + i), articleCurrent[candidate.Position + i].PartOfSpeech);
+                        whereCandidate.setValue((weka.core.Attribute)fvWhere.elementAt(posAfterFirstAttributeNumber + i), articleCurrent[candidate.Position + i].PartOfSpeech);
                     }
                 }
             }
@@ -562,26 +603,26 @@ namespace IE
         #region Fast Vector Creation
         private FastVector createWhoFastVector()
         {
-            FastVector fvWho = new FastVector(25);
+            FastVector fvWho = new FastVector(7 + whoWordsBefore * 2 + whoWordsAfter * 2);
             fvWho.addElement(new weka.core.Attribute("word", (FastVector)null));
             fvWho.addElement(new weka.core.Attribute("wordCount"));
             fvWho.addElement(new weka.core.Attribute("sentence"));
             fvWho.addElement(new weka.core.Attribute("position"));
             fvWho.addElement(new weka.core.Attribute("sentenceStartProximity"));
             fvWho.addElement(new weka.core.Attribute("wordScore"));
-            for (int i = 6; i > 0; i--)
+            for (int i = whoWordsBefore; i > 0; i--)
             {
                 fvWho.addElement(new weka.core.Attribute("word-" + i, (FastVector)null));
             }
-            for (int i = 1; i <= 3; i++)
+            for (int i = 1; i <= whoWordsAfter; i++)
             {
                 fvWho.addElement(new weka.core.Attribute("word+" + i, (FastVector)null));
             }
-            for (int i = 6; i > 0; i--)
+            for (int i = whoWordsBefore; i > 0; i--)
             {
                 fvWho.addElement(new weka.core.Attribute("postag-" + i, fvPOS));
             }
-            for (int i = 1; i <= 3; i++)
+            for (int i = 1; i <= whoWordsAfter; i++)
             {
                 fvWho.addElement(new weka.core.Attribute("postag+" + i, fvPOS));
             }
@@ -594,26 +635,26 @@ namespace IE
 
         private FastVector createWhenFastVector()
         {
-            FastVector fvWhen = new FastVector(25);
+            FastVector fvWhen = new FastVector(7 + whenWordsBefore * 2 + whenWordsAfter * 2);
             fvWhen.addElement(new weka.core.Attribute("word", (FastVector)null));
             fvWhen.addElement(new weka.core.Attribute("wordCount"));
             fvWhen.addElement(new weka.core.Attribute("sentence"));
             fvWhen.addElement(new weka.core.Attribute("position"));
             fvWhen.addElement(new weka.core.Attribute("sentenceStartProximity"));
             fvWhen.addElement(new weka.core.Attribute("wordScore"));
-            for (int i = 8; i > 0; i--)
+            for (int i = whenWordsBefore; i > 0; i--)
             {
                 fvWhen.addElement(new weka.core.Attribute("word-" + i, (FastVector)null));
             }
-            for (int i = 1; i <= 1; i++)
+            for (int i = 1; i <= whenWordsAfter; i++)
             {
                 fvWhen.addElement(new weka.core.Attribute("word+" + i, (FastVector)null));
             }
-            for (int i = 8; i > 0; i--)
+            for (int i = whenWordsBefore; i > 0; i--)
             {
                 fvWhen.addElement(new weka.core.Attribute("postag-" + i, fvPOS));
             }
-            for (int i = 1; i <= 1; i++)
+            for (int i = 1; i <= whenWordsAfter; i++)
             {
                 fvWhen.addElement(new weka.core.Attribute("postag+" + i, fvPOS));
             }
@@ -626,26 +667,26 @@ namespace IE
 
         private FastVector createWhereFastVector()
         {
-            FastVector fvWhere = new FastVector(47);
+            FastVector fvWhere = new FastVector(7 + whereWordsBefore * 2 + whereWordsAfter * 2);
             fvWhere.addElement(new weka.core.Attribute("word", (FastVector)null));
             fvWhere.addElement(new weka.core.Attribute("wordCount"));
             fvWhere.addElement(new weka.core.Attribute("sentence"));
             fvWhere.addElement(new weka.core.Attribute("position"));
             fvWhere.addElement(new weka.core.Attribute("sentenceStartProximity"));
             fvWhere.addElement(new weka.core.Attribute("wordScore"));
-            for (int i = 10; i > 0; i--)
+            for (int i = whereWordsBefore; i > 0; i--)
             {
                 fvWhere.addElement(new weka.core.Attribute("word-" + i, (FastVector)null));
             }
-            for (int i = 1; i <= 10; i++)
+            for (int i = 1; i <= whereWordsAfter; i++)
             {
                 fvWhere.addElement(new weka.core.Attribute("word+" + i, (FastVector)null));
             }
-            for (int i = 10; i > 0; i--)
+            for (int i = whereWordsBefore; i > 0; i--)
             {
                 fvWhere.addElement(new weka.core.Attribute("postag-" + i, fvPOS));
             }
-            for (int i = 1; i <= 10; i++)
+            for (int i = 1; i <= whereWordsAfter; i++)
             {
                 fvWhere.addElement(new weka.core.Attribute("postag+" + i, fvPOS));
             }
