@@ -142,7 +142,7 @@
         <when>kamakalawa ng gabi</when>
         <where>Pinaglabanan Shrine sa San Juan</where>
         <what>Sinisi ni dating pangulong Joseph Estrada sa pagkakatalsik niya sa puwesto noong Enero 20 kasunod ng apat na araw na pangalawang people power revolution si Manila Archbishop Jaime Cardinal Sin at mga negosyanteng taga-Makati City</what>
-        <why>Sinasabi ni Estrada na nagalit sa kanya si Sin nang hindi niya pinagbigyan ang mga kahilingan nito</why>
+        <why>Sinabi ni Estrada na nagalit sa kanya si Sin nang hindi niya pinagbigyan ang mga kahilingan</why>
     </article>
     <article>
         <title>Nasaan si Tan?</title>
@@ -254,7 +254,7 @@
         <when />
         <where />
         <what>Tumatanggap din si Pangulong Gloria Macapagal Arroyo ng text message mula sa kanyang mga kaibigan at kakilala pero hindi niya ito sinasagot</what>
-        <why>dahil baka mawili siya ng husto rito</why>
+        <why>dahil baka mawili siya nang husto rito</why>
     </article>
     <article>
         <title>Tiglao, hinirang bilang Presidential Spokeman</title>
@@ -462,7 +462,7 @@
         <when>kahapon</when>
         <where />
         <what>Inamin kahapon ni Health Secretary Manuel Dayrit na 100 katao ang namamatay taon-taon dahil sa pag-inom ng mga pekeng gamot</what>
-        <why>dahil sa pag-inom ng pekeng gamot</why>
+        <why>dahil sa pag-inom ng mga pekeng gamot</why>
     </article>
     <article>
         <title>Jude, loyal na kay GMA</title>
@@ -638,7 +638,7 @@
         <when>this is N/A</when>
         <where />
         <what>Hiningi ni Pangulong Gloria Macapagal-Arroyo sa mga kababayan niyang Kapampangan na iregalo nila sa kanyang ika-54 na kaarawan ang 13-0 boto para sa mga pinili niyang kandidatong senador ng makaadministrasyong People Power Coalition</what>
-        <why>ang ganap na suporta ng mga Kapampangan sa kanyang mga piniling kandidato ang titiyak sa mabilis na pagsulong ng gobyerno sa mga proyektoong pangkaunlaran ng kanyang administrasyon</why>
+        <why>ang ganap na suporta ng mga Kapampangan sa kanyang mga piniling kandidato ang titiyak sa mabilis na pagsusulong ng gobyerno sa mga proyektong pangkaunlaran ng kanyang administrasyon.</why>
     </article>
     <article>
         <title>AFP, PNP, magtutulong sa pagbabaklas ng Posters</title>
@@ -654,7 +654,7 @@
         <when />
         <where>kahabaan ng Epifanio delos Santos Avenue at ibang bahagi ng Metro Manila</where>
         <what>Pagtutulungan ng Philippine National Police at ng Armed Forces of the Philippines ang pagbabaklas ng mga poster ng mga kandidato sa lokal at pambansang halalan na nakadikit sa mga lugar na hindi saklaw ng common poster areas na idineklara ng Commission on Elections</what>
-        <why>nais lang nilang makatulong sa Comelec para mabawasan ang mga problems nito dahil sa katigasan ng ulo ng mga supporter ng ilang kandidato na nagdidikit ng nasabing mga poster</why>
+        <why>nais lang nilang makatulong sa Comelec para mabawasan ang mga problema nito dahil sa katigasan ng ulo ng mga supporter ng ilang kandidato na nagdidikit ng nasabing mga poster</why>
     </article>
     <article>
         <title>Blackout sa Luzon</title>
@@ -990,7 +990,7 @@
         <when>kahapon; Bandang alas-5:20 ng hapon</when>
         <where>Pilipinas</where>
         <what>Dumating kahapon sa Pilipinas ang mga miyembro ng panel ng National Democratic Front na kasali sa usapang pangkapayapaan na isinusulong ng pamahalaan</what>
-        <why>Dadalo rin ang NDF panel sa solidarity conference na hiniling ng National Council of Churches kaugnay ng usapang pangkapayapaan. </why>
+        <why>Dadalo rin ang NDF panel sa solidarity conference na hiniling ng National Council of Churches kaugnay ng usapang pangkapayapaan</why>
     </article>
     <article>
         <title>Reklamo sa kandidato ipinauubaya sa kalaban</title>
@@ -1101,7 +1101,7 @@
         <who>National Democratic Front</who>
         <when>Abril 27 ng taong ito</when>
         <where />
-        <what>Nakahanda ang pamunuan ng National Democratic Front (NDF) na magdeklara ng nationwide ceasefire kung ito ang mapagkakasunduan sa pagpapatuloy ng naudlot na peace talks sa darating na Abril 27 ng taong ito.</what>
+        <what>Nakahanda ang pamunuan ng National Democratic Front (NDF) na magdeklara ng nationwide ceasefire kung ito ang mapagkakasunduan sa pagpapatuloy ng naudlot na peace talks sa darating na Abril 27 ng taong ito</what>
         <why />
     </article>
     <article>
@@ -1534,7 +1534,7 @@
         <when />
         <where>Jolo</where>
         <what>Nagsanib na ang puwersa ng Army, Navy at Marines para masagip si Roland Ullah, ang Pilipino na natitirang bihag ng mga bandidong Abu Sayyaf sa Jolo</what>
-        <why>inamin ng militar na mas mahihirapan silang mabawi si Ulah dahil inaasahang lalong maghihigpit dito ang Abu Sayyaf</why>
+        <why>Inamin ng militar na mas mahihirapan silang mabawi si Ullah dahil inaasahang lalong maghihigpit dito ang Abu Sayyaf</why>
     </article>
     <article>
         <title>Alok na ceasefire itinanggi ng Palasyo</title>
@@ -1678,7 +1678,7 @@
         <when>kahapon</when>
         <where />
         <what>Hiniling ni Norwegian Ambassador Tal Moe kay Vice President at Foreign Affairs Secretary Teofisto Guingona na linawin ang papel ng kanyang bansa sa usapang pangkapayapaan ng pamahalaan at ng National Democratic Front</what>
-        <why>bagaman ipararating niya sa kanyang pamahalaan ang kahilingan ng Pilipinas na idaos ang peace talk sa Norway, kailangan nila ng detalye</why>
+        <why>bagaman ipaparating niya sa kanyang pamahalaan ang kahilingan ng Pilipinas na idaos ang peace talk sa Norway, kailangan nila ng detalye</why>
     </article>
     <article>
         <title>Berroya, hinirang bilang hepe ng PNP intel</title>
@@ -1816,12 +1816,12 @@
             <day>19</day>
             <year>2001</year>
         </date>
-        <body>Hindi pa lutas ang misteryosong pagdukot at brutal na pagpatay kay PR man Salvador "Bubby" Dacer at sa driver nitong si Emmanuel Corbito hanggat hindi pa naaaresto ang utak sa krimen. Ito ang nagkakaisang pahayag kahapon nina Justice Secretary Hernando Perez, PNP Chief Director General Leandro Mendoza at National Bureau of Investigation (NBI) Director Reynaldo Wycoco matapos iprisinta sa mediamen ang pitong tauhan at civilian assets ng PAOCTF. Boluntaryong sumuko upang magpa-imbestiga ang mga suspek na sina SPO4 Marino Soberano, SPO1 Mauro Torres,Chief Insp. Bobby Lancaon at ang mga civilian assets na sina Crisostomo Purificacion,Renato Malabanan, Jovencio Malabanan at Rommel Rollan. Ibinulgar rin ng mga opisyal na taong 1999 pa plinano ang pagdukot kay Dacer subalit noong Nobyembre ng nakalipas na taon ito naisakatuparan. Nagpalabas na rin ng hold departure order si Immigration Commissioner Andrea Domingo laban sa mga boluntaryong sumuko at kina Senior Supt. Michael Ray Aquino,Supt.Teofilo Vina, Supt. Glen Dumlao, Insp. Vicente Soberano at SPO3 Jose Escalante. Samantala, isa pang suspek sa Dacer ang sumuko kahapon sa NBI dahil sa takot na siya ang isunod na dukutin at ipapatay ng mga utak sa nasabing krimen. Kinumpirma kahapon ni Wycoco, na sumuko sa kanila si William Lopez (kapatid ni Jimmy Lopez na kasama sa unang naaresto ng NBI at naging state witness). Bagamat hawak ng NBI si Lopez ay hindi pa ito nagbibigay sa kanila ng pahayag kung sino ang utak sa pagdukot at pagpatay kay Dacer at Corbito. Nagpahayag naman si Perez na kanilang aarestuhin ang isang mataas na opisyal ng bansa na may kinalaman sa pagpatay at pagdukot kina Dacer at Corbito bago sumapit ang eleksyon sa Mayo. (Ulat nina Joy Cantos at Ellen Fernando)</body>
+        <body>Hindi pa lutas ang misteryosong pagdukot at brutal na pagpatay kay PR man Salvador "Bubby" Dacer at sa driver nitong si Emmanuel Corbito hanggat hindi pa naaaresto ang utak sa krimen. Ito ang nagkakaisang pahayag kahapon nina Justice Secretary Hernando Perez, PNP Chief Director General Leandro Mendoza at National Bureau of Investigation (NBI) Director Reynaldo Wycoco matapos iprisinta sa mediamen ang pitong tauhan at civilian assets ng PAOCTF. Boluntaryong sumuko upang magpa-imbestiga ang mga suspek na sina SPO4 Marino Soberano, SPO1 Mauro Torres,P/Chief Insp. Bobby Lancaon at ang mga civilian assets na sina Crisostomo Purificacion,Renato Malabanan, Jovencio Malabanan at Rommel Rollan. Ibinulgar rin ng mga opisyal na taong 1999 pa plinano ang pagdukot kay Dacer subalit noong Nobyembre ng nakalipas na taon ito naisakatuparan. Nagpalabas na rin ng hold departure order si Immigration Commissioner Andrea Domingo laban sa mga boluntaryong sumuko at kina P/Senior Supt. Michael Ray Aquino,P/Supt.Teofilo Vina, P/Supt. Glen Dumlao, C/Insp. Vicente Soberano at SPO3 Jose Escalante. Samantala, isa pang suspek sa Dacer ang sumuko kahapon sa NBI dahil sa takot na siya ang isunod na dukutin at ipapatay ng mga utak sa nasabing krimen. Kinumpirma kahapon ni Wycoco, na sumuko sa kanila si William Lopez (kapatid ni Jimmy Lopez na kasama sa unang naaresto ng NBI at naging state witness). Bagamat hawak ng NBI si Lopez ay hindi pa ito nagbibigay sa kanila ng pahayag kung sino ang utak sa pagdukot at pagpatay kay Dacer at Corbito. Nagpahayag naman si Perez na kanilang aarestuhin ang isang mataas na opisyal ng bansa na may kinalaman sa pagpatay at pagdukot kina Dacer at Corbito bago sumapit ang eleksyon sa Mayo. (Ulat nina Joy Cantos at Ellen Fernando)</body>
         <link>http://www.philstar.com/Article.aspx?articleId=126402publicationSubCategoryId=92</link>
         <who>Hernando Perez; Leandro Mendoza; Reynaldo Wycoco</who>
         <when />
         <where />
-        <what>hindi pa lutas ang misteryosong pagdukot at brutal na pagpatay kay PR man Salvador "Bubby" Dacer at sa driver nitong si Emmanuel Corbito hanggat hindi pa naaaresto ang utak sa krimen</what>
+        <what>Hindi pa lutas ang misteryosong pagdukot at brutal na pagpatay kay PR man Salvador "Bubby" Dacer at sa driver nitong si Emmanuel Corbito hanggat hindi pa naaaresto ang utak sa krimen</what>
         <why />
     </article>
     <article>
@@ -1886,7 +1886,7 @@
         <when />
         <where />
         <what>Kumambiyo ang Malacanang sa desisyong magkaroon ng taas sa binabayarang buwanang kontribusyon ng mga miyembro ng Social Security System kapalit ng pagtaas ng benepisyo para sa 23 milyong miyembro</what>
-        <why>wala pinal na desisyon sa isyu at kailangan dito ang masusing pag-aaral sa magiging epekto nito </why>
+        <why>walang pinal na desisyon sa isyu at kailangan dito ang masusing pag-aaral sa magiging epekto nito</why>
     </article>
     <article>
         <title>25% nakapasa sa Bar exam</title>

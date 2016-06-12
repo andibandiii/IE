@@ -110,7 +110,7 @@ namespace IE
 
             foreach (var candidate in candidates)
             {
-                //System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
+                System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
             }
 
             return candidates;
@@ -124,6 +124,15 @@ namespace IE
                 "dahilan",
                 "subalit",
                 "makaraang",
+                "kaya",
+                "kung",
+                "kapag",
+                "ngunit",
+                "palibhassa",
+                "sapagkat",
+                "sana",
+                "kundi",
+                "ni",
                 "naglalayong" };
             String[] startMarkersExclusive = new String[] { "ang",
                 "mula",
@@ -182,10 +191,10 @@ namespace IE
                 }
             }
 
-            //foreach (var candidate in candidates)
-            //{
-            //    //System.Console.WriteLine("WHEN CANDIDATE " + candidate.Value);
-            //}
+            foreach (var candidate in candidates)
+            {
+                //System.Console.WriteLine("WHEN CANDIDATE " + candidate.Value);
+            }
 
             return candidates;
         }
@@ -193,34 +202,62 @@ namespace IE
         public List<Candidate> performWhereCandidateSelection(List<Token> tokenizedArticle, String articleTitle)
         {
             List<Candidate> candidates = new List<Candidate>();
-            String[] generalStopWords = new string[] { "dahil",
+            String[] generalStopWords = new String[] { "dahil",
+                "dahil",
                 "dahilan",
                 "subalit",
-                };
-            String[] startMarkers = new String[5] { "ang",
+                "makaraang",
+                "kaya",
+                "kung",
+                "kapag",
+                "ngunit",
+                "palibhassa",
+                "sapagkat",
+                "sana",
+                "kundi",
+                "ni",
+                "naglalayong",
+                "Enero",
+                "January",
+                "Pebrero",
+                "February",
+                "Marso",
+                "March",
+                "April",
+                "Abril",
+                "Mayo",
+                "May",
+                "Hunyo",
+                "June",
+                "Hulyo",
+                "July",
+                "Agosto",
+                "August",
+                "Setyembre",
+                "September",
+                "Oktubre",
+                "October",
+                "Nobyembre",
+                "November",
+                "Disyembre",
+                "December" };
+            String[] startMarkers = new String[3] { "ang",
                 "nasa",
-                "noong",
-                "nuong",
                 "sa" };
-            String[][] endMarkers = new String[5][] { new String[] { "ay", "."},
+            String[][] endMarkers = new String[3][] { new String[] { "ay"},
                 new String[] { "para"},
-                new String[] { "."},
-                new String[] { "."},
-                new String[] { "para", "noong", "nuong","sa","kamakalawa","kamakala-wa","."} };
-            String[][] enderMarkers = new String[5][] { new String[] { },
+                new String[] { "mula", "para", "noong", "nuong","sa","kamakalawa","kamakala-wa","."} };
+            String[][] enderMarkers = new String[3][] { new String[] { },
                 new String[] { },
-                new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas","oras"},
-                new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas","oras"},
                 new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas","oras"} };
-            String[][] enderPOSType = new String[5][] { new String[] { "VB" },
+            String[][] enderPOSType = new String[3][] { new String[] { "VB" },
                 new String[] { "VB" },
-                new String[] { "VB"},
-                new String[] { "VB"},
                 new String[] { "VB" } };
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
-                i = getCandidateByNer("LOC", i, candidates, tokenizedArticle);
                 getCandidateByMarkers(generalStopWords, startMarkers, endMarkers, enderMarkers, null, enderPOSType, i, candidates, tokenizedArticle, true);
+                i = getCandidateByNer("LOC", i, candidates, tokenizedArticle);
+                //getCandidateByMarkers(generalStopWords, startMarkers, endMarkers, enderMarkers, null, enderPOSType, i, candidates, tokenizedArticle, true);
 
                 if (tokenizedArticle[i].Sentence > 3)
                 {
@@ -297,7 +334,14 @@ namespace IE
                 while ((i + 1) < tokenizedArticle.Count && tokenizedArticle[i].NamedEntity == tokenizedArticle[i + 1].NamedEntity)
                 {
                     i++;
-                    strValue += " " + tokenizedArticle[i].Value;
+                    if (tokenizedArticle[i].Value.Equals(",") || tokenizedArticle[i].Value.Equals("."))
+                    {
+                        strValue += tokenizedArticle[i].Value;
+                    }
+                    else
+                    {
+                        strValue += " " + tokenizedArticle[i].Value;
+                    }
                     if (tokenizedArticle[i].Frequency > tempWs)
                     {
                         tempWs = tokenizedArticle[i].Frequency;
@@ -332,17 +376,19 @@ namespace IE
             {
                 if (tokenizedArticle[i].Value.Equals(startMarkers[j], StringComparison.OrdinalIgnoreCase))
                 {
-                    if (isExclusive)
-                    {
-                        i++;
-                    }
-                    int startIndex = i;
                     int sentenceNumber = tokenizedArticle[i].Sentence;
                     String strValue = null;
                     String posValue = null;
+                    if (!isExclusive)
+                    {
+                        strValue = tokenizedArticle[i].Value;
+                        posValue = tokenizedArticle[i].PartOfSpeech;
+                    }
                     int tempWs = 0;
                     Boolean flag = true;
                     Boolean endMarkerFound = false;
+                    i++;
+                    int startIndex = i;
                     while (flag)
                     {
                         foreach (String markers in endMarkers[j])
