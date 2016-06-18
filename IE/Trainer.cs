@@ -34,6 +34,11 @@ namespace IE
             listTokenizedArticle = new List<Token>();
             listCandidates = new List<Candidate>();
             posTags = "{" + String.Join(",", Token.PartOfSpeechTags) + "}";
+            reinitializeInstances();   
+        }
+
+        private void reinitializeInstances()
+        {
             noInstances = new List<String>();
             yesInstances = new List<String>();
         }
@@ -50,6 +55,8 @@ namespace IE
 
         public void trainMany(String wFeature, List<List<Token>> pTokenizedArticleList, List<List<Candidate>> pAllCandidateLists)
         {
+            reinitializeInstances();
+
             string path = @"..\..\" + CultureInfo.CurrentCulture.TextInfo.ToTitleCase(wFeature.ToLower()) + ".arff";
             string lowerWFeature = wFeature.ToLower();
 
