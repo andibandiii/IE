@@ -241,18 +241,22 @@ namespace IE
                 "November",
                 "Disyembre",
                 "December" };
-            String[] startMarkers = new String[3] { "ang",
+            String[] startMarkers = new String[] { "ang",
                 "nasa",
-                "sa" };
-            String[][] endMarkers = new String[3][] { new String[] { "ay"},
+                "sa" ,
+                "ng"};
+            String[][] endMarkers = new String[][] { new String[] { "ay"},
                 new String[] { "para"},
-                new String[] { "mula", "para", "noong", "nuong","sa","kamakalawa","kamakala-wa","."} };
-            String[][] enderMarkers = new String[3][] { new String[] { },
+                new String[] { "mula", "para", "noong", "nuong","sa","kamakalawa","kamakala-wa","kamakailan","kahapon",".","ang","ay"},
+                new String[] { "para"} };
+            String[][] enderMarkers = new String[][] { new String[] { },
                 new String[] { },
+                new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas","oras"},
                 new String[] { "sabado", "hapon","umaga","gabi","miyerkules","lunes","martes","huwebes","linggo","biyernes","alas","oras"} };
-            String[][] enderPOSType = new String[3][] { new String[] { "VB" },
+            String[][] enderPOSType = new String[][] { new String[] { "VB" },
                 new String[] { "VB" },
-                new String[] { "VB" } };
+                new String[] { "VB" },
+                new String[] { "VB" }};
             for (int i = 0; i < tokenizedArticle.Count; i++)
             {
                 getCandidateByMarkers(generalStopWords, startMarkers, endMarkers, enderMarkers, null, enderPOSType, i, candidates, tokenizedArticle, true);
