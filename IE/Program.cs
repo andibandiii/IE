@@ -58,7 +58,7 @@ namespace IE
                 Preprocessor preprocessor = new Preprocessor();
 
                 //Temporarily set to 2 because getting all articles takes longer run time
-                for (int nI = 0; nI < 30; nI++)
+                for (int nI = 0; nI < listCurrentArticles.Count; nI++)
                 {
                     preprocessor.setCurrentArticle(listCurrentArticles[nI]);
                     preprocessor.preprocess();
@@ -79,17 +79,68 @@ namespace IE
 
                 if (isAnnotated)
                 {
-                    Trainer whoTrainer = new WhoTrainer();
-                    Trainer whenTrainer = new WhenTrainer();
-                    Trainer whereTrainer = new WhereTrainer();
-                    whoTrainer.trainMany(listTokenizedArticles, listAllWhoCandidates);
-                    whenTrainer.trainMany(listTokenizedArticles, listAllWhenCandidates);
-                    whereTrainer.trainMany(listTokenizedArticles, listAllWhereCandidates);
+                    Trainer trainer = new Trainer();
+                    trainer.trainMany("who", listTokenizedArticles, listAllWhoCandidates);
+                    trainer.trainMany("when", listTokenizedArticles, listAllWhenCandidates);
+                    trainer.trainMany("where", listTokenizedArticles, listAllWhereCandidates);
                 }
             }
 
+            /*Candidate Selection Printer*/
+            /*try
+            {
+                var whoCandidatesPath = @"..\..\candidates_who.txt";
+                var whenCandidatesPath = @"..\..\candidates_when.txt";
+                var whereCandidatesPath = @"..\..\candidates_where.txt";
+
+                if (File.Exists(whoCandidatesPath)) File.Delete(whoCandidatesPath);
+                if (File.Exists(whenCandidatesPath)) File.Delete(whenCandidatesPath);
+                if (File.Exists(whereCandidatesPath)) File.Delete(whereCandidatesPath);
+
+                using (StreamWriter sw = File.CreateText(whoCandidatesPath))
+                {
+                    for (int nI = 0; nI < listAllWhoCandidates.Count; nI++)
+                    {
+                        sw.WriteLine("#{0}:", nI);
+                        foreach (var candidate in listAllWhoCandidates[nI])
+                        {
+                            sw.Write(candidate.Value + ", ");
+                        }
+                        sw.WriteLine("\n");
+                    }
+                }
+                using (StreamWriter sw = File.CreateText(whenCandidatesPath))
+                {
+                    for (int nI = 0; nI < listAllWhenCandidates.Count; nI++)
+                    {
+                        sw.WriteLine("#{0}:", nI);
+                        foreach (var candidate in listAllWhenCandidates[nI])
+                        {
+                            sw.Write(candidate.Value + ", ");
+                        }
+                        sw.WriteLine("\n");
+                    }
+                }
+                using (StreamWriter sw = File.CreateText(whereCandidatesPath))
+                {
+                    for (int nI = 0; nI < listAllWhereCandidates.Count; nI++)
+                    {
+                        sw.WriteLine("#{0}:", nI);
+                        foreach (var candidate in listAllWhereCandidates[nI])
+                        {
+                            sw.Write(candidate.Value + ", ");
+                        }
+                        sw.WriteLine("\n");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                System.Console.WriteLine("Error with writing initial line of training dataset.");
+            }*/
+
             Identifier annotationIdentifier = new Identifier();
-            for (int nI = 0; nI < 30; nI++)
+            for (int nI = 0; nI < listCurrentArticles.Count; nI++)
             {
                 annotationIdentifier.setCurrentArticle(listTokenizedArticles[nI]);
                 annotationIdentifier.setWhoCandidates(listAllWhoCandidates[nI]);
@@ -97,6 +148,7 @@ namespace IE
                 annotationIdentifier.setWhereCandidates(listAllWhereCandidates[nI]);
                 annotationIdentifier.setWhatCandidates(listAllWhatCandidates[nI]);
                 annotationIdentifier.setWhyCandidates(listAllWhyCandidates[nI]);
+                annotationIdentifier.setTitle(listCurrentArticles[nI].Title);
                 annotationIdentifier.labelAnnotations();
                 listAllWhoAnnotations.Add(annotationIdentifier.getWho());
                 listAllWhenAnnotations.Add(annotationIdentifier.getWhen());
