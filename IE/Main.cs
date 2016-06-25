@@ -359,7 +359,7 @@ namespace IE
                     listAllWhatCandidates.Add(preprocessor.getWhatCandidates());
                     listAllWhyCandidates.Add(preprocessor.getWhyCandidates());
 
-                    preprocessor.setCurrentAnnotation(listCurrentTrainingAnnotations[nI]);
+                    /*preprocessor.setCurrentAnnotation(listCurrentTrainingAnnotations[nI]);
                     statistics = preprocessor.performAnnotationAssignment();
 
                     if (statistics != null)
@@ -445,7 +445,7 @@ namespace IE
                     System.Console.WriteLine("Precision When: " + statistics[1][1]);
                     System.Console.WriteLine("Precision Where: " + statistics[2][1]);
                     System.Console.WriteLine("Precision What: " + statistics[3][1]);
-                    System.Console.WriteLine("Precision Why: " + statistics[4][1]);
+                    System.Console.WriteLine("Precision Why: " + statistics[4][1]);*/
                 }
 
                 System.Console.WriteLine("Average Statistics");

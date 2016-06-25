@@ -34,6 +34,11 @@ namespace IE
             listTokenizedArticle = new List<Token>();
             listCandidates = new List<Candidate>();
             posTags = "{" + String.Join(",", Token.PartOfSpeechTags) + "}";
+            reinitializeInstances();   
+        }
+
+        private void reinitializeInstances()
+        {
             noInstances = new List<String>();
             yesInstances = new List<String>();
         }
@@ -50,6 +55,8 @@ namespace IE
 
         public void trainMany(String wFeature, List<List<Token>> pTokenizedArticleList, List<List<Candidate>> pAllCandidateLists)
         {
+            reinitializeInstances();
+
             string path = @"..\..\" + CultureInfo.CurrentCulture.TextInfo.ToTitleCase(wFeature.ToLower()) + ".arff";
             string lowerWFeature = wFeature.ToLower();
 
@@ -186,7 +193,7 @@ namespace IE
                     /*!!
                      * INITIAL ATTRIBUTES
                      */
-                    str = "\"" + value.Replace("\"", "'") + "\",";
+                    str = "\"" + value.Replace("\"", "\\\"") + "\",";
                     str += wordcount + ",";
                     str += sentence + ",";
                     str += position + ",";
@@ -205,14 +212,14 @@ namespace IE
                     }
                     while (ctrBefore < position)
                     {
-                        str += "\"" + listTokenizedArticle[ctrBefore - 1].Value.Replace("\"", "'") + "\",";
+                        str += "\"" + listTokenizedArticle[ctrBefore - 1].Value.Replace("\"", "\\\"") + "\",";
                         ctrBefore++;
                     }
                     for (int c = 0; c < afterCount; c++)
                     {
                         if (endIndex + c < listTokenizedArticle.Count)
                         {
-                            str += "\"" + listTokenizedArticle[endIndex + c].Value.Replace("\"", "'") + "\",";
+                            str += "\"" + listTokenizedArticle[endIndex + c].Value.Replace("\"", "\\\"") + "\",";
                         }
                         else
                         {

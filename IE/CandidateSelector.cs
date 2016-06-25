@@ -110,6 +110,10 @@ namespace IE
 
             foreach (var candidate in candidates)
             {
+                candidate.Value = candidate.Value.Replace("`` ", "\"");
+                candidate.Value = candidate.Value.Replace("``", "\"");
+                candidate.Value = candidate.Value.Replace(" ''", "\"");
+                candidate.Value = candidate.Value.Replace("''", "\"");
                 System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
             }
 
@@ -193,6 +197,10 @@ namespace IE
 
             foreach (var candidate in candidates)
             {
+                candidate.Value = candidate.Value.Replace("`` ", "\"");
+                candidate.Value = candidate.Value.Replace("``", "\"");
+                candidate.Value = candidate.Value.Replace(" ''", "\"");
+                candidate.Value = candidate.Value.Replace("''", "\"");
                 //System.Console.WriteLine("WHEN CANDIDATE " + candidate.Value);
             }
 
@@ -287,7 +295,11 @@ namespace IE
 
             foreach (var candidate in candidates)
             {
-                System.Console.WriteLine("WHERE CANDIDATE " + candidate.Value);
+                candidate.Value = candidate.Value.Replace("`` ", "\"");
+                candidate.Value = candidate.Value.Replace("``", "\"");
+                candidate.Value = candidate.Value.Replace(" ''", "\"");
+                candidate.Value = candidate.Value.Replace("''", "\"");
+                //System.Console.WriteLine("WHERE CANDIDATE " + candidate.Value);
             }
 
             return candidates;
