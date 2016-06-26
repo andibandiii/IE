@@ -257,7 +257,7 @@ namespace IE
             }
 
             System.Console.WriteLine("---------");
-            System.Console.WriteLine("WHAT: {0}", 
+            System.Console.WriteLine("WHAT: {0}",
                 strWhat);
         }
 
@@ -269,14 +269,21 @@ namespace IE
             //double WEIGHT_PER_CHAR = 0.01;
             //double WEIGHT_PER_SENTENCE = 0;
             double CARRY_OVER = 0;
-            
+
             String[][] markers = new String[][] {
+                new String[] { "dahil sa", "START" },
                 new String[] { "dahil", "START" },
                 new String[] { "para", "START" },
                 new String[] { "upang", "START" },
                 new String[] { "makaraang", "START" },
                 new String[] { "naglalayong", "START" },
                 new String[] { "kaya", "END" }
+            };
+
+            string[] endMarkers = new string[]
+            {
+                " makaraang ",
+                ", ",
             };
 
             String[] verbMarkers = new String[]
@@ -303,7 +310,7 @@ namespace IE
                     String[] match;
                     bool hasWhat = false;
                     bool hasMarker = false;
-                    
+
                     tempWhy = String.Join(" ", candidate.Select(token => token.Value).ToArray());
                     tempWhy = tempWhy.Replace("-LRB- ", "(");
                     tempWhy = tempWhy.Replace(" -RRB-", ")");
@@ -312,27 +319,37 @@ namespace IE
                     tempWhy = tempWhy.Replace(" ,", ",");
                     tempWhy = tempWhy.Replace(" !", "!");
 
-                    if(tempWhy.Contains(strWhat))
+                    if (tempWhy.Contains(strWhat))
                     {
                         tempWeight += WEIGHT_PER_WHAT;
                         hasWhat = true;
                     }
-                    
+
                     match = markers.FirstOrDefault(s => tempWhy.Contains(s[0]));
 
-                    if(match != null)
+                    if (match != null)
                     {
                         tempWhy = (match[1].Equals("START")) ?
                             tempWhy.Substring(tempWhy.IndexOf(match[0]) + match[0].Count() + 1) :
                             tempWhy.Substring(0, tempWhy.IndexOf(match[0]));
                         tempWeight += WEIGHT_PER_MARKER;
                         hasMarker = true;
+
+                        if (match[1].Equals("START"))
+                        {
+                            string endMatch = endMarkers.FirstOrDefault(s => tempWhy.Contains(s));
+
+                            if (endMatch != null)
+                            {
+                                tempWhy = tempWhy.Substring(0, tempWhy.IndexOf(endMatch));
+                            }
+                        }
                     }
 
                     tempWeight += CARRY_OVER;
                     CARRY_OVER = 0;
 
-                    if(strWhat.Contains(tempWhy))
+                    if (strWhat.Contains(tempWhy))
                     {
                         tempWeight = 0;
                     }
@@ -342,7 +359,7 @@ namespace IE
                     //    tempWeight += WEIGHT_PER_VERB_MARKER;
                     //}
 
-                    if(strWhat.Equals(tempWhy))
+                    if (strWhat.Equals(tempWhy))
                     {
                         CARRY_OVER = 0.5;
                     }
