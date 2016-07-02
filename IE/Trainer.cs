@@ -25,7 +25,7 @@ namespace IE
         /*!!
          * NUMBER OF NO INSTANCES IN PROPORTION TO YES INSTANCES
          */
-        private const int noToYesCount = 3;
+        private double noToYesCount = 3;
 
         private string posTags;
 
@@ -35,6 +35,11 @@ namespace IE
             listCandidates = new List<Candidate>();
             posTags = "{" + String.Join(",", Token.PartOfSpeechTags) + "}";
             reinitializeInstances();   
+        }
+
+        public void setNoToYesCount(double noToYesCount)
+        {
+            this.noToYesCount = noToYesCount;
         }
 
         private void reinitializeInstances()
@@ -53,11 +58,11 @@ namespace IE
             listCandidates = pCandidates;
         }
 
-        public void trainMany(String wFeature, List<List<Token>> pTokenizedArticleList, List<List<Candidate>> pAllCandidateLists)
+        public void trainMany(String wFeature, List<List<Token>> pTokenizedArticleList, List<List<Candidate>> pAllCandidateLists, String fileNameAddition = "")
         {
             reinitializeInstances();
 
-            string path = @"..\..\" + CultureInfo.CurrentCulture.TextInfo.ToTitleCase(wFeature.ToLower()) + ".arff";
+            string path = @"..\..\" + CultureInfo.CurrentCulture.TextInfo.ToTitleCase(wFeature.ToLower()) + fileNameAddition + ".arff";
             string lowerWFeature = wFeature.ToLower();
 
             if (pTokenizedArticleList.Count != pAllCandidateLists.Count ||
@@ -127,7 +132,7 @@ namespace IE
                         sw.WriteLine(yes);
                     }
 
-                    for (int i = 0; i < Math.Min(noInstances.Count, yesInstances.Count * noToYesCount); i++)
+                    for (int i = 0; i < Math.Min(noInstances.Count, ((double)yesInstances.Count) * noToYesCount); i++)
                     {
                         sw.WriteLine(noInstances[i]);
                     }
@@ -194,6 +199,7 @@ namespace IE
                      * INITIAL ATTRIBUTES
                      */
                     str = "\"" + value.Replace("\"", "\\\"") + "\",";
+                    //str = "";
                     str += wordcount + ",";
                     str += sentence + ",";
                     str += position + ",";
