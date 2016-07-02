@@ -67,7 +67,7 @@ namespace IE
                 for (int currentIndex = candidate.Position - 1; currentIndex < candidate.Position + candidate.Length - 1; currentIndex++)
                 {
                     //Console.WriteLine(tokenizedArticle[currentIndex].PartOfSpeech);
-                    if (tokenizedArticle[currentIndex].PartOfSpeech != null && tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("V") || tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("PR") || tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("RB"))
+                    if (tokenizedArticle[currentIndex].PartOfSpeech != null && (tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("V") || tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("PR") || tokenizedArticle[currentIndex].PartOfSpeech.StartsWith("RB")))
                     {
                         Console.WriteLine(tokenizedArticle[currentIndex].PartOfSpeech);
                         candidateWeight = 0;
