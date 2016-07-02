@@ -151,22 +151,22 @@ namespace IE
         {
             Instances whoInstances = createWhoInstances();
 
-            for (int i = 0; i < whoInstances.size(); i++)
+            /*for (int i = 0; i < whoInstances.size(); i++)
             {
                 double[] classProbability = whoClassifier.distributionForInstance(whoInstances.get(i));
                 if (classProbability[0] >= classProbability[1])
                 {
                     listWho.Add(listWhoCandidates[i].Value == null ? "" : listWhoCandidates[i].Value);
                 }
+            }*/
+            foreach (Instance instance in whoInstances)
+            {
+                double[] classProbability = whoClassifier.distributionForInstance(instance);
+                if (classProbability[0] >= classProbability[1])
+                {
+                    listWho.Add(instance.stringValue(0));
+                }
             }
-            //foreach (Instance instance in whoInstances)
-            //{
-            //    double[] classProbability = whoClassifier.distributionForInstance(instance);
-            //    if (classProbability[0] >= classProbability[1])
-            //    {
-            //        listWho.Add(instance.stringValue(0));
-            //    }
-            //}
         }
 
         private void labelWhen()
