@@ -279,13 +279,24 @@ namespace IE
             double CARRY_OVER = 0;
 
             String[][] markers = new String[][] {
-                new String[] { "dahil sa", "START" },
-                new String[] { "dahil", "START" },
-                new String[] { "para", "START" },
-                new String[] { "upang", "START" },
-                new String[] { "makaraang", "START" },
-                new String[] { "naglalayong", "START" },
-                new String[] { "kaya", "END" }
+                new String[] { " sanhi sa ", "START" },
+                new String[] { " sanhi ng ", "START" },
+                new String[] { " sapagkat ", "START" },
+                new String[] { " palibhasa ay ", "START" },
+                new String[] { " palibhasa ", "START" },
+                new String[] { " kasi ", "START" },
+                new String[] { " mangyari'y ", "START" },
+                new String[] { " mangyari ay ", "START" },
+                new String[] { " dahil sa ", "START" },
+                new String[] { " dahil na rin sa ", "START" },
+                new String[] { " dahil ", "START" },
+                new String[] { " dahilan sa", "START" },
+                new String[] { " dahilan ", "START" },
+                new String[] { " para ", "START" },
+                new String[] { " upang ", "START" },
+                new String[] { " makaraang ", "START" },
+                new String[] { " naglalayong ", "START" },
+                new String[] { " kaya ", "END" }
             };
 
             string[] endMarkers = new string[]
@@ -338,7 +349,7 @@ namespace IE
                     if (match != null)
                     {
                         tempWhy = (match[1].Equals("START")) ?
-                            tempWhy.Substring(tempWhy.IndexOf(match[0]) + match[0].Count() + 1) :
+                            tempWhy.Substring(tempWhy.IndexOf(match[0]) + match[0].Count()) :
                             tempWhy.Substring(0, tempWhy.IndexOf(match[0]));
                         tempWeight += WEIGHT_PER_MARKER;
                         hasMarker = true;

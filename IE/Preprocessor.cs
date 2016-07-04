@@ -178,6 +178,7 @@ namespace IE
             "Prof",
             "Rev",
             "Pres",
+            "Sec",
             "Sr",
             "Fr",
             "St",
