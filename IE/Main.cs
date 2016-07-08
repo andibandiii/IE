@@ -310,9 +310,9 @@ namespace IE
             List<String> listAllWhatAnnotations = new List<String>();
             List<String> listAllWhyAnnotations = new List<String>();
 
-            List<Annotation> listCurrentTrainingAnnotations = new List<Annotation>();
+            //List<Annotation> listCurrentTrainingAnnotations = new List<Annotation>();
 
-            listCurrentTrainingAnnotations = fileparserFP.parseAnnotations(sourcePaths[tabControl1.SelectedIndex]);
+            //listCurrentTrainingAnnotations = fileparserFP.parseAnnotations(sourcePaths[tabControl1.SelectedIndex]);
 
             if (listCurrentArticles != null && listCurrentArticles.Count > 0)
             {
