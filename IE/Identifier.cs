@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using weka.classifiers;
 using weka.classifiers.meta;
@@ -21,25 +22,34 @@ namespace IE
         private List<Candidate> listWhoCandidates;
         private List<Candidate> listWhenCandidates;
         private List<Candidate> listWhereCandidates;
+        private List<Candidate> listSecondaryWhyCandidates;
         private List<List<Token>> listWhatCandidates;
         private List<List<Token>> listWhyCandidates;
+        private Annotation annotationCurrent;
         private List<String> listWho;
         private List<String> listWhen;
         private List<String> listWhere;
         private String strWhat;
         private String strWhy;
         private FastVector fvPOS;
+        private Boolean isAnnotated;
+        private WhyTrainer wt;
         Classifier whoClassifier;
         Classifier whenClassifier;
         Classifier whereClassifier;
+        Classifier whyClassifier;
 
-        public Identifier()
+        public Identifier(Boolean isAnnotated, WhyTrainer wt)
         {
+            this.isAnnotated = isAnnotated;
+            this.wt = wt;
+
             listWhoCandidates = new List<Candidate>();
             listWhenCandidates = new List<Candidate>();
             listWhereCandidates = new List<Candidate>();
             listWhatCandidates = new List<List<Token>>();
             listWhyCandidates = new List<List<Token>>();
+            listSecondaryWhyCandidates = new List<Candidate>();
 
             fvPOS = new FastVector(Token.PartOfSpeechTags.Length);
             foreach (String POS in Token.PartOfSpeechTags)
@@ -52,6 +62,11 @@ namespace IE
             whereClassifier = (Classifier)SerializationHelper.read(@"..\..\IdentifierModels\where.model");
 
             initializeAnnotations();
+        }
+        
+        public void setCurrentAnnotation(Annotation pAnnotation)
+        {
+            annotationCurrent = pAnnotation;
         }
 
         private void initializeAnnotations()
@@ -322,9 +337,11 @@ namespace IE
 
             if (listWhyCandidates.Count > 0)
             {
+                bool foundMatching = false;
                 foreach (List<Token> candidate in listWhyCandidates)
                 {
                     String tempWhy = "";
+                    String copyWhy = "";
                     double tempWeight = 0;
                     String[] match;
                     bool hasWhat = false;
@@ -354,15 +371,15 @@ namespace IE
                         tempWeight += WEIGHT_PER_MARKER;
                         hasMarker = true;
 
-                        if (match[1].Equals("START"))
-                        {
-                            string endMatch = endMarkers.FirstOrDefault(s => tempWhy.Contains(s));
+                        //if (match[1].Equals("START"))
+                        //{
+                        //    string endMatch = endMarkers.FirstOrDefault(s => tempWhy.Contains(s));
 
-                            if (endMatch != null)
-                            {
-                                tempWhy = tempWhy.Substring(0, tempWhy.IndexOf(endMatch));
-                            }
-                        }
+                        //    if (endMatch != null)
+                        //    {
+                        //        tempWhy = tempWhy.Substring(0, tempWhy.IndexOf(endMatch));
+                        //    }
+                        //}
                     }
 
                     tempWeight += CARRY_OVER;
@@ -389,14 +406,104 @@ namespace IE
                         match != null ? match[0] : "N/A", 
                         tempWeight);
                     */
-                    candidateWeights.Add(tempWeight);
+                    //candidateWeights.Add(tempWeight);
 
-                    if (tempWeight > highestWeight)
+                    //if (tempWeight > highestWeight)
+                    //{
+                    //    strWhy = tempWhy;
+                    //    highestWeight = tempWeight;
+                    //}
+                    int position = candidate[0].Position + copyWhy.Substring(0, copyWhy.IndexOf(tempWhy)).Split(' ').Count() - 1;
+                    int length = tempWhy.Split(' ').Count();
+
+                    Candidate newCandidate = new Candidate(tempWhy, position, length);
+
+                    newCandidate.Sentence = candidate[0].Sentence;
+                    newCandidate.Score = tempWeight;
+                    newCandidate.NumWho = listWho.Where(tempWhy.Contains).Count();
+                    newCandidate.NumWhen = listWhen.Where(tempWhy.Contains).Count();
+                    newCandidate.NumWhere = listWhere.Where(tempWhy.Contains).Count();
+
+                    if (isAnnotated)
                     {
-                        strWhy = tempWhy;
-                        highestWeight = tempWeight;
+                        Regex rgx = new Regex("[^a-zA-Z0-9]");
+                        var candidateValue = rgx.Replace(newCandidate.Value, "");
+                        var annotationValue = rgx.Replace(annotationCurrent.Why, "");
+                        if (candidateValue == annotationValue)
+                        {
+                            newCandidate.IsWhy = true;
+                            foundMatching = true;
+                        }
+                    }
+
+                    listSecondaryWhyCandidates.Add(newCandidate);
+                }
+
+                if (isAnnotated && !foundMatching && annotationCurrent.Why.Length > 0)
+                {
+                    Preprocessor p = new Preprocessor();
+                    List<Token> tokenizedAnnotation = p.performTokenizationAndSS(annotationCurrent.Why);
+
+                    Candidate newCandidate = new Candidate(
+                        annotationCurrent.Why, 0, annotationCurrent.Why.Split(' ').Count()
+                    );
+
+                    int sentenceNumber = -1;
+                    int position = -1;
+
+                    for (int i = 0; i < articleCurrent.Count - 2; i++)
+                    {
+                        if (tokenizedAnnotation[0].Value == articleCurrent[i].Value &&
+                           (tokenizedAnnotation.Count < 2 || tokenizedAnnotation[1].Value == articleCurrent[i + 1].Value) &&
+                           (tokenizedAnnotation.Count < 3 || tokenizedAnnotation[2].Value == articleCurrent[i + 2].Value))
+                        {
+                            sentenceNumber = articleCurrent[i].Sentence;
+                            position = articleCurrent[i].Position;
+                            break;
+                        }
+                    }
+
+                    if (sentenceNumber != -1 && position != -1)
+                    {
+                        double tempWeight = 0;
+
+                        if (annotationCurrent.Why.Contains(annotationCurrent.What))
+                        {
+                            tempWeight += WEIGHT_PER_WHAT;
+                        }
+
+                        String[] match = markers.FirstOrDefault(s => annotationCurrent.Why.Contains(s[0]));
+
+                        if (match != null)
+                        {
+                            tempWeight += WEIGHT_PER_MARKER;
+                        }
+
+                        tempWeight += CARRY_OVER;
+                        CARRY_OVER = 0;
+
+                        if (annotationCurrent.What.Contains(annotationCurrent.Why))
+                        {
+                            tempWeight = 0;
+                        }
+
+                        newCandidate.Position = position;
+                        newCandidate.Sentence = sentenceNumber;
+                        newCandidate.Score = tempWeight;
+                        newCandidate.NumWho = listWho.Where(annotationCurrent.Why.Contains).Count();
+                        newCandidate.NumWhen = listWhen.Where(annotationCurrent.Why.Contains).Count();
+                        newCandidate.NumWhere = listWhere.Where(annotationCurrent.Why.Contains).Count();
+
+                        listSecondaryWhyCandidates.Add(newCandidate);
                     }
                 }
+
+                if (isAnnotated)
+                {
+                    wt.train("why", articleCurrent, listSecondaryWhyCandidates);
+                }
+
+                listSecondaryWhyCandidates = new List<Candidate>();
             }
             /*
             System.Console.WriteLine("---------");
@@ -460,6 +567,8 @@ namespace IE
         private const int whenWordsAfter = 3;
         private const int whereWordsBefore = 10;
         private const int whereWordsAfter = 10;
+        private const int whyWordsBefore = 10;
+        private const int whyWordsAfter = 10;
 
         #region Single Instance Creation
         private Instance createSingleWhoInstance(FastVector fvWho, Token candidate)
@@ -633,6 +742,51 @@ namespace IE
             }
             return whereCandidate;
         }
+        private Instance createSingleWhyInstance(FastVector fvWhy, Token candidate)
+        {
+            //first word-n attribute number
+            int wordsBeforeFirstAttributeNumber = 7;
+            //first pos-n attribute number
+            int posBeforeFirstAttributeNumber = wordsBeforeFirstAttributeNumber + whyWordsBefore + whyWordsAfter;
+            //word+1 attribute number
+            int wordsAfterFirstAttributeNumber = wordsBeforeFirstAttributeNumber + whyWordsBefore;
+            //pos+1 attribute number
+            int posAfterFirstAttributeNumber = posBeforeFirstAttributeNumber + whyWordsBefore;
+
+            int totalAttributeCount = wordsBeforeFirstAttributeNumber + whyWordsBefore * 2 + whyWordsAfter * 2 + 1;
+
+            Instance whyCandidate = new DenseInstance(totalAttributeCount);
+            whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(0), candidate.Value);
+            whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(1), candidate.Value.Split(' ').Count());
+            whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(2), candidate.Sentence);
+            whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(3), candidate.Score);
+            whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(4), candidate.NumWho);
+            whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(5), candidate.NumWhen);
+            whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(6), candidate.NumWhere);
+            for (int i = whyWordsBefore; i > 0; i--)
+            {
+                if (candidate.Position - i - 1 >= 0)
+                {
+                    whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(whyWordsBefore - i + wordsBeforeFirstAttributeNumber), articleCurrent[candidate.Position - i - 1].Value);
+                    if (articleCurrent[candidate.Position - i - 1].PartOfSpeech != null)
+                    {
+                        whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(whyWordsBefore - i + posBeforeFirstAttributeNumber), articleCurrent[candidate.Position - i - 1].PartOfSpeech);
+                    }
+                }
+            }
+            for (int i = 0; i < whyWordsAfter; i++)
+            {
+                if (candidate.Position + i < articleCurrent.Count)
+                {
+                    whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(wordsAfterFirstAttributeNumber + i), articleCurrent[candidate.Position + i].Value);
+                    if (articleCurrent[candidate.Position + i].PartOfSpeech != null)
+                    {
+                        whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(posAfterFirstAttributeNumber + i), articleCurrent[candidate.Position + i].PartOfSpeech);
+                    }
+                }
+            }
+            return whyCandidate;
+        }
         #endregion
         #endregion
 
@@ -731,6 +885,39 @@ namespace IE
             fvClass.addElement("no");
             fvWhere.addElement(new weka.core.Attribute("where", fvClass));
             return fvWhere;
+        }
+
+        private FastVector createWhyFastVector()
+        {
+            FastVector fvWhy = new FastVector(8 + whyWordsBefore * 2 + whyWordsAfter * 2);
+            fvWhy.addElement(new weka.core.Attribute("candidate", (FastVector)null));
+            fvWhy.addElement(new weka.core.Attribute("wordCount"));
+            fvWhy.addElement(new weka.core.Attribute("sentence"));
+            fvWhy.addElement(new weka.core.Attribute("candidateScore"));
+            fvWhy.addElement(new weka.core.Attribute("numWho"));
+            fvWhy.addElement(new weka.core.Attribute("numWhen"));
+            fvWhy.addElement(new weka.core.Attribute("numWhere"));
+            for (int i = whereWordsBefore; i > 0; i--)
+            {
+                fvWhy.addElement(new weka.core.Attribute("word-" + i, (FastVector)null));
+            }
+            for (int i = 1; i <= whereWordsAfter; i++)
+            {
+                fvWhy.addElement(new weka.core.Attribute("word+" + i, (FastVector)null));
+            }
+            for (int i = whyWordsBefore; i > 0; i--)
+            {
+                fvWhy.addElement(new weka.core.Attribute("postag-" + i, fvPOS));
+            }
+            for (int i = 1; i <= whyWordsAfter; i++)
+            {
+                fvWhy.addElement(new weka.core.Attribute("postag+" + i, fvPOS));
+            }
+            FastVector fvClass = new FastVector(2);
+            fvClass.addElement("yes");
+            fvClass.addElement("no");
+            fvWhy.addElement(new weka.core.Attribute("why", fvClass));
+            return fvWhy;
         }
         #endregion
     }

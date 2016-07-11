@@ -114,7 +114,7 @@ namespace IE
                 candidate.Value = candidate.Value.Replace("``", "\"");
                 candidate.Value = candidate.Value.Replace(" ''", "\"");
                 candidate.Value = candidate.Value.Replace("''", "\"");
-                System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
+                //System.Console.WriteLine("WHO CANDIDATE " + candidate.Value);
             }
 
             return candidates;
@@ -307,7 +307,7 @@ namespace IE
 
         public List<List<Token>> performWhatCandidateSelection(List<Token> tokenizedArticle, String articleTitle)
         {
-            int maxNumberOfCandidates = 3;
+            int maxNumberOfCandidates = 2;
             List<List<Token>> candidates = new List<List<Token>>();
             List<List<Token>> segregatedArticle = tokenizedArticle
                 .GroupBy(token => token.Sentence)
@@ -324,7 +324,7 @@ namespace IE
 
         public List<List<Token>> performWhyCandidateSelection(List<Token> tokenizedArticle, String articleTitle)
         {
-            int maxNumberOfCandidates = 4;
+            int maxNumberOfCandidates = 6;
             List<List<Token>> candidates = new List<List<Token>>();
             List<List<Token>> segregatedArticle = tokenizedArticle
                 .GroupBy(token => token.Sentence)
