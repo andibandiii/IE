@@ -60,6 +60,7 @@ namespace IE
             whoClassifier = (Classifier)SerializationHelper.read(@"..\..\IdentifierModels\who.model");
             whenClassifier = (Classifier)SerializationHelper.read(@"..\..\IdentifierModels\when.model");
             whereClassifier = (Classifier)SerializationHelper.read(@"..\..\IdentifierModels\where.model");
+            whyClassifier = (Classifier)SerializationHelper.read(@"..\..\IdentifierModels\why.model");
 
             initializeAnnotations();
         }
@@ -355,6 +356,8 @@ namespace IE
                     tempWhy = tempWhy.Replace(" ,", ",");
                     tempWhy = tempWhy.Replace(" !", "!");
 
+                    copyWhy = tempWhy;
+
                     if (tempWhy.Contains(strWhat))
                     {
                         tempWeight += WEIGHT_PER_WHAT;
@@ -502,14 +505,21 @@ namespace IE
                 {
                     wt.train("why", articleCurrent, listSecondaryWhyCandidates);
                 }
-
-                listSecondaryWhyCandidates = new List<Candidate>();
             }
-            /*
-            System.Console.WriteLine("---------");
-            System.Console.WriteLine("WHY: {0}", 
-                strWhy);
-            */
+
+            Instances whyInstances = createWhyInstances();
+
+            foreach (Instance instance in whyInstances)
+            {
+                double[] classProbability = whyClassifier.distributionForInstance(instance);
+                if (classProbability[0] >= classProbability[1])
+                {
+                    strWhy = instance.stringValue(0);
+                    break;
+                }
+            }
+
+            listSecondaryWhyCandidates = new List<Candidate>();
         }
         #endregion
 
@@ -558,6 +568,21 @@ namespace IE
             }
             whereInstances.setClassIndex(fvWhere.size() - 1);
             return whereInstances;
+        }
+
+        private Instances createWhyInstances()
+        {
+            FastVector fvWhy = createWhyFastVector();
+            Instances whyInstances = new Instances("WhyInstances", fvWhy, listSecondaryWhyCandidates.Count);
+            foreach (Token candidate in listSecondaryWhyCandidates)
+            {
+                if (candidate.Value == null) continue;
+                Instance whyInstance = createSingleWhyInstance(fvWhy, candidate);
+                whyInstance.setDataset(whyInstances);
+                whyInstances.add(whyInstance);
+            }
+            whyInstances.setClassIndex(fvWhy.size() - 1);
+            return whyInstances;
         }
         #endregion
 

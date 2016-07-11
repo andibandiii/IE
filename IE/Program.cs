@@ -21,11 +21,11 @@ namespace IE
         [STAThread]
         public static void Main()
         {
-            /*#if DEBUG
+            #if DEBUG
                         Application.EnableVisualStyles();
                         Application.SetCompatibleTextRenderingDefault(false);
                         Application.Run(new Main());
-            #else*/
+            #else
             Boolean isAnnotated = true;
             FileParser fileparserFP = new FileParser();
             String sourcePath = @"..\..\training_news.xml";
@@ -141,9 +141,10 @@ namespace IE
             }*/
             #endregion
 
-            WhyTrainer wwt = new WhyTrainer();
-            wwt.startTrain();
-            Identifier annotationIdentifier = new Identifier(isAnnotated, wwt);
+            WhyTrainer wt = new WhyTrainer();
+            if (isAnnotated)
+                wt.startTrain();
+            Identifier annotationIdentifier = new Identifier(isAnnotated, wt);
             for (int nI = 0; nI < listCurrentArticles.Count; nI++)
             {
                 annotationIdentifier.setCurrentArticle(listTokenizedArticles[nI]);
@@ -164,13 +165,14 @@ namespace IE
                 listAllWhatAnnotations.Add(annotationIdentifier.getWhat());
                 listAllWhyAnnotations.Add(annotationIdentifier.getWhy());
             }
-            wwt.endTrain();
+            if (isAnnotated)
+                wt.endTrain();
 
-            /*ResultWriter rw = new ResultWriter(destinationPath, formatDateDestinationPath, invertedDestinationPath, listCurrentArticles, listAllWhoAnnotations, listAllWhenAnnotations, listAllWhereAnnotations, listAllWhatAnnotations, listAllWhyAnnotations);
+            ResultWriter rw = new ResultWriter(destinationPath, formatDateDestinationPath, invertedDestinationPath, listCurrentArticles, listAllWhoAnnotations, listAllWhenAnnotations, listAllWhereAnnotations, listAllWhatAnnotations, listAllWhyAnnotations);
             rw.generateOutput();
             rw.generateOutputFormatDate();
-            rw.generateInvertedIndexOutput();*/
-            //#endif
+            rw.generateInvertedIndexOutput();
+            #endif
         }
     }
 }
