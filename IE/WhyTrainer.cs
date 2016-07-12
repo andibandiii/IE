@@ -48,7 +48,7 @@ namespace IE
                     sw.WriteLine("@attribute candidate string");
                     sw.WriteLine("@attribute wordCount NUMERIC");
                     sw.WriteLine("@attribute sentence NUMERIC");
-                    sw.WriteLine("@attribute candidateScore NUMERIC");
+                    //sw.WriteLine("@attribute candidateScore NUMERIC");
                     sw.WriteLine("@attribute numWho NUMERIC");
                     sw.WriteLine("@attribute numWhen NUMERIC");
                     sw.WriteLine("@attribute numWhere NUMERIC");
@@ -141,7 +141,7 @@ namespace IE
                     str = "\"" + value.Replace("\"", "\\\"") + "\",";
                     str += wordcount + ",";
                     str += sentence + ",";
-                    str += candidateScore + ",";
+                    //str += candidateScore + ",";
                     str += numWho + ",";
                     str += numWhen + ",";
                     str += numWhere + ",";
