@@ -770,7 +770,7 @@ namespace IE
         private Instance createSingleWhyInstance(FastVector fvWhy, Token candidate)
         {
             //first word-n attribute number
-            int wordsBeforeFirstAttributeNumber = 6;
+            int wordsBeforeFirstAttributeNumber = 7;
             //first pos-n attribute number
             int posBeforeFirstAttributeNumber = wordsBeforeFirstAttributeNumber + whyWordsBefore + whyWordsAfter;
             //word+1 attribute number
@@ -784,10 +784,10 @@ namespace IE
             whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(0), candidate.Value);
             whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(1), candidate.Value.Split(' ').Count());
             whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(2), candidate.Sentence);
-            //whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(3), candidate.Score);
-            whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(3), candidate.NumWho);
-            whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(4), candidate.NumWhen);
-            whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(5), candidate.NumWhere);
+            whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(3), candidate.Score);
+            whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(4), candidate.NumWho);
+            whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(5), candidate.NumWhen);
+            whyCandidate.setValue((weka.core.Attribute)fvWhy.elementAt(6), candidate.NumWhere);
             for (int i = whyWordsBefore; i > 0; i--)
             {
                 if (candidate.Position - i - 1 >= 0)
@@ -914,11 +914,11 @@ namespace IE
 
         private FastVector createWhyFastVector()
         {
-            FastVector fvWhy = new FastVector(7 + whyWordsBefore * 2 + whyWordsAfter * 2);
+            FastVector fvWhy = new FastVector(8 + whyWordsBefore * 2 + whyWordsAfter * 2);
             fvWhy.addElement(new weka.core.Attribute("candidate", (FastVector)null));
             fvWhy.addElement(new weka.core.Attribute("wordCount"));
             fvWhy.addElement(new weka.core.Attribute("sentence"));
-            //fvWhy.addElement(new weka.core.Attribute("candidateScore"));
+            fvWhy.addElement(new weka.core.Attribute("candidateScore"));
             fvWhy.addElement(new weka.core.Attribute("numWho"));
             fvWhy.addElement(new weka.core.Attribute("numWhen"));
             fvWhy.addElement(new weka.core.Attribute("numWhere"));
