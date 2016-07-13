@@ -507,7 +507,7 @@ namespace IE
                 }
             }
 
-            /*Instances whyInstances = createWhyInstances();
+            Instances whyInstances = createWhyInstances();
 
             foreach (Instance instance in whyInstances)
             {
@@ -517,7 +517,7 @@ namespace IE
                     strWhy = instance.stringValue(0);
                     break;
                 }
-            }*/
+            }
 
             listSecondaryWhyCandidates = new List<Candidate>();
         }
